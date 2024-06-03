@@ -3,6 +3,7 @@
     public class Image : BaseEntity<long>
     {
         public string FileName { get; set; } = null!;
-        public bool IsThumbnailImage { get; set; }
+        public long AccommodationUnitId { get; set; }
+        public AccommodationUnit AccommodationUnit { get; set; } = null!;
     }
 }

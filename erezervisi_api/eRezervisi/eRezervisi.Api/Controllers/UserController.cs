@@ -1,4 +1,5 @@
 ﻿using eRezervisi.Api.Authorization;
+using eRezervisi.Common.Dtos.Review;
 using eRezervisi.Common.Dtos.User;
 using eRezervisi.Core.Services.Interfaces;
 using eRezervisi.Infrastructure.Common.Constants;
@@ -20,18 +21,18 @@ namespace eRezervisi.Api.Controllers
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> RegisterUserAsync([FromBody] UserCreateDto request, CancellationToken cancellationToken)
+        public async Task<IActionResult> RegisterAsync([FromBody] UserCreateDto request, CancellationToken cancellationToken)
         {
             var result = await _userService.CreateUserAsync(request, cancellationToken);
 
             return Ok(result);
         }
 
-        [HttpPut("{userId}")]
+        [HttpPut("{id}")]
         [CustomAuthorize(Roles.MobileUser.Name, Roles.Owner.Name)]
-        public async Task<IActionResult> UpdateUserAsync([FromRoute] long userId, [FromBody] UserUpdateDto request, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateAsync([FromRoute] long id, [FromBody] UserUpdateDto request, CancellationToken cancellationToken)
         {
-            var result = await _userService.UpdateUserAsync(userId, request, cancellationToken);
+            var result = await _userService.UpdateUserAsync(id, request, cancellationToken);
 
             return Ok(result);
         }
@@ -57,7 +58,7 @@ namespace eRezervisi.Api.Controllers
 
         [HttpGet("{id}")]
         [CustomAuthorize(Roles.MobileUser.Name, Roles.Owner.Name)]
-        public async Task<IActionResult> GetUserByIdAsync(long id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetByIdAsync(long id, CancellationToken cancellationToken)
         {
             var result = await _userService.GetUserByIdAsync(id, cancellationToken);
 
@@ -66,20 +67,21 @@ namespace eRezervisi.Api.Controllers
 
         [HttpGet("{id}/reviews")]
         [CustomAuthorize(Roles.MobileUser.Name, Roles.Owner.Name)]
-        public async Task<IActionResult> GetUserReviewsAsync(long id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetReviewsAsync(long id, CancellationToken cancellationToken)
         {
             var result = await _userService.GetUserReviewsAsync(id, cancellationToken);
 
             return Ok(result);
         }
 
-        [HttpGet]
-        [CustomAuthorize(Roles.MobileUser.Name, Roles.Owner.Name)]
-        public async Task<IActionResult> GetUsersAsync(CancellationToken cancellationToken)
+        [HttpPost("{id}/reviews")]
+        [CustomAuthorize(Roles.Owner.Name)]
+        public async Task<IActionResult> CreateReviewAsync([FromRoute] long id, [FromBody] ReviewCreateDto request, CancellationToken cancellationToken)
         {
-            var result = await _userService.GetGuestsAsync(cancellationToken);
+            var result = await _userService.CreateReviewAsync(id, request, cancellationToken);
 
             return Ok(result);
         }
+
     }
 }

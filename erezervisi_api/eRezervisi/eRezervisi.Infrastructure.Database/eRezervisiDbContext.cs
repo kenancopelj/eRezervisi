@@ -29,31 +29,25 @@ namespace eRezervisi.Infrastructure.Database
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Message> Texts { get; set; }
         public DbSet<Township> Townships { get; set; }
-
-
+        public DbSet<FavoriteAccommodationUnit> FavoriteAccommodationUnits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(eRezervisiDbContext).Assembly);
-
-            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
-            {
-                relationship.DeleteBehavior = DeleteBehavior.Restrict;
-            }
-
             modelBuilder.Entity<AccommodationUnit>().HasQueryFilter(x => !x.Deleted);
             modelBuilder.Entity<AccommodationUnitCategory>().HasQueryFilter(x => !x.Deleted);
             modelBuilder.Entity<Canton>().HasQueryFilter(x => !x.Deleted);
             modelBuilder.Entity<Image>().HasQueryFilter(x => !x.Deleted);
-            modelBuilder.Entity<Irregularity>().HasQueryFilter(x => !x.Deleted);
             modelBuilder.Entity<Notification>().HasQueryFilter(x => !x.Deleted);
             modelBuilder.Entity<Reservation>().HasQueryFilter(x => !x.Deleted);
             modelBuilder.Entity<Review>().HasQueryFilter(x => !x.Deleted);
             modelBuilder.Entity<Message>().HasQueryFilter(x => !x.Deleted);
             modelBuilder.Entity<Township>().HasQueryFilter(x => !x.Deleted);
             modelBuilder.Entity<User>().HasQueryFilter(x => !x.Deleted);
+            modelBuilder.Entity<FavoriteAccommodationUnit>().HasQueryFilter(x => !x.Deleted);
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(eRezervisiDbContext).Assembly);
 
             modelBuilder.Seed();
         }

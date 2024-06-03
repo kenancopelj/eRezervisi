@@ -8,6 +8,7 @@
         public string PasswordSalt { get; set; } = null!;
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiresAtUtc { get; set; }
+        public DateTime LastPasswordChangeAt { get; set; }
 
         public UserCredentials() { }
 

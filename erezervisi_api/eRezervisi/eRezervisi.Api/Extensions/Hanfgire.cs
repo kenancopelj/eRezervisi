@@ -1,4 +1,5 @@
 ﻿using eRezervisi.Core.Services.Interfaces;
+using eRezervisi.Infrastructure.Common.Constants;
 using Hangfire;
 using Hangfire.SqlServer;
 using Hangfire.Storage;
@@ -27,47 +28,53 @@ namespace eRezervisi.Api.Extensions
         #region App
         public static void StartHangFire(this IApplicationBuilder app, IConfiguration configuration)
         {
-            var username = configuration["Hangfire:Credentials:Username"];
-            var password = configuration["Hangfire:Credentials:Password"];
-
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            using (var scope = app.ApplicationServices.CreateScope())
             {
-                DashboardTitle = "eRezervisi dashboard",
-                Authorization = new[]
+                var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
+
+                var username = configuration["Hangfire:Credentials:Username"];
+                var password = configuration["Hangfire:Credentials:Password"];
+
+                app.UseHangfireDashboard("/hangfire", new DashboardOptions
                 {
+                    DashboardTitle = "eRezervisi dashboard",
+                    Authorization = new[]
+                    {
                     new HangfireCustomBasicAuthenticationFilter
                     {
                         User = username,
                         Pass = password
                     }
                 }
-            });
+                });
 
-            //RecurringJob.AddOrUpdate<IJobService>("Deactivate users", x => x.DeactivateUsersAsync(CancellationToken.None), configuration.GetValue<string>("DeactiveUsersJobCron"),
-            //    new RecurringJobOptions
-            //    {
-            //        TimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Belgrade")
-            //    });
+                using (var connection = JobStorage.Current.GetConnection())
+                {
+                    foreach (var recurringJob in connection.GetRecurringJobs())
+                    {
+                        RecurringJob.RemoveIfExists(recurringJob.Id);
+                    }
+                }
 
-            //using (var connection = JobStorage.Current.GetConnection())
-            //{
-            //    foreach (var recurringJob in connection.GetRecurringJobs())
-            //    {
-            //        RecurringJob.RemoveIfExists(recurringJob.Id);
-            //    }
-            //}
+                TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Belgrade");
 
-            //using (var scope = app.ApplicationServices.CreateScope())
-            //{
-            //    var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
+                RecurringJobOptions jobOptions = new()
+                {
+                    TimeZone = timeZone,
+                };
 
-            //    var recurringJobOptions = new RecurringJobOptions
-            //    {
-            //        TimeZone = TimeZoneInfo.Utc,
-            //        MisfireHandling = MisfireHandlingMode.Ignorable
-            //    };
+                RecurringJob.AddOrUpdate<IJobService>(Jobs.CheckReservations, x => x.CheckReservationsAsync(CancellationToken.None), configuration.GetValue<string>("CheckReservationsJobCron"),
+                    jobOptions);
 
-            //}
+                RecurringJob.AddOrUpdate<IJobService>(Jobs.CheckUsers, x => x.CheckUsersAsync(CancellationToken.None), configuration.GetValue<string>("CheckUsersJobCron"),
+                    jobOptions);
+
+                RecurringJob.AddOrUpdate<IJobService>(Jobs.CheckAccommodationUnits, x => x.CheckAccommodationUnitsAsync(CancellationToken.None), configuration.GetValue<string>("CheckAccommodationUnitsJobCron"),
+                    jobOptions);
+
+                RecurringJob.AddOrUpdate<IJobService>(Jobs.RemindAboutPasswordChange, x => x.RemindAboutPasswordChange(CancellationToken.None), configuration.GetValue<string>("RemindAboutPasswordJobCron"),
+                    jobOptions);
+            }
         }
         #endregion
     }

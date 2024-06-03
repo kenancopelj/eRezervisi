@@ -5,12 +5,6 @@ namespace eRezervisi.Core.Domain.Entities
 {
     public class User : BaseEntity<long>
     {
-        public User()
-        {
-            UserCredentials = new UserCredentials();
-            UserSettings = new UserSettings();
-        }
-
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string Phone { get; set; } = null!;

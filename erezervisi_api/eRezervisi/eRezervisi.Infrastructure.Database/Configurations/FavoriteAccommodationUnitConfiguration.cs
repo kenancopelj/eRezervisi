@@ -10,11 +10,9 @@ namespace eRezervisi.Infrastructure.Database.Configurations
         {
             builder.ToTable("favorite_accommodation_units");
 
-            builder.HasKey(x => new { x.UserId, x.AccommodationUnitId });
+            builder.HasKey(x => x.Id);
 
             builder.HasOne<AccommodationUnit>(x => x.AccommodationUnit).WithMany().HasForeignKey(x => x.AccommodationUnitId);
-
-            builder.HasOne<User>(x => x.User).WithMany().HasForeignKey(x => x.UserId);
         }
     }
 }

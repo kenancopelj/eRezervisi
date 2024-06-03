@@ -25,15 +25,13 @@ namespace eRezervisi.Infrastructure.Database.Configurations
 
             builder.Property(x => x.RoleId);
 
-            builder.HasOne<Role>(x => x.Role).WithMany().HasForeignKey(x => x.RoleId);
+            builder.HasOne<Role>(x => x.Role).WithMany().HasForeignKey(x => x.RoleId).OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(x => x.IsActive).HasDefaultValue(false);
 
             builder.OwnsOne(x => x.UserCredentials, x =>
             {
                 x.ToTable("user_credentials");
-
-                x.HasKey(x => x.UserId);
 
                 x.WithOwner().HasForeignKey(x => x.UserId);
 
@@ -56,8 +54,6 @@ namespace eRezervisi.Infrastructure.Database.Configurations
             builder.OwnsOne(x => x.UserSettings, x =>
             {
                 x.ToTable("user_settings");
-
-                x.HasKey(x => x.UserId);
 
                 x.WithOwner().HasForeignKey(x => x.UserId);
 

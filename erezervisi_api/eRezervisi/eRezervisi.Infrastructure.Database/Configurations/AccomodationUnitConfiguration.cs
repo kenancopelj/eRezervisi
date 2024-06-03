@@ -22,11 +22,11 @@ namespace eRezervisi.Infrastructure.Database.Configurations
 
             builder.Property(x => x.Note).IsRequired(false);
 
+            builder.Property(x => x.ThumbnailImage);
+
             builder.OwnsOne(x => x.AccommodationUnitPolicy, x =>
             {
                 x.ToTable("accommodation_unit_policies");
-
-                x.HasKey(x => x.AccommodationUnitId);
 
                 x.WithOwner().HasForeignKey(x => x.AccommodationUnitId);
 
@@ -45,11 +45,11 @@ namespace eRezervisi.Infrastructure.Database.Configurations
 
             builder.HasOne<Township>(x => x.Township).WithMany().HasForeignKey(x => x.TownshipId);
 
-            builder.HasOne<Image>(x => x.ThumbnailImage).WithMany().HasForeignKey(x => x.ThumbnailImageId);
+            builder.HasMany<Image>(x => x.Images).WithOne(i => i.AccommodationUnit).HasForeignKey(x => x.AccommodationUnitId);
 
-            builder.Property(x => x.Latitude).HasColumnName("latitude");
+            builder.Property(x => x.Latitude);
 
-            builder.Property(x => x.Longitude).HasColumnName("longitude");
+            builder.Property(x => x.Longitude);
         }
     }
 }

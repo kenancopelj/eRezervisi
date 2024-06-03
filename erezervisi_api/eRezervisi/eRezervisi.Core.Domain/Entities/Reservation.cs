@@ -29,9 +29,9 @@ namespace eRezervisi.Core.Domain.Entities
             Status = status;
         }
 
-        public void CalculateTotalPrice()
+        public void CalculateTotalPrice(double basePrice)
         {
-            TotalPrice = TotalDays * AccommodationUnit.Price;
+            TotalPrice = TotalDays * basePrice;
         }
     }
 }

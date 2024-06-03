@@ -1,4 +1,5 @@
-﻿using eRezervisi.Core.Domain.Enums;
+﻿using eRezervisi.Common.Dtos.AccommodationUnit;
+using eRezervisi.Core.Domain.Enums;
 
 namespace eRezervisi.Common.Dtos.Reservation
 {
@@ -9,7 +10,7 @@ namespace eRezervisi.Common.Dtos.Reservation
         public long GuestId { get; set; }
         public string Guest { get; set; } = null!;
         public long AccommodationUnitId { get; set; }
-        public string AccommodationUnit { get; set; } = null!;
+        public AccommodationUnitGetDto AccommodationUnit { get; set; } = null!;
         public DateTime From { get; set; }
         public DateTime To { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
@@ -18,6 +19,6 @@ namespace eRezervisi.Common.Dtos.Reservation
         public int TotalPeople { get; set; }
         public int TotalDays { get; set; }
         public double TotalPrice { get; set; }
-        public DateOnly CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

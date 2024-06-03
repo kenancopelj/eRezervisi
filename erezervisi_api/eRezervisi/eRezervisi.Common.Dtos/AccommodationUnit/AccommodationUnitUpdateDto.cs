@@ -1,4 +1,5 @@
 ﻿using eRezervisi.Common.Dtos.AccommodationUnitPolicy;
+using eRezervisi.Common.Dtos.Image;
 
 namespace eRezervisi.Common.Dtos.AccommodationUnit
 {
@@ -13,6 +14,5 @@ namespace eRezervisi.Common.Dtos.AccommodationUnit
         public long TownshipId { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public string? FileName { get; set; } = null!;
     }
 }

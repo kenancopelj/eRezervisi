@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using eRezervisi.Common.Dtos.Guest;
 using eRezervisi.Common.Dtos.Review;
 using eRezervisi.Common.Dtos.Role;
 using eRezervisi.Common.Dtos.User;
 using eRezervisi.Common.Dtos.UserSettings;
 using eRezervisi.Common.Shared;
+using eRezervisi.Common.Shared.Pagination;
 using eRezervisi.Core.Domain.Entities;
+using eRezervisi.Core.Domain.Enums;
 using eRezervisi.Core.Domain.Exceptions;
 using eRezervisi.Core.Services.Interfaces;
 using eRezervisi.Infrastructure.Common.Constants;
@@ -20,15 +23,22 @@ namespace eRezervisi.Core.Services
         private readonly IHashService _hashService;
         private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly IMapper _mapper;
+        private readonly IStorageService _storageService;
+        private readonly IJwtTokenReader _jwtTokenReader;
+
         public UserService(eRezervisiDbContext dbContext,
             IHashService hashService,
             IMapper mapper,
-            IBackgroundJobClient backgroundJobClient)
+            IBackgroundJobClient backgroundJobClient,
+            IStorageService storageService,
+            IJwtTokenReader jwtTokenReader)
         {
             _dbContext = dbContext;
             _hashService = hashService;
             _mapper = mapper;
             _backgroundJobClient = backgroundJobClient;
+            _storageService = storageService;
+            _jwtTokenReader = jwtTokenReader;
         }
 
         public async Task<UserGetDto> CreateUserAsync(UserCreateDto request, CancellationToken cancellationToken)
@@ -54,8 +64,21 @@ namespace eRezervisi.Core.Services
                 PasswordSalt = passwordSalt,
                 Username = request.Username,
                 RefreshToken = null,
-                RefreshTokenExpiresAtUtc = null
+                RefreshTokenExpiresAtUtc = null,
+                LastPasswordChangeAt = DateTime.UtcNow,
             };
+
+            user.UserSettings = new UserSettings
+            {
+                RecieveEmails = true,
+            };
+
+            if (request.ImageBase64 != null)
+            {
+                var uploadedFile = await _storageService.UploadFileAsync(FileType.UserLogo, request.ImageFileName!, request.ImageBase64, cancellationToken);
+
+                user.Image = uploadedFile.FileName;
+            }
 
             await _dbContext.Users.AddAsync(user, cancellationToken);
 
@@ -64,14 +87,13 @@ namespace eRezervisi.Core.Services
             return _mapper.Map<UserGetDto>(user);
         }
 
-        public Task<GetGuestsResponse> GetGuestsAsync(CancellationToken cancellationToken)
+        public async Task<UserGetDto> GetUserByIdAsync(long id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-        }
+            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-        public Task<UserGetDto> GetUserByIdAsync(long id, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
+            NotFoundException.ThrowIfNull(user);
+
+            return _mapper.Map<UserGetDto>(user);
         }
 
         public async Task<UserGetDto> ChangePasswordAsync(long id, ChangePasswordDto request, CancellationToken cancellationToken)
@@ -97,7 +119,8 @@ namespace eRezervisi.Core.Services
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt,
                     RefreshToken = null,
-                    RefreshTokenExpiresAtUtc = null
+                    RefreshTokenExpiresAtUtc = null,
+                    LastPasswordChangeAt = DateTime.UtcNow,
                 };
             }
             else
@@ -150,6 +173,15 @@ namespace eRezervisi.Core.Services
                 user.UserCredentials.Username = request.Username;
             }
 
+            if (request.ImageBase64 != null)
+            {
+                var uploadedFile = await _storageService.UploadFileAsync(FileType.UserLogo, request.ImageFileName!, request.ImageBase64, cancellationToken);
+
+                user.Image = uploadedFile.FileName;
+            }
+
+            _dbContext.Update(user);
+
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             var response = _mapper.Map<UserGetDto>(user);
@@ -161,6 +193,44 @@ namespace eRezervisi.Core.Services
             response.UserSettings = _mapper.Map<UserSettingsGetDto>(user.UserSettings);
 
             return response;
+        }
+
+        public async Task<ReviewGetDto> CreateReviewAsync(long id, ReviewCreateDto request, CancellationToken cancellationToken)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+            NotFoundException.ThrowIfNull(user);
+
+            var ownerId = _jwtTokenReader.GetUserIdFromToken();
+
+            var wasPreviouslyGuest = await _dbContext.Reservations
+                .Include(x => x.AccommodationUnit)
+                .AsNoTracking()
+                .AnyAsync(x => x.UserId == user.Id && x.Status == ReservationStatus.Completed
+                && x.AccommodationUnit.OwnerId == ownerId);
+
+            if (!wasPreviouslyGuest)
+            {
+                throw new DomainException("NotGuest", "Ne možete napraviti recenziju za korisnika koji nije bio gost Vašeg objekta.");
+            }
+
+            var review = _mapper.Map<Review>(request);
+
+            await _dbContext.AddAsync(review, cancellationToken);
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            var userReview = new AccommodationUnitReview
+            {
+                AccommodationUnitId = id,
+                ReviewId = review.Id,
+            };
+
+            await _dbContext.AddAsync(userReview, cancellationToken);
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return _mapper.Map<ReviewGetDto>(review);
         }
 
         public async Task<UserSettingsGetDto> UpdateSettingsAsync(long id, UpdateSettingsDto request, CancellationToken cancellationToken)

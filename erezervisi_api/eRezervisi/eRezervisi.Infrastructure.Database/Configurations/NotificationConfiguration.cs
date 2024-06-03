@@ -21,7 +21,7 @@ namespace eRezervisi.Infrastructure.Database.Configurations
 
             builder.Property(x => x.Description).IsRequired(false);
 
-            builder.Property(x => x.Status).HasDefaultValue(NotificationStatus.Unread);
+            builder.Property(x => x.Status).HasDefaultValueSql("1");
         }
     }
 }

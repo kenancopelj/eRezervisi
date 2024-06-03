@@ -7,7 +7,7 @@ namespace eRezervisi.Core.Domain.Entities
         public string Title { get; set; } = null!;
         public string ShortTitle { get; set; } = null!;
         public double Price { get; set; }
-        public List<Image> Images { get; set; } = [];
+        public List<Image> Images { get; set; } = new();
         public User Owner { get; set; } = null!;
         public long OwnerId { get; set; }
         public string? Note { get; set; }
@@ -17,18 +17,25 @@ namespace eRezervisi.Core.Domain.Entities
         public ICollection<AccommodationUnitReview>? Reviews { get; set; }
         public double? AverageRating => Reviews?.Average(x => x.Review.Rating);
         public AccommodationUnitStatus Status { get; set; }
+        public string ThumbnailImage { get; set; } = null!;
         public long TownshipId { get; set; }
         public Township Township { get; set; } = null!;
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public long ThumbnailImageId { get; set; }
-        public Image ThumbnailImage { get; set; } = null!;
+        public DateOnly? DeactivateAt { get; set; } // In case user wants to deactivate object, but there are still reservations in progress. Enqueue it to job
 
         public AccommodationUnit() { }
 
-        public void ChangeStatus(AccommodationUnitStatus status)
+        public void Deactivate(DateOnly date)
         {
-            Status = status;
+            Status = AccommodationUnitStatus.Inactive;
+            DeactivateAt = date;
+        }
+
+        public void Activate()
+        {
+            Status = AccommodationUnitStatus.Active;
+            DeactivateAt = null;
         }
     }
 }

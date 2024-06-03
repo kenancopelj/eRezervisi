@@ -13,6 +13,8 @@ namespace eRezervisi.Infrastructure.Database.Configurations
             builder.ToTable("images");
 
             builder.Property(x => x.FileName);
+
+            builder.HasOne<AccommodationUnit>(x => x.AccommodationUnit).WithMany(x => x.Images).HasForeignKey(x => x.AccommodationUnitId);
         }
     }
 }

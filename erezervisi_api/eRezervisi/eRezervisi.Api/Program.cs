@@ -3,6 +3,10 @@ using eRezervisi.Api.Middleware;
 using eRezervisi.Core.Services.Mapper;
 using eRezervisi.Infrastructure.Common.Configuration;
 using eRezervisi.Infrastructure.Database;
+using FirebaseAdmin;
+using FirebaseAdmin.Messaging;
+using Google.Apis.Auth.OAuth2;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -82,9 +86,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.StartHangFire(builder.Configuration);
+app.StartHangFire(app.Configuration);
 
 app.Run();
+
 
 void AddJwtBearer()
 {

@@ -2,7 +2,8 @@
 {
     public enum NotificationStatus
     {
-        Read = 1,
-        Unread = 2
+        Delivered = 1,
+        Read = 2,
+        Unread = 3
     }
 }

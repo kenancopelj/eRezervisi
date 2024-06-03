@@ -14,7 +14,7 @@ namespace eRezervisi.Infrastructure.Database.Configurations
 
             builder.HasOne<Review>(x => x.Review).WithMany().HasForeignKey(x => x.ReviewId);
 
-            builder.HasOne<AccommodationUnit>(x => x.AccommodationUnit).WithMany().HasForeignKey(x => x.AccommodationUnitId);
+            builder.HasOne<AccommodationUnit>(x => x.AccommodationUnit).WithMany(x => x.Reviews).HasForeignKey(x => x.AccommodationUnitId);
         }
     }
 }

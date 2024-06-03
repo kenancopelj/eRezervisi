@@ -2,7 +2,7 @@
 {
     public enum ScopeType
     {
-        Mobile = 1,
-        Application = 2
+        Application = 1,
+        Mobile = 2
     }
 }

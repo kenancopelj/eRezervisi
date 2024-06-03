@@ -10,8 +10,4 @@
     <ProjectReference Include="..\eRezervisi.Core.Domain\eRezervisi.Core.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="AccommodationUnitReview\" />
-  </ItemGroup>
-
 </Project>

@@ -1,6 +1,6 @@
 ﻿namespace eRezervisi.Core.Domain.Entities
 {
-    public record AccommodationUnitPolicy
+    public class AccommodationUnitPolicy
     {
         public long AccommodationUnitId { get; set; }
         public bool AlcoholAllowed { get; set; }

@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.dockerignore = .dockerignore
 		docker-compose.yml = docker-compose.yml
 		Dockerfile = Dockerfile
+		erezervisifcm-firebase-adminsdk-53n3j-bae20b673f.json = erezervisifcm-firebase-adminsdk-53n3j-bae20b673f.json
 	EndProjectSection
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3EC84E99-EC5E-4BF2-8274-DD5495F33AA1}"
