@@ -1,6 +1,7 @@
 ﻿using eRezervisi.Common.Dtos.Reservation;
 using eRezervisi.Common.Shared.Pagination;
 using eRezervisi.Common.Shared.Requests.Reservation;
+using eRezervisi.Core.Domain.Enums;
 
 namespace eRezervisi.Core.Services.Interfaces
 {
@@ -12,5 +13,6 @@ namespace eRezervisi.Core.Services.Interfaces
         Task DeleteReservationAsync(long id, CancellationToken cancellationToken);
         Task ConfirmReservationAsync(long id, CancellationToken cancellationToken);
         Task CancelReservationAsync(long id, CancellationToken cancellationToken);
+        Task<ReservationByStatusesResponse> GetUserReservationsAsync(GetReservationsByStatusRequest request, CancellationToken cancellationToken);
     }
 }

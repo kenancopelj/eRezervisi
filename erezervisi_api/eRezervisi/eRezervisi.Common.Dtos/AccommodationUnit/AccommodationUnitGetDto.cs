@@ -18,5 +18,6 @@ namespace eRezervisi.Common.Dtos.AccommodationUnit
         public double Longitude { get; set; }
         public string ThumbnailImage { get; set; } = null!;
         public List<ImageGetDto> Images { get; set; } = new();
+        public bool Favorite { get; set; }
     }
 }

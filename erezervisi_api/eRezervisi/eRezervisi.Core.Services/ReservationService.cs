@@ -14,7 +14,6 @@ using eRezervisi.Core.Services.Interfaces;
 using eRezervisi.Infrastructure.Database;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
 namespace eRezervisi.Core.Services
@@ -211,6 +210,33 @@ namespace eRezervisi.Core.Services
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<ReservationGetDto>(reservation);
+        }
+
+        public async Task<ReservationByStatusesResponse> GetUserReservationsAsync(GetReservationsByStatusRequest request, CancellationToken cancellationToken)
+        {
+            var userId = _jwtTokenReader.GetUserIdFromToken();
+
+            var reservations = await _dbContext.Reservations
+               .AsNoTracking()
+               .Where(x => x.UserId == userId && x.Status == request.Status)
+               .Select(x => new ReservationByStatusDto
+               {
+                   Id = x.Id,
+                   Code = x.Code,
+                   AccommodationUnit = x.AccommodationUnit.Title,
+                   From = x.From,
+                   To = x.To,
+                   TotalPeople = x.TotalPeople,
+                   TotalDays = x.TotalDays,
+                   CreatedAt = x.CreatedAt,
+                   TotalPrice = x.TotalPrice
+               })
+               .ToListAsync(cancellationToken);
+
+            return new ReservationByStatusesResponse
+            {
+                Reservations = reservations
+            };
         }
 
         private void NotifyOwner(long reservationId)

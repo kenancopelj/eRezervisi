@@ -75,7 +75,9 @@ namespace eRezervisi.Core.Services
 
         public async Task RemoveAsync(long id, CancellationToken cancellationToken)
         {
-            var favorite = await _dbContext.FavoriteAccommodationUnits.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            var userId = _jwtTokenReader.GetUserIdFromToken();
+
+            var favorite = await _dbContext.FavoriteAccommodationUnits.FirstOrDefaultAsync(x => x.AccommodationUnitId == id && x.CreatedBy == userId, cancellationToken);
 
             NotFoundException.ThrowIfNull(favorite);
 

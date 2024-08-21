@@ -71,5 +71,14 @@ namespace eRezervisi.Api.Controllers
 
             return Ok();
         }
+
+        [HttpPost("status")]
+        [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
+        public async Task<IActionResult> GetByStatusAsync([FromBody] GetReservationsByStatusRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _reservationService.GetUserReservationsAsync(request, cancellationToken);
+
+            return Ok(result);
+        }
     }
 }

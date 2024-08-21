@@ -83,5 +83,13 @@ namespace eRezervisi.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("my-reviews")]
+        [CustomAuthorize(Roles.MobileUser.Name, Roles.Owner.Name)]
+        public async Task<IActionResult> MyReviewsAsync(CancellationToken cancellationToken)
+        {
+            var result = await _userService.GetReviewsByUserAsync(cancellationToken);
+
+            return Ok(result);
+        }
     }
 }

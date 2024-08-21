@@ -13,5 +13,6 @@ namespace eRezervisi.Core.Services.Interfaces
         Task<UserGetDto> ChangePasswordAsync(long id, ChangePasswordDto request, CancellationToken cancellationToken);
         Task<UserSettingsGetDto> UpdateSettingsAsync(long id, UpdateSettingsDto request, CancellationToken cancellationToken);
         Task<ReviewGetDto> CreateReviewAsync(long id, ReviewCreateDto request, CancellationToken cancellationToken);
+        Task<GetReviewsResponse> GetReviewsByUserAsync(CancellationToken cancellationToken);
     }
 }

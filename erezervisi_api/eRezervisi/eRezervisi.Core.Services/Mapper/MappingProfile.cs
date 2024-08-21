@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using eRezervisi.Common.Dtos.AccommodationUnit;
+using eRezervisi.Common.Dtos.AccommodationUnitCategories;
 using eRezervisi.Common.Dtos.AccommodationUnitPolicy;
 using eRezervisi.Common.Dtos.Canton;
 using eRezervisi.Common.Dtos.FavoriteAccommodationUnit;
@@ -38,6 +39,7 @@ namespace eRezervisi.Core.Services.Mapper
             CreateMap<AccommodationUnitCreateDto, AccommodationUnit>();
             CreateMap<AccommodationUnitPolicyCreateDto, AccommodationUnitPolicy>();
             CreateMap<AccommodationUnit, AccommodationUnitGetDto>();
+            CreateMap<AccommodationUnitGetDto, AccommodationUnit>();
             CreateMap<GetAccommodationUnitsRequest, PagedRequest<AccommodationUnit>>();
             CreateMap<PagedRequest<AccommodationUnitCategory>, GetCategoriesRequest>();
             CreateMap<GetAccommodationUnitReviewsRequest, PagedRequest<AccommodationUnit>>();
@@ -63,7 +65,11 @@ namespace eRezervisi.Core.Services.Mapper
             CreateMap<FavoriteAccommodationUnit, FavoriteAccommodationUnitGetDto>();
             CreateMap<GetFavoriteAccommodationUnitsRequest, PagedRequest<FavoriteAccommodationUnit>>();
             CreateMap<Review, ReviewGetDto>();
-            CreateMap<Notification, NotificationCreateDto>();
+            CreateMap<FirebaseAdmin.Messaging.Notification, NotificationCreateDto>();
+            CreateMap<Township, TownshipGetDto>();
+            CreateMap<Canton, CantonGetDto>();
+            CreateMap<AccommodationUnitPolicy, PolicyGetDto>();
+            CreateMap<AccommodationUnitCategory, CategoryGetDto>();
         }
     }
 }

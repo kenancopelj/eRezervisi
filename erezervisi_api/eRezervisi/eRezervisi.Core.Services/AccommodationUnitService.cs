@@ -60,6 +60,8 @@ namespace eRezervisi.Core.Services
 
         public async Task<PagedResponse<AccommodationUnitGetDto>> GetAccommodationUnitsPagedAsync(GetAccommodationUnitsRequest request, CancellationToken cancellationToken)
         {
+            var userId = _jwtTokenReader.GetUserIdFromToken();
+
             var queryable = _dbContext.AccommodationUnits.AsQueryable();
 
             var pagingRequest = _mapper.Map<PagedRequest<AccommodationUnit>>(request);
@@ -107,6 +109,7 @@ namespace eRezervisi.Core.Services
                     Latitude = x.Latitude,
                     Longitude = x.Longitude,
                     ThumbnailImage = x.ThumbnailImage,
+                    Favorite = _dbContext.FavoriteAccommodationUnits.Any(f => f.Id == x.Id && x.CreatedBy == userId),
                     Images = x.Images.Select(i => new ImageGetDto
                     {
                         Id = i.Id,
@@ -211,16 +214,22 @@ namespace eRezervisi.Core.Services
 
         public async Task<AccommodationUnitGetDto> GetAccommodationUnitByIdAsync(long id, CancellationToken cancellationToken)
         {
+            var userId = _jwtTokenReader.GetUserIdFromToken();
+
             var accommodationUnit = await _dbContext.AccommodationUnits
                 .Include(x => x.AccommodationUnitCategory)
                 .Include(x => x.Images)
-                .Include(x => x.Township)
+                .Include(x => x.Township).ThenInclude(x => x.Canton)
                 .Include(x => x.AccommodationUnitPolicy)
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
             NotFoundException.ThrowIfNull(accommodationUnit);
 
-            return _mapper.Map<AccommodationUnitGetDto>(accommodationUnit);
+            var response = _mapper.Map<AccommodationUnitGetDto>(accommodationUnit);
+
+            response.Favorite = await _dbContext.FavoriteAccommodationUnits.AnyAsync(x => x.AccommodationUnitId == id && x.CreatedBy == userId);
+
+            return response;
         }
 
         public async Task<PagedResponse<GetReviewsResponse>> GetAccommodationUnitReviewsPagedAsync(GetAccommodationUnitReviewsRequest request, CancellationToken cancellationToken)

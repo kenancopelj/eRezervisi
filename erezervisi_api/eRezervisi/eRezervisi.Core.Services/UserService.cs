@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using eRezervisi.Common.Dtos.Guest;
+using eRezervisi.Common.Dtos.Reservation;
 using eRezervisi.Common.Dtos.Review;
 using eRezervisi.Common.Dtos.Role;
 using eRezervisi.Common.Dtos.User;
@@ -244,6 +245,50 @@ namespace eRezervisi.Core.Services
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<UserSettingsGetDto>(user.UserSettings);
+        }
+
+        public async Task<GetReviewsResponse> GetReviewsByUserAsync(CancellationToken cancellationToken)
+        {
+            var userId = _jwtTokenReader.GetUserIdFromToken();
+
+            var user = await _dbContext.Users.FirstAsync(x => x.Id == userId);
+
+            var accommodationUnitReviews = await _dbContext.AccommodationUnitReviews
+               .Include(x => x.Review)
+               .AsNoTracking()
+               .Where(x => x.Review.CreatedBy == userId)
+               .Select(x => new ReviewGetDto
+               {
+                   Id = x.Review.Id,
+                   Title = x.Review.Title,
+                   Note = x.Review.Note,
+                   Rating = x.Review.Rating,
+                   ReviewerId = userId,
+                   Reviewer = user.GetFullName()
+               })
+               .ToListAsync(cancellationToken);
+
+            var guestReviews = await _dbContext.GuestReviews
+               .Include(x => x.Review)
+               .AsNoTracking()
+               .Where(x => x.Review.CreatedBy == userId)
+               .Select(x => new ReviewGetDto
+               {
+                   Id = x.Review.Id,
+                   Title = x.Review.Title,
+                   Note = x.Review.Note,
+                   Rating = x.Review.Rating,
+               })
+               .ToListAsync(cancellationToken);
+
+            accommodationUnitReviews.AddRange(guestReviews);
+
+            accommodationUnitReviews = accommodationUnitReviews.OrderBy(_ => Guid.NewGuid()).ToList();
+
+            return new GetReviewsResponse
+            {
+                Reviews = accommodationUnitReviews
+            };
         }
     }
 }
