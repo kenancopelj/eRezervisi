@@ -4,11 +4,19 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:erezervisi_mobile/enums/input_type.dart';
 import 'package:erezervisi_mobile/enums/toast_type.dart';
+import 'package:erezervisi_mobile/models/dropdown_item.dart';
 import 'package:erezervisi_mobile/models/requests/accommodation_unit/accommodation_unit_create_dto.dart';
 import 'package:erezervisi_mobile/models/requests/accommodation_unit/policy_create_dto.dart';
+import 'package:erezervisi_mobile/models/requests/category/get_all_categories_request.dart';
+import 'package:erezervisi_mobile/models/requests/category/get_categories_request.dart';
 import 'package:erezervisi_mobile/models/requests/image/image_create_dto.dart';
+import 'package:erezervisi_mobile/models/requests/townshp/get_all_townships_request.dart';
+import 'package:erezervisi_mobile/models/requests/townshp/get_townships_request.dart';
 import 'package:erezervisi_mobile/providers/accommodation_unit_provider.dart';
+import 'package:erezervisi_mobile/providers/category_provider.dart';
+import 'package:erezervisi_mobile/providers/township_provider.dart';
 import 'package:erezervisi_mobile/shared/components/form/checkbox.dart';
+import 'package:erezervisi_mobile/shared/components/form/dropdown.dart';
 import 'package:erezervisi_mobile/shared/components/form/input.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:erezervisi_mobile/shared/style.dart';
@@ -32,6 +40,14 @@ class _CreateAccommodationUnitScreenState
   final formKey = GlobalKey<FormState>();
 
   late AccommodationUnitProvider provider;
+  late CategoryProvider categoryProvider;
+  late TownshipProvider townshipProvider;
+
+  List<DropdownItem> categories = [];
+  List<DropdownItem> townships = [];
+
+  var categoriesRequest = GetCategoriesRequest.def();
+  var townshipsRequest = GetTownshipsRequest.def();
 
   var validator = AccommodationUnitCreateValidator();
 
@@ -41,8 +57,8 @@ class _CreateAccommodationUnitScreenState
   var noteController = TextEditingController();
   var capacityController = TextEditingController();
 
-  late num categoryId;
-  late num townshipId;
+  num? categoryId;
+  num? townshipId;
   List<ImageCreateDto> images = [];
 
   bool alcoholAllowed = false;
@@ -56,11 +72,45 @@ class _CreateAccommodationUnitScreenState
   bool validated = false;
   int step = 1;
 
+  final TextEditingController categoryController = TextEditingController();
+  final TextEditingController townshipController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
 
     provider = context.read<AccommodationUnitProvider>();
+    categoryProvider = context.read<CategoryProvider>();
+    townshipProvider = context.read<TownshipProvider>();
+
+    loadCategories();
+    loadTownships();
+  }
+
+  Future loadCategories() async {
+    var response =
+        await categoryProvider.getAll(GetAllCategoriesRequest(searchTerm: ''));
+
+    if (mounted) {
+      setState(() {
+        for (var item in response.categories) {
+          categories.add(DropdownItem(key: item.id, value: item.title));
+        }
+      });
+    }
+  }
+
+  Future loadTownships() async {
+    var response =
+        await townshipProvider.getAll(GetAllTownshipsRequest(searchTerm: ''));
+
+    if (mounted) {
+      setState(() {
+        for (var item in response.townships) {
+          townships.add(DropdownItem(key: item.id, value: item.title));
+        }
+      });
+    }
   }
 
   @override
@@ -78,10 +128,15 @@ class _CreateAccommodationUnitScreenState
                     step = 1;
                   });
                 },
-                child: const Padding(
-                  padding: EdgeInsets.only(left: 25.0),
-                  child: Text("Nazad"),
-                ),
+                child: Padding(
+                    padding: EdgeInsets.only(left: 25.0),
+                    child: Container(
+                        height: 40,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0)),
+                        child: Center(child: Text("Nazad")))),
               )
             else
               const SizedBox.shrink(),
@@ -98,7 +153,13 @@ class _CreateAccommodationUnitScreenState
                   });
                 }
               },
-              child: Text(step == 1 ? "Dalje" : "Završi"),
+              child: Container(
+                  height: 40,
+                  width: 60,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0)),
+                  child: Center(child: Text(step == 1 ? "Dalje" : "Završi"))),
             ),
           ],
         ),
@@ -113,55 +174,32 @@ class _CreateAccommodationUnitScreenState
   }
 
   List<Widget> pages() {
-    return [firstPage(), secondPage()];
+    return [firstPage()];
   }
 
   Widget headerText() {
-    return const Align(
-      alignment: Alignment.centerLeft,
-      child: Text(
-        "Kreirajte novi objekat",
-        style: TextStyle(fontSize: 24, color: Colors.black),
-      ),
-    );
-  }
-
-  Widget pageHeader() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const SizedBox(height: 30),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
-        child: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back)),
-      ),
-      const SizedBox(
-        height: 20,
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 45.0),
-        child: Column(
-          children: [
-            headerText(),
-            const SizedBox(
-              height: 15,
-            ),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Unesite detalje Vašeg objekta",
-                style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w300),
-              ),
-            ),
-          ],
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 30.0),
+            child: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.arrow_back)),
+          ),
         ),
-      )
-    ]);
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Kreirajte novi objekat",
+            style: TextStyle(fontSize: 24, color: Colors.black),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget firstPage() {
@@ -192,44 +230,57 @@ class _CreateAccommodationUnitScreenState
           ),
         )
       ]),
-      Column(
-        children: [
-          const SizedBox(height: 30),
-          Input(
-            controller: titleController,
-            validator: validator.required,
-            label: "Naziv",
-            hintText: "Unesite naziv Vašeg objekta",
-          ),
-          Input(
-            controller: shortTitleController,
-            validator: validator.required,
-            label: "Kratki naziv",
-            hintText: "e.g. V-MO",
-          ),
-          Input(
-            controller: priceController,
-            validator: validator.required,
-            label: "Cijena (po noćenju)",
-            hintText: "0KM",
-          ),
-          Input(
-            controller: noteController,
-            validator: validator.required,
-            label: "Adresa",
-            hintText: "e.g. Ulica 13, Mostar",
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-        ],
-      )
-    ]);
-  }
-
-  Widget secondPage() {
-    return Column(children: [
-      const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Column(children: [
+        const SizedBox(height: 30),
+        Input(
+          controller: titleController,
+          validator: validator.required,
+          label: "Naziv",
+          hintText: "Unesite naziv Vašeg objekta",
+        ),
+        Input(
+          controller: shortTitleController,
+          validator: validator.required,
+          label: "Kratki naziv",
+          hintText: "e.g. V-MO",
+        ),
+        Input(
+          controller: priceController,
+          validator: validator.required,
+          label: "Cijena (po noćenju)",
+          hintText: "0KM",
+        ),
+        Dropdown(
+          label: 'Kategorija',
+          controller: categoryController,
+          value: categoryId,
+          placeholder: '',
+          hintText: 'e.g. Privatna kuća',
+          items: categories,
+          onChanged: (value) {
+            categoryId = (value as DropdownItem).key;
+          },
+        ),
+        Dropdown(
+          label: 'Mjesto',
+          controller: townshipController,
+          value: townshipId,
+          placeholder: '',
+          hintText: 'e.g. Mostar',
+          items: townships,
+          onChanged: (value) {
+            townshipId = (value as DropdownItem).key;
+          },
+        ),
+        Input(
+          controller: noteController,
+          validator: validator.required,
+          label: "Adresa",
+          hintText: "e.g. Ulica 13, Mostar",
+        ),
+        const SizedBox(
+          height: 30,
+        ),
         SizedBox(
           height: 20,
         ),
@@ -288,6 +339,9 @@ class _CreateAccommodationUnitScreenState
               value: hasPool,
               onChange: handleHasPoolChange,
               label: "Sa bazenom"),
+          const SizedBox(
+            height: 130,
+          )
         ],
       )
     ]);
@@ -324,14 +378,13 @@ class _CreateAccommodationUnitScreenState
         children: [
           ElevatedButton(
             style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(Style
-                  .inputBackgroundColor), // Replace with your desired color
-              elevation: WidgetStateProperty.all(0), // Remove shadow
-              padding: WidgetStateProperty.all(const EdgeInsets.symmetric(
-                  vertical: 12.0,
-                  horizontal: 16.0)), // Adjust padding as needed
+              backgroundColor:
+                  WidgetStateProperty.all(Style.inputBackgroundColor),
+              elevation: WidgetStateProperty.all(0),
+              padding: WidgetStateProperty.all(
+                  const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0)),
               side: WidgetStateProperty.all(const BorderSide(
-                  color: Color.fromARGB(100, 0, 0, 0), width: 1)), // Add border
+                  color: Color.fromARGB(100, 0, 0, 0), width: 1)),
             ),
             onPressed: () {
               showModalBottomSheet<void>(
@@ -492,49 +545,55 @@ class _CreateAccommodationUnitScreenState
           ),
           const SizedBox(height: 20),
           SizedBox(
-            height: images.length > 2 ? images.length * 250 : 125,
+            height: 350,
             child: GridView.count(
                 crossAxisCount: 2,
                 children: images
                     .map(
-                      (image) => InkWell(
-                        onTap: () {
-                          showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (BuildContext context) {
-                              return PreviewImage(
-                                image: image.image!,
-                              );
-                            },
-                          );
-                        },
-                        child: Dismissible(
-                          background: Container(
-                            color: Colors.red,
-                            child: const Center(
-                              child: Icon(
-                                Icons.delete_outline,
-                                color: Colors.white,
+                      (image) => Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          onTap: () {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return PreviewImage(
+                                  image: image.image!,
+                                );
+                              },
+                            );
+                          },
+                          child: Dismissible(
+                            background: Container(
+                              color: Colors.red,
+                              child: const Center(
+                                child: Icon(
+                                  Icons.delete_outline,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                          ),
-                          key: Key(image.imageFileName),
-                          onDismissed: (direction) {
-                            setState(() {
-                              images.removeWhere((x) =>
-                                  x.imageFileName == image.imageFileName);
-                            });
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 10),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Image.file(
-                              fit: BoxFit.contain,
-                              File(image.image!.path),
-                              width: 170,
-                              height: MediaQuery.of(context).size.height * 0.2,
+                            key: Key(image.imageFileName!),
+                            onDismissed: (direction) {
+                              setState(() {
+                                images.removeWhere((x) =>
+                                    x.imageFileName == image.imageFileName);
+                              });
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Center(
+                                child: Image.file(
+                                  fit: BoxFit.contain,
+                                  File(image.image!.path),
+                                  width: 170,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.2,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -616,6 +675,9 @@ class _CreateAccommodationUnitScreenState
                         )
                         .toList() as List<Widget>),
           ),
+          const SizedBox(
+            height: 50,
+          )
         ],
       )
     ]);
@@ -696,9 +758,9 @@ class _CreateAccommodationUnitScreenState
             oneNightOnly: oneNightOnly,
             birthdayPartiesAllowed: birthdayPartiesAllowed,
             hasPool: hasPool),
-        categoryId: 1,
+        categoryId: categoryId!,
         files: images,
-        townshipId: 4,
+        townshipId: townshipId!,
         latitude: latitude,
         longitude: longitude);
 
@@ -709,10 +771,13 @@ class _CreateAccommodationUnitScreenState
         Navigator.pop(context, response);
       }
     } catch (ex) {
-      print(ex);
       if (ex is DioException) {
         var error = ex.response?.data["Error"];
         Globals.notifier.setInfo(error, ToastType.Error);
+      } else {
+        if (mounted) {
+          Navigator.pop(context);
+        }
       }
     }
   }

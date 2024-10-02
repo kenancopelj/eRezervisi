@@ -34,6 +34,7 @@ class GlobalNotifier extends ChangeNotifier {
   logoutUser() async {
     logoutUserImmediately = true;
     Globals.loggedUser = null;
+    Globals.image = null;
 
     final prefs = await SharedPreferences.getInstance();
 

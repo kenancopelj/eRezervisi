@@ -1,5 +1,6 @@
 using eRezervisi.Api.Extensions;
 using eRezervisi.Api.Middleware;
+using eRezervisi.Core.Services.Hubs;
 using eRezervisi.Core.Services.Mapper;
 using eRezervisi.Infrastructure.Common.Configuration;
 using eRezervisi.Infrastructure.Database;
@@ -64,12 +65,14 @@ app.UseMiddleware<GlobalExceptionHandler>();
 
 if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Docker"))
 {
+    Console.WriteLine("Using Swagger");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 if (app.Environment.IsEnvironment("Docker"))
 {
+    Console.WriteLine("Migrating database");
     app.MigrateDatabase();
 }
 
@@ -84,6 +87,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.StartHangFire(app.Configuration);
+
+app.MapHub<NotificationHub>("/notification-hub");
+
+app.MapHub<MessageHub>("/message-hub");
 
 app.Run();
 

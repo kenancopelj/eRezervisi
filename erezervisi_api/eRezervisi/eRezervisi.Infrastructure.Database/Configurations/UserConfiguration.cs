@@ -45,6 +45,8 @@ namespace eRezervisi.Infrastructure.Database.Configurations
 
                 x.Property(y => y.RefreshTokenExpiresAtUtc).IsRequired(false);
 
+                x.Property(y => y.ReminderSent).HasDefaultValue(false);
+
                 x.HasIndex(y => y.Username).IsUnique();
 
                 x.HasIndex(y => y.RefreshToken).IsUnique();
@@ -57,9 +59,9 @@ namespace eRezervisi.Infrastructure.Database.Configurations
 
                 x.WithOwner().HasForeignKey(x => x.UserId);
 
-                x.Property(y => y.SendReminderAt).IsRequired(false);
+                x.Property(y => y.ReceiveNotifications).HasDefaultValue(true);
 
-                x.Property(y => y.RecieveEmails).HasDefaultValue(true);
+                x.Property(y => y.ReceiveEmails).HasDefaultValue(true);
             });
         }
     }

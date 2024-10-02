@@ -1,4 +1,9 @@
+import 'package:erezervisi_mobile/models/requests/user/update_settings_dto.dart';
+import 'package:erezervisi_mobile/models/responses/user/user_settings_get_dto.dart';
+import 'package:erezervisi_mobile/providers/user_provider.dart';
+import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class NotificationSettings extends StatefulWidget {
   const NotificationSettings({super.key});
@@ -8,8 +13,40 @@ class NotificationSettings extends StatefulWidget {
 }
 
 class _NotificationSettingsState extends State<NotificationSettings> {
-  bool allowNotifications = false;
-  bool receiveEmails = false;
+  bool receiveMails = true;
+  bool receiveNotifications = true;
+
+  late UserProvider userProvider;
+
+  @override
+  void initState() {
+    super.initState();
+
+    userProvider = context.read<UserProvider>();
+
+    loadSettings();
+  }
+
+  Future loadSettings() async {
+    var response = await userProvider.getById(Globals.loggedUser!.userId);
+
+    setState(() {
+      receiveMails = response.settings.receiveMails;
+      receiveNotifications = response.settings.receiveNotifications;
+    });
+  }
+
+  Future updateSettings() async {
+    await userProvider.updateSettings(
+        Globals.loggedUser!.userId,
+        UpdateSettingsDto(
+            receiveMails: receiveMails,
+            receiveNotifications: receiveNotifications));
+
+    setState(() {
+      Globals.enableNotifications = receiveNotifications;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +99,13 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                 ],
               ),
               Switch(
-                  value: allowNotifications,
+                  value: receiveNotifications,
                   onChanged: (value) {
                     setState(() {
-                      allowNotifications = value;
+                      receiveNotifications = value;
                     });
+
+                    updateSettings();
                   })
             ],
           ),
@@ -89,11 +128,13 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                 ],
               ),
               Switch(
-                  value: receiveEmails,
+                  value: receiveMails,
                   onChanged: (value) {
                     setState(() {
-                      receiveEmails = value;
+                      receiveMails = value;
                     });
+
+                    updateSettings();
                   })
             ],
           ),

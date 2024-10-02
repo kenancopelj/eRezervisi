@@ -3,7 +3,7 @@
     public class UserSettingsGetDto
     {
         public long UserId { get; set; }
-        public DateTime? SendReminderAt { get; set; }
-        public bool RecieveMails { get; set; }
+        public bool ReceiveMails { get; set; }
+        public bool ReceiveNotifications { get; set; }
     }
 }

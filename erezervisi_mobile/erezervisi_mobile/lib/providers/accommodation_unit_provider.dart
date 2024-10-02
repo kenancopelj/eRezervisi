@@ -34,6 +34,52 @@ class AccommodationUnitProvider extends BaseProvider {
     throw response;
   }
 
+  Future<PagedResponse<AccommodationUnitGetDto>> getLatestPaged(
+      GetAccommodationUnitsRequest request) async {
+    String endpoint = "accommodation-units/latest";
+    var url = Globals.apiUrl + endpoint;
+
+    var response = await dio.post(url, data: jsonEncode(request.toJson()));
+
+    if (response.statusCode == 200) {
+      var data = response.data['items']
+          .map((x) => AccommodationUnitGetDto.fromJson(x))
+          .cast<AccommodationUnitGetDto>()
+          .toList();
+      var pagedResponse = PagedResponse.fromJson(response.data);
+
+      return PagedResponse(
+          totalItems: pagedResponse.totalItems,
+          totalPages: pagedResponse.totalPages,
+          pageSize: pagedResponse.pageSize,
+          items: data);
+    }
+    throw response;
+  }
+
+  Future<PagedResponse<AccommodationUnitGetDto>> getPopularPaged(
+      GetAccommodationUnitsRequest request) async {
+    String endpoint = "accommodation-units/popular";
+    var url = Globals.apiUrl + endpoint;
+
+    var response = await dio.post(url, data: jsonEncode(request.toJson()));
+
+    if (response.statusCode == 200) {
+      var data = response.data['items']
+          .map((x) => AccommodationUnitGetDto.fromJson(x))
+          .cast<AccommodationUnitGetDto>()
+          .toList();
+      var pagedResponse = PagedResponse.fromJson(response.data);
+
+      return PagedResponse(
+          totalItems: pagedResponse.totalItems,
+          totalPages: pagedResponse.totalPages,
+          pageSize: pagedResponse.pageSize,
+          items: data);
+    }
+    throw response;
+  }
+
   Future<AccommodationUnitGetDto> getById(num id) async {
     String endpoint = "accommodation-units/$id";
     var url = Globals.apiUrl + endpoint;
@@ -49,10 +95,10 @@ class AccommodationUnitProvider extends BaseProvider {
   }
 
   Future<AccommodationUnitGetDto> create(AccommodationUnitCreateDto request) async {
-    String endpoint = "accomodation-units";
+    String endpoint = "accommodation-units";
     var url = Globals.apiUrl + endpoint;
 
-    var response = await dio.post(url);
+    var response = await dio.post(url, data: request.toJson());
 
     if (response.statusCode == 200) {
       Globals.notifier.setInfo("Uspješno kreirano", ToastType.Success);

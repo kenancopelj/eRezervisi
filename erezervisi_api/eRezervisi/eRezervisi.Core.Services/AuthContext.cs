@@ -41,6 +41,8 @@ namespace eRezervisi.Core.Services
             try
             {
                 var user = await _dbContext.Users.Include(x => x.Role)
+                                                 .Include(x => x.UserSettings)
+                                                 .Include(x => x.UserCredentials)
                                                  .FirstOrDefaultAsync(x => x.UserCredentials!.Username == request.Username, cancellationToken);
 
                 if (user is { } && user.IsActive)
@@ -50,14 +52,7 @@ namespace eRezervisi.Core.Services
 
                         bool enabledLogin = true;
 
-                        if (_httpContext != null && _httpContext.HttpContext != null && request.Scope == ScopeType.Mobile)
-                        {
-                            if (user.Role.Id != Roles.MobileUser.Id)
-                            {
-                                enabledLogin = false;
-                            }
-                        }
-                        else
+                        if (_httpContext != null && _httpContext.HttpContext != null && request.Scope == ScopeType.Application)
                         {
                             if (user.Role.Id != Roles.Owner.Id)
                             {

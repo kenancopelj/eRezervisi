@@ -28,7 +28,7 @@ namespace eRezervisi.Core.Services
                 .AsNoTracking()
                 .Include(x => x.Canton)
                 .Where(x => (string.IsNullOrEmpty(request.SearchTerm) || x.Title.ToLower().Contains(request.SearchTermLower)) &&
-                (request.CantonId.HasValue || x.CantonId == request.CantonId))
+                (!request.CantonId.HasValue || x.CantonId == request.CantonId))
                 .Select(x => new TownshipGetDto
                 {
                     Id = x.Id,

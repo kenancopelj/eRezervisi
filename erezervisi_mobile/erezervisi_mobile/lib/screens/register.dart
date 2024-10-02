@@ -8,6 +8,7 @@ import 'package:erezervisi_mobile/shared/components/form/button.dart';
 import 'package:erezervisi_mobile/shared/components/form/input.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:erezervisi_mobile/shared/navigator/navigate.dart';
+import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:erezervisi_mobile/shared/validators/auth/register.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -177,7 +178,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     if (response != null && mounted) {
-      Navigate.next(context, const LoginScreen(), true);
+      Navigate.next(context, AppRoutes.login.routeName, const LoginScreen(), true);
     }
   }
 }

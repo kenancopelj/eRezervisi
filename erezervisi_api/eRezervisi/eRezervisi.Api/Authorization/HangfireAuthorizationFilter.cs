@@ -36,7 +36,7 @@ namespace eRezervisi.Api.Authorization
 
             try
             {
-                var roleClaim = jwtSecurityToken.ValidTo >= DateTime.UtcNow ? jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == JwtClaims.Role) : null;
+                var roleClaim = jwtSecurityToken.ValidTo >= DateTime.Now ? jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == JwtClaims.Role) : null;
 
                 return roleClaim != null && roleClaim.Value == Roles.Owner.Name;
             }

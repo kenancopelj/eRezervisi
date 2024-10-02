@@ -5,6 +5,7 @@ using eRezervisi.Common.Dtos.AccommodationUnitPolicy;
 using eRezervisi.Common.Dtos.Canton;
 using eRezervisi.Common.Dtos.FavoriteAccommodationUnit;
 using eRezervisi.Common.Dtos.Image;
+using eRezervisi.Common.Dtos.Message;
 using eRezervisi.Common.Dtos.Notification;
 using eRezervisi.Common.Dtos.Reservation;
 using eRezervisi.Common.Dtos.Review;
@@ -19,6 +20,7 @@ using eRezervisi.Common.Shared.Requests.AccommodationUnitCategory;
 using eRezervisi.Common.Shared.Requests.Canton;
 using eRezervisi.Common.Shared.Requests.FavoriteAccommodationUnit;
 using eRezervisi.Common.Shared.Requests.Guest;
+using eRezervisi.Common.Shared.Requests.Message;
 using eRezervisi.Common.Shared.Requests.Reservation;
 using eRezervisi.Common.Shared.Requests.Township;
 using eRezervisi.Core.Domain.Authorization;
@@ -70,6 +72,12 @@ namespace eRezervisi.Core.Services.Mapper
             CreateMap<Canton, CantonGetDto>();
             CreateMap<AccommodationUnitPolicy, PolicyGetDto>();
             CreateMap<AccommodationUnitCategory, CategoryGetDto>();
+            CreateMap<NotificationCreateDto, Notification>();
+            CreateMap<MessageCreateDto, Message>();
+            CreateMap<Message, MessageGetDto>();
+            CreateMap<GetMessagesRequest, PagedRequest<Message>>();
+            CreateMap<User, UserGetShortDto>();
+            CreateMap<PagedRequest<AccommodationUnitReview>, GetAccommodationUnitReviewsRequest>();
         }
     }
 }

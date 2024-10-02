@@ -1,4 +1,5 @@
 ﻿using eRezervisi.Api.Authorization;
+using eRezervisi.Common.Dtos.Mail;
 using eRezervisi.Common.Dtos.Review;
 using eRezervisi.Common.Dtos.User;
 using eRezervisi.Core.Services.Interfaces;
@@ -13,10 +14,19 @@ namespace eRezervisi.Api.Controllers
     public class UserController : BaseController<UserController>
     {
         private readonly IUserService _userService;
+        private readonly IRabbitMQProducer _rabbitmqProducer;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IRabbitMQProducer rabbitMQProducer)
         {
             _userService = userService;
+            _rabbitmqProducer = rabbitMQProducer;
+        }
+
+        [HttpPost("test-rabbit-mq")]
+        public IActionResult TestRabbitMQ([FromBody] MailCreateDto request)
+        {
+            _rabbitmqProducer.SendMessage(request);
+            return Ok();
         }
 
         [HttpPost("register")]

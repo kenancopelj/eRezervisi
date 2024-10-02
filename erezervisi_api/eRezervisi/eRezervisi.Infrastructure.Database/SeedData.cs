@@ -56,34 +56,36 @@ namespace eRezervisi.Infrastructure.Database
                 new UserSettings
                 {
                     UserId = 1,
-                    RecieveEmails = true
+                    ReceiveNotifications = true,
+                    ReceiveEmails = true
                 },
                 new UserSettings
                 {
                     UserId = 2,
-                    RecieveEmails = true
+                    ReceiveNotifications = true,
+                    ReceiveEmails = true
                 });
 
             modelBuilder.Entity<User>().OwnsOne(x => x.UserCredentials).HasData(
                 new UserCredentials
                 {
                     UserId = 1,
-                    PasswordSalt = "a45e7aa02fd2414eb66c0c24562205ba",
-                    PasswordHash = "e38fa1a920da144b4f91c910b3e8f432c1cd3a6dd27f40a8bad40317e25981cf",
+                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
                     Username = "desktop",
                     RefreshToken = null,
                     RefreshTokenExpiresAtUtc = null,
-                    LastPasswordChangeAt = DateTime.UtcNow,
+                    LastPasswordChangeAt = DateTime.Now,
                 },
                 new UserCredentials
                 {
                     UserId = 2,
-                    PasswordSalt = "a45e7aa02fd2414eb66c0c24562205ba",
-                    PasswordHash = "e38fa1a920da144b4f91c910b3e8f432c1cd3a6dd27f40a8bad40317e25981cf",
+                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
                     Username = "mobile",
                     RefreshToken = null,
                     RefreshTokenExpiresAtUtc = null,
-                    LastPasswordChangeAt = DateTime.UtcNow,
+                    LastPasswordChangeAt = DateTime.Now,
                 });
 
             #endregion

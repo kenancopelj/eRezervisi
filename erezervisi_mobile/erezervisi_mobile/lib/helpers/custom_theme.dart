@@ -7,7 +7,7 @@ class CustomTheme {
   static Color secondaryBlackColor = Colors.black;
   static TextStyle smallTextStyle = const TextStyle(color: Colors.black, fontSize: 12);
   static TextStyle menuItemTextStyle = const TextStyle(color: Colors.white, fontSize: 12);
-  static TextStyle mediumTextStyle = const TextStyle(color: Colors.black, fontSize: 14);
+  static TextStyle mediumTextStyle = const TextStyle(color: Colors.black, fontSize: 20);
   static TextStyle largeTextStyle = const TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold);
 
   MaterialColor myColor = const MaterialColor(0xFF231F20, {

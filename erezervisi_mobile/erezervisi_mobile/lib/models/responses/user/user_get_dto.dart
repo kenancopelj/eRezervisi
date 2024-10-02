@@ -1,3 +1,5 @@
+import 'package:erezervisi_mobile/models/responses/user/user_settings_get_dto.dart';
+
 class UserGetDto {
   late num id;
   late String firstName;
@@ -6,6 +8,8 @@ class UserGetDto {
   late String address;
   late String email;
   late String? image;
+  late String username;
+  late UserSettingsGetDto settings;
 
   UserGetDto(
       {required this.id,
@@ -14,7 +18,9 @@ class UserGetDto {
       required this.phone,
       required this.address,
       required this.email,
-      this.image});
+      required this.username,
+      this.image,
+      required this.settings});
 
   factory UserGetDto.fromJson(Map<String, dynamic> json) {
     return UserGetDto(
@@ -24,6 +30,8 @@ class UserGetDto {
         phone: json['phone'] as String,
         address: json['address'] as String,
         email: json['email'] as String,
-        image: json['image']);
+        username: json['username'] as String,
+        image: json['image'],
+        settings: UserSettingsGetDto.fromJson(json['userSettings']));
   }
 }

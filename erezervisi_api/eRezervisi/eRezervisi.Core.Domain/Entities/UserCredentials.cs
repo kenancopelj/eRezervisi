@@ -9,6 +9,7 @@
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiresAtUtc { get; set; }
         public DateTime LastPasswordChangeAt { get; set; }
+        public bool ReminderSent { get; set; }
 
         public UserCredentials() { }
 

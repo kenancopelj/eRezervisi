@@ -1,5 +1,12 @@
+// ignore_for_file: must_be_immutable
+
+import 'dart:io';
+
 import 'package:erezervisi_mobile/enums/toast_type.dart';
+import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/main.dart';
+import 'package:erezervisi_mobile/models/requests/image/image_create_dto.dart';
+import 'package:erezervisi_mobile/providers/file_provider.dart';
 import 'package:erezervisi_mobile/screens/favorites.dart';
 import 'package:erezervisi_mobile/screens/home.dart';
 import 'package:erezervisi_mobile/screens/notifications.dart';
@@ -8,15 +15,17 @@ import 'package:erezervisi_mobile/screens/search.dart';
 import 'package:erezervisi_mobile/shared/components/loader.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:erezervisi_mobile/shared/navigator/navigate.dart';
+import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:erezervisi_mobile/shared/navigator/routes.dart';
 import 'package:erezervisi_mobile/shared/style.dart';
 import 'package:erezervisi_mobile/widgets/drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 
 class MasterWidget extends StatefulWidget {
   final Widget child;
-  const MasterWidget({super.key, required this.child});
+  bool isLogin;
+  MasterWidget({super.key, required this.child, this.isLogin = false});
 
   @override
   State<MasterWidget> createState() => _MasterWidgetState();
@@ -123,9 +132,9 @@ class _MasterWidgetState extends State<MasterWidget> {
 
   BarRoute selectedRoute = BarRoute.Home;
 
-  void navigate(BarRoute route) {
+  void navigate(BottomNavigationRoute route) {
     setState(() {
-      selectedRoute = route;
+      selectedRoute = route.route;
     });
 
     mapRoute(selectedRoute);
@@ -134,19 +143,23 @@ class _MasterWidgetState extends State<MasterWidget> {
   mapRoute(selectedRoute) {
     switch (selectedRoute) {
       case BarRoute.Home:
-        Navigate.next(context, const Home(), true);
+        Navigate.next(context, AppRoutes.home.routeName, const Home(), true);
         break;
       case BarRoute.Favorites:
-        Navigate.next(context, const MyFavourites(), true);
+        Navigate.next(
+            context, AppRoutes.favorites.routeName, const MyFavourites(), true);
         break;
       case BarRoute.Search:
-        Navigate.next(context, const Search(), true);
+        Navigate.next(
+            context, AppRoutes.search.routeName, const Search(), true);
         break;
       case BarRoute.Notifications:
-        Navigate.next(context, const MyNotifications(), true);
+        Navigate.next(context, AppRoutes.notifications.routeName,
+            const MyNotifications(), true);
         break;
       case BarRoute.Profile:
-        Navigate.next(context, const MyProfile(), true);
+        Navigate.next(
+            context, AppRoutes.profile.routeName, const MyProfile(), true);
         break;
       default:
         break;
@@ -163,90 +176,109 @@ class _MasterWidgetState extends State<MasterWidget> {
         icon: const Icon(
           Icons.home,
         ),
-        route: BarRoute.Home),
+        route: BarRoute.Home,
+        name: AppRoutes.home.routeName),
     BottomNavigationRoute(
-        icon: const Icon(Icons.favorite), route: BarRoute.Favorites),
+        icon: const Icon(Icons.favorite),
+        route: BarRoute.Favorites,
+        name: AppRoutes.favorites.routeName),
     BottomNavigationRoute(
-        icon: const Icon(Icons.search), route: BarRoute.Search),
+        icon: const Icon(Icons.search),
+        route: BarRoute.Search,
+        name: AppRoutes.search.routeName),
     BottomNavigationRoute(
-        icon: const Icon(Icons.notifications), route: BarRoute.Notifications),
+        icon: const Icon(Icons.notifications),
+        route: BarRoute.Notifications,
+        name: AppRoutes.notifications.routeName),
     BottomNavigationRoute(
-        icon: const Icon(Icons.person), route: BarRoute.Profile),
+        icon: const Icon(Icons.person),
+        route: BarRoute.Profile,
+        name: AppRoutes.profile.routeName),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.black,
-          leading: Builder(
-            builder: (context) => Padding(
-              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-              child: IconButton(
-                splashRadius: 1,
-                icon: const Icon(
-                  Icons.menu,
-                  color: Colors.white,
-                ),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-              ),
-            ),
-          ),
-        ),
-        drawer: const eRezervisiDrawer(),
-        body: widget.child,
-        bottomNavigationBar: SizedBox(
-          height: 50,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: routes
-                .map(
-                  (x) => IconButton(
-                    color: selectionColor(x.route),
-                    icon: x.route == BarRoute.Profile
-                        ? Container(
-                            height: 20,
-                            width: 20,
-                            decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                    image:
-                                        AssetImage("assets/images/user.png"))),
-                          )
-                        : x.icon,
-                    onPressed: () => navigate(x.route),
-                  ),
-                )
-                .toList() as List<Widget>,
-          ),
-        ),
-      ),
-      Visibility(
-        visible: Globals.isAnyRequestActive,
-        child: Positioned.fill(
-          child: Center(
-              child: Dialog(
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            child: Center(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height - 100,
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    LoaderIndicator(
-                      tickCount: 8,
-                      radius: 16,
+    return widget.isLogin
+        ? Scaffold(
+            body: widget.child,
+          )
+        : Stack(children: [
+            Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                backgroundColor: Colors.black,
+                leading: Builder(
+                  builder: (context) => Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                    child: IconButton(
+                      splashRadius: 1,
+                      icon: const Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => Scaffold.of(context).openDrawer(),
                     ),
-                  ],
+                  ),
+                ),
+                title: const Text("eRezervisi"),
+              ),
+              drawer: const eRezervisiDrawer(),
+              body: widget.child,
+              bottomNavigationBar: SizedBox(
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: routes
+                      .map(
+                        (x) => IconButton(
+                          color: selectionColor(x.route),
+                          icon: x.route == BarRoute.Profile
+                              ? Container(
+                                  height: 30,
+                                  width: 30,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                      image: DecorationImage(
+                                        fit: BoxFit.fitHeight,
+                                          image: Globals.image != null
+                                              ? FileImage(File(
+                                                  Globals.image!.path))
+                                              : const AssetImage(
+                                                  "assets/images/user.png"))),
+                                )
+                              : x.icon,
+                          onPressed: () => navigate(x),
+                        ),
+                      )
+                      .toList() as List<Widget>,
                 ),
               ),
             ),
-          )),
-        ),
-      ),
-    ]);
+            Visibility(
+              visible: Globals.isAnyRequestActive,
+              child: Positioned.fill(
+                child: Center(
+                    child: Dialog(
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  child: Center(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height - 100,
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          LoaderIndicator(
+                            tickCount: 8,
+                            radius: 16,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )),
+              ),
+            ),
+          ]);
   }
 }

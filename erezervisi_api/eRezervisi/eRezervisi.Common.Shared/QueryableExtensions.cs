@@ -7,7 +7,7 @@ namespace eRezervisi.Common.Shared
 {
     public static class QueryableExtensions
     {
-        public static async Task<PagedResponse<TSelector>> GetPagedAsync<TEntity, TSelector, TOrderByKey>(this IQueryable<TEntity>? queryable, PagedRequest<TEntity> request, List<(bool ShouldFilter, Expression<Func<TEntity, bool>> FilterExpression)> filterExpressions, Expression<Func<TEntity, TOrderByKey>> orderByExpression, Expression<Func<TEntity, TSelector>> projection, CancellationToken cancellationToken) where TEntity : class, IBaseEntity<long>
+        public static async Task<PagedResponse<TSelector>> GetPagedAsync<TEntity, TSelector, TOrderByKey>(this IQueryable<TEntity>? queryable, PagedRequest<TEntity> request, List<(bool ShouldFilter, Expression<Func<TEntity, bool>> FilterExpression)> filterExpressions, Expression<Func<TEntity, TOrderByKey>> orderByExpression, Expression<Func<TEntity, TSelector>> projection, CancellationToken cancellationToken) where TEntity : class
         {
             if (queryable == null)
             {

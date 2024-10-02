@@ -1,8 +1,10 @@
+import 'package:erezervisi_mobile/models/requests/user/update_settings_dto.dart';
 import 'package:erezervisi_mobile/models/requests/user/user_create_dto.dart';
-import 'package:erezervisi_mobile/models/responses/reservation/reservation_by_status_get_dto.dart';
+import 'package:erezervisi_mobile/models/requests/user/user_update_dto.dart';
 import 'package:erezervisi_mobile/models/responses/review/get_reviews_response.dart';
 import 'package:erezervisi_mobile/models/responses/review/review_get_dto.dart';
 import 'package:erezervisi_mobile/models/responses/user/user_get_dto.dart';
+import 'package:erezervisi_mobile/models/responses/user/user_settings_get_dto.dart';
 import 'package:erezervisi_mobile/providers/base_provider.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 
@@ -21,7 +23,19 @@ class UserProvider extends BaseProvider {
     throw response;
   }
 
-  Future getById(num id) async {
+  Future update(num userId, UserUpdateDto request) async {
+    String endpoint = "users/$userId";
+    var url = Globals.apiUrl + endpoint;
+
+    var response = await dio.put(url, data: request.toJson());
+
+    if (response.statusCode == 200) {
+      return UserGetDto.fromJson(response.data);
+    }
+    throw response;
+  }
+
+  Future<UserGetDto> getById(num id) async {
     String endpoint = "users/$id";
     var url = Globals.apiUrl + endpoint;
 
@@ -47,6 +61,18 @@ class UserProvider extends BaseProvider {
           .toList();
 
       return GetReviewsResponse(reviews: data);
+    }
+    throw response;
+  }
+
+  Future<UserSettingsGetDto> updateSettings(num userId, UpdateSettingsDto request) async {
+    String endpoint = "users/$userId/change-settings";
+    var url = Globals.apiUrl + endpoint;
+
+    var response = await dio.put(url, data: request.toJson());
+
+    if (response.statusCode == 200) {
+      return UserSettingsGetDto.fromJson(response.data);
     }
     throw response;
   }

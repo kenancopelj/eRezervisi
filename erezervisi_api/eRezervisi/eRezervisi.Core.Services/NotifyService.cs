@@ -1,6 +1,11 @@
-﻿using eRezervisi.Core.Domain.Enums;
+﻿using eRezervisi.Common.Dtos.Notification;
+using eRezervisi.Core.Domain.Entities;
+using eRezervisi.Core.Domain.Enums;
+using eRezervisi.Core.Domain.Exceptions;
 using eRezervisi.Core.Services.Interfaces;
+using eRezervisi.Infrastructure.Common.Constants;
 using eRezervisi.Infrastructure.Database;
+using FirebaseAdmin.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -11,14 +16,51 @@ namespace eRezervisi.Core.Services
         private readonly eRezervisiDbContext _dbContext;
         private readonly ILogger<NotifyService> _logger;
         private readonly IReservationService _reservationService;
+        private readonly INotificationService _notificationService;
 
         public NotifyService(eRezervisiDbContext dbContext,
             ILogger<NotifyService> logger,
-            IReservationService reservationService)
+            IReservationService reservationService,
+            INotificationService notificationService)
         {
             _dbContext = dbContext;
             _logger = logger;
             _reservationService = reservationService;
+            _notificationService = notificationService;
+
+        }
+
+        public async Task NotifyAboutFirstTimeOwnership(long userId)
+        {
+            var notification = new NotificationCreateDto
+            {
+                UserId = userId,
+                Title = "Novi objekat",
+                ShortTitle = "Test",
+                Description = "Čestitamo na Vašoj prvoj objavi objekta. Sada imate pristup desktop aplikaciji za vlasnike objekata " +
+                "kojoj možete pristupiti sa svojim kredencijalima.",
+                Type = NotificationType.System,
+            };
+
+            await _notificationService.SendAsync(notification, CancellationToken.None);
+        }
+
+        public async Task NotifyAboutNewMessage(long messageId)
+        {
+            var message = await _dbContext.Messages.Include(x => x.Sender).FirstAsync(x => x.Id == messageId);
+
+            NotFoundException.ThrowIfNull(message);
+
+            var notification = new NotificationCreateDto
+            {
+                UserId = message.ReceiverId,
+                Title = "Nova poruka",
+                ShortTitle = "Test",
+                Description = $"Nova poruka od korisnika {message.Sender.GetFullName()}",
+                Type = NotificationType.Message,
+            };
+
+            await _notificationService.SendAsync(notification, CancellationToken.None);
         }
 
         public async Task NotifyOwnerAboutReservationStatus(long reservationId)
@@ -43,15 +85,35 @@ namespace eRezervisi.Core.Services
 
             var owner = accommodationUnit.Owner;
 
-            // Todo - Send email to owners email from userCredentials
+            var notification = new NotificationCreateDto
+            {
+                UserId = owner.Id,
+                Title = "Status rezervacije",
+                AccommodationUnitId = accommodationUnit.Id,
+                ShortTitle = "Test",
+                Description = $"Rezervacija nad Vašim objektom - {accommodationUnit.Title} je promijenila status.",
+                Type = NotificationType.System,
+            };
 
-            await Task.CompletedTask;
+            await _notificationService.SendAsync(notification, CancellationToken.None);
         }
 
         public async Task NotifyUserAboutPasswordChange(long userId)
         {
-            // Todo
-            await Task.CompletedTask;
+            var user = await _dbContext.Users.Include(x => x.UserCredentials).FirstAsync(x => x.Id == userId);
+
+            NotFoundException.ThrowIfNull(user);
+
+            var notification = new NotificationCreateDto
+            {
+                UserId = userId,
+                Title = "Promjena lozinke",
+                ShortTitle = "Test",
+                Description = "Molimo ažurirajte vašu lozinku. Prošlo je više od 30 dana od posljednjeg ažuriranja",
+                Type = NotificationType.System,
+            };
+
+            await _notificationService.SendAsync(notification, CancellationToken.None);
         }
 
         public async Task NotifyUsersAboutAccommodationUnitStatus(long accommodationUnitId)
@@ -67,13 +129,10 @@ namespace eRezervisi.Core.Services
 
             if (accommodationUnit.Status == AccommodationUnitStatus.Inactive)
             {
-                await NotifyUsersAboutAccommodationUnitActivity(accommodationUnitId);
                 await CancelReservationsBulkAsync(accommodationUnitId);
             }
-            else
-            {
-                await NotifyUsersAboutAccommodationUnitActivity(accommodationUnitId);
-            }
+
+            await NotifyUsersAboutAccommodationUnitActivity(accommodationUnitId);
 
             await _dbContext.SaveChangesAsync();
         }
@@ -81,12 +140,25 @@ namespace eRezervisi.Core.Services
         private async Task CancelReservationsBulkAsync(long accommodationUnitId)
         {
             var reservations = await _dbContext.Reservations
+                    .Include(x => x.AccommodationUnit)
                     .Include(x => x.User).ThenInclude(x => x.UserSettings)
                     .Where(x => x.AccommodationUnitId == accommodationUnitId && x.Status == ReservationStatus.Confirmed).ToListAsync();
 
             foreach (var reservation in reservations)
             {
                 await _reservationService.CancelReservationAsync(reservation.Id, CancellationToken.None);
+
+                var notification = new NotificationCreateDto
+                {
+                    UserId = reservation.UserId,
+                    AccommodationUnitId = accommodationUnitId,
+                    Title = reservation.AccommodationUnit.Title,
+                    ShortTitle = "Test",
+                    Description = "Vaša rezervacija je otkazana zbog neaktivnosti objekta.",
+                    Type = NotificationType.System
+                };
+
+                await _notificationService.SendAsync(notification, CancellationToken.None);
             }
 
             await _dbContext.SaveChangesAsync();
@@ -110,12 +182,25 @@ namespace eRezervisi.Core.Services
 
             var users = await _dbContext.Users
                     .Include(x => x.UserSettings)
-                    .Where(x => x.IsActive && x.Id != accommodationUnit.OwnerId && x.UserSettings!.RecieveEmails && usersSubscribed.Contains(x.Id)).ToListAsync();
+                    .Where(x => x.IsActive && x.Id != accommodationUnit.OwnerId 
+                    && x.UserSettings!.ReceiveEmails
+                    && usersSubscribed.Contains(x.Id)).ToListAsync();
 
 
-            foreach (var reservation in users)
+            foreach (var item in users)
             {
-                // Todo - send notification/mail
+                var notification = new NotificationCreateDto
+                {
+                    UserId = item.Id,
+                    Title = accommodationUnit.Title,
+                    AccommodationUnitId = accommodationUnitId,
+                    ShortTitle = "Test",
+                    Description = accommodationUnit.Status == AccommodationUnitStatus.Active ?
+                    "Objekat je ponovo dostupan za rezervacije" : "Objekat je, od danas, neaktivan za rezervacije!",
+                    Type = NotificationType.AccommodationUnit,
+                };
+
+                await _notificationService.SendAsync(notification, CancellationToken.None);
             }
         }
     }

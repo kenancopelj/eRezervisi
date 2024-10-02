@@ -1,10 +1,13 @@
+import 'package:erezervisi_mobile/enums/accommodation_unit_status.dart';
+import 'package:erezervisi_mobile/enums/scope_type.dart';
 import 'package:erezervisi_mobile/models/requests/base/base_paged_request.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 
 class GetAccommodationUnitsRequest extends BasePagedRequest {
-  num scope = 1;
+  num scope = ScopeType.Mobile.index;
   num? ownerId;
   num? categoryId;
+  num? status;
 
   GetAccommodationUnitsRequest({
     required super.page,
@@ -29,6 +32,7 @@ class GetAccommodationUnitsRequest extends BasePagedRequest {
     data['scope'] = scope;
     data['ownerId'] = ownerId;
     data['categoryId'] = categoryId;
+    data['status'] = AccommodationUnitStatus.Active.index;
 
     return data;
   }

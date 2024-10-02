@@ -13,26 +13,32 @@ class ItemCardList extends StatefulWidget {
 class _ItemCardListState extends State<ItemCardList> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: SizedBox(
-            height: 350,
-            width: double.infinity,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: widget.items.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: ItemCard(
-                      item: widget.items[index],
-                    ));
-              },
-            ),
-          ),
-        ),
-      ],
-    );
+    return widget.items.isEmpty
+        ? Column(
+            children: [SizedBox(height: 100, child: Center(child: Text("Trenutno nema dostupnih objekata")))],
+          )
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: SizedBox(
+                  height: 350,
+                  width: double.infinity,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: widget.items.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: ItemCard(
+                            item: widget.items[index],
+                          ));
+                    },
+                  ),
+                ),
+              ),
+            ],
+          );
   }
 }

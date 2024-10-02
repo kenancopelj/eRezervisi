@@ -16,6 +16,7 @@ class AccommodationUnitGetDto {
   late String thumbnailImage;
   late List<ImageGetDto> images;
   late bool favorite;
+  late num ownerId;
 
   AccommodationUnitGetDto(
       {required this.id,
@@ -29,24 +30,26 @@ class AccommodationUnitGetDto {
       required this.longitude,
       required this.thumbnailImage,
       required this.images,
-      required this.favorite});
+      required this.favorite,
+      required this.ownerId});
 
   factory AccommodationUnitGetDto.fromJson(Map<String, dynamic> json) {
     return AccommodationUnitGetDto(
         id: json['id'] as num,
         title: json['title'],
         price: json['price'] as num,
-        policy: json['policy'] != null
-            ? PolicyGetDto.fromJson(json['policy'])
+        policy: json['accommodationUnitPolicy'] != null
+            ? PolicyGetDto.fromJson(json['accommodationUnitPolicy'])
             : null,
         category: json['category'] != null
-            ? CategoryGetDto.fromJson(json['category'])
+            ? CategoryGetDto.fromJson(json['accommodationUnitCategory'])
             : null,
         township: TownshipGetDto.fromJson(json['township']),
         latitude: json['latitude'] as num,
         longitude: json['longitude'] as num,
         thumbnailImage: json['thumbnailImage'],
         favorite: json['favorite'],
+        ownerId: json['ownerId'] as num,
         images: (json['images'] as List<dynamic>)
             .map((imageJson) => ImageGetDto.fromJson(imageJson))
             .toList());

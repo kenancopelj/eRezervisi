@@ -1,8 +1,10 @@
 import 'package:erezervisi_mobile/helpers/custom_theme.dart';
+import 'package:erezervisi_mobile/models/responses/message/message_get_dto.dart';
 import 'package:flutter/material.dart';
 
 class MyMessage extends StatefulWidget {
-  const MyMessage({super.key});
+  final MessageGetDto message;
+  const MyMessage({super.key, required this.message});
 
   @override
   State<MyMessage> createState() => _MyMessageState();
@@ -31,7 +33,7 @@ class _MyMessageState extends State<MyMessage> {
             margin: EdgeInsets.only(left: 10),
             width: MediaQuery.of(context).size.width - 120,
             child: Text(
-              "Pozdrav, da li je objekat slobodan u perioud od 10.10 do 12.10? Hvala",
+              widget.message.content,
               style: TextStyle(color: Colors.black, fontSize: 14),
             ),
           ),

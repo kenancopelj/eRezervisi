@@ -1,0 +1,1 @@
+enum ScopeType { Unknown, Application, Mobile }

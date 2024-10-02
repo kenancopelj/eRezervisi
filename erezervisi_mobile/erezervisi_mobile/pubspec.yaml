@@ -48,6 +48,10 @@ dependencies:
   path_provider: ^2.1.3
   encrypt: ^5.0.3
   introduction_screen: ^3.1.14
+  signalr_netcore: ^1.3.9
+  flutter_local_notifications: ^17.2.2
+  dropdown_button2: ^2.3.9
+  intl: ^0.19.0
   
 dev_dependencies:
   flutter_test:
@@ -78,6 +82,7 @@ flutter:
     - assets/images/apartment3.jpg
     - assets/images/user.png
     - assets/images/welcome.png
+    - assets/images/stripe-logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

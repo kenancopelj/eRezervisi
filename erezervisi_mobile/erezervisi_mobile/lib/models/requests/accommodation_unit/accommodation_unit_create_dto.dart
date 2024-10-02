@@ -26,22 +26,17 @@ class AccommodationUnitCreateDto {
       required this.longitude});
 
   Map<String, dynamic> toJson() {
-    try {
-      return {
-        'title': title,
-        'shortTitle': shortTitle,
-        // 'price': price.toString(),
-        // 'note': note,
-        // 'policy': policy.toJson(),
-        // 'accommodationUnitCategoryId': categoryId,
-        // 'files': files.map((file) => file.toJson()).toList(),
-        // 'townshipId': townshipId.toString(),
-        // 'latitude': latitude.toString(),
-        // 'longitude': longitude.toString(),
-      };
-    } catch (e) {
-      print(e);
-      return {'test': 'test'};
-    }
+    return {
+      'title': title,
+      'shortTitle': shortTitle,
+      'price': price.toString(),
+      'note': note,
+      'policy': policy.toJson(),
+      'accommodationUnitCategoryId': categoryId,
+      'files': files.map((file) => file.toJson()).toList(),
+      'townshipId': townshipId.toString(),
+      'latitude': latitude.toString(),
+      'longitude': longitude.toString(),
+    };
   }
 }

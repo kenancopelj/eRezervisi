@@ -33,7 +33,7 @@ namespace eRezervisi.Api.Controllers
 
             Response.Headers.Append("Content-Disposition", "inline");
 
-            return File(result.Bytes, result.ContentType);
+            return Ok(result);
         }
 
         [RequestSizeLimit(100_000_000)]
@@ -51,7 +51,7 @@ namespace eRezervisi.Api.Controllers
 
             Response.Headers.Append("Content-Disposition", "inline");
 
-            return File(result.Bytes, result.ContentType);
+            return Ok(result);
         }
     }
 }

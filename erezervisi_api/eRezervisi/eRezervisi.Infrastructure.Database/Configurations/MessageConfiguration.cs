@@ -14,7 +14,7 @@ namespace eRezervisi.Infrastructure.Database.Configurations
 
             builder.HasOne<User>(x => x.Sender).WithMany().HasForeignKey(x => x.SenderId).OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne<User>(x => x.Reciever).WithMany().HasForeignKey(x => x.RecieverId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne<User>(x => x.Receiver).WithMany().HasForeignKey(x => x.ReceiverId).OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(x => x.Content);
         }

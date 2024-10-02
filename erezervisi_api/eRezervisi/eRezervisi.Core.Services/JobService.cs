@@ -18,7 +18,7 @@ namespace eRezervisi.Core.Services
 
         public async Task CheckAccommodationUnitsAsync(CancellationToken cancellationToken)
         {
-            var now = DateOnly.FromDateTime(DateTime.UtcNow);
+            var now = DateOnly.FromDateTime(DateTime.Now);
 
             var accommodationUnits = await _dbContext.AccommodationUnits
                 .Where(x => x.Status == AccommodationUnitStatus.Active && x.DeactivateAt <= now)
@@ -34,7 +34,7 @@ namespace eRezervisi.Core.Services
 
         public async Task CheckReservationsAsync(CancellationToken cancellationToken)
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
 
             var reservations = await _dbContext.Reservations.Where(x => x.From >= now && x.Status == ReservationStatus.Confirmed).ToListAsync(cancellationToken);
 
@@ -48,10 +48,9 @@ namespace eRezervisi.Core.Services
 
         public async Task CheckUsersAsync(CancellationToken cancellationToken)
         {
-            var now = DateTime.UtcNow;
-
+            var now = DateTime.Now;
             var users = await _dbContext.Users.Include(x => x.UserCredentials)
-                .Where(x => x.IsActive && x.UserCredentials!.RefreshTokenExpiresAtUtc.HasValue
+                .Where(x => x.IsActive && !x.UserCredentials!.ReminderSent && x.UserCredentials!.RefreshTokenExpiresAtUtc.HasValue
                 && x.UserCredentials!.RefreshTokenExpiresAtUtc.Value.AddDays(90) < now)
                 .ToListAsync(cancellationToken);
 
@@ -65,7 +64,7 @@ namespace eRezervisi.Core.Services
 
         public async Task CompleteReservationsAsync(CancellationToken cancellationToken)
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
 
             var reservations = await _dbContext.Reservations.Where(x => x.To <= now && x.Status == ReservationStatus.InProgress).ToListAsync(cancellationToken);
 
@@ -79,14 +78,16 @@ namespace eRezervisi.Core.Services
 
         public async Task RemindAboutPasswordChange(CancellationToken cancellationToken)
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
 
             var users = await _dbContext.Users.Include(x => x.UserCredentials)
-                .Where(x => x.IsActive && x.UserCredentials!.LastPasswordChangeAt.AddDays(30) < now)
+                .Where(x => x.IsActive && !x.UserCredentials!.ReminderSent && x.UserCredentials!.LastPasswordChangeAt.AddDays(30) < now)
                 .ToListAsync(cancellationToken);
 
             foreach (var user in users)
             {
+                user.UserCredentials!.ReminderSent = true;
+
                 await _notifyService.NotifyUserAboutPasswordChange(user.Id);
             }
         }

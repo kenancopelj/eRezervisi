@@ -27,7 +27,7 @@ namespace eRezervisi.Infrastructure.Database
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Review> Reviews { get; set; }
-        public DbSet<Message> Texts { get; set; }
+        public DbSet<Message> Messages { get; set; }
         public DbSet<Township> Townships { get; set; }
         public DbSet<FavoriteAccommodationUnit> FavoriteAccommodationUnits { get; set; }
 
@@ -90,7 +90,7 @@ namespace eRezervisi.Infrastructure.Database
                     {
                         entry.State = EntityState.Modified;
                         auditableEntry.DeletedBy = userId;
-                        auditableEntry.DeletedAt = DateTime.UtcNow;
+                        auditableEntry.DeletedAt = DateTime.Now;
                         auditableEntry.Deleted = true;
                     }
                 }

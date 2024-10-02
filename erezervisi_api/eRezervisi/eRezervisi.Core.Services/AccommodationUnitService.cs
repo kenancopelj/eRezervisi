@@ -2,10 +2,8 @@
 using eRezervisi.Common.Dtos.AccommodationUnit;
 using eRezervisi.Common.Dtos.AccommodationUnitCategories;
 using eRezervisi.Common.Dtos.Canton;
-using eRezervisi.Common.Dtos.FavoriteAccommodationUnit;
 using eRezervisi.Common.Dtos.Image;
 using eRezervisi.Common.Dtos.Review;
-using eRezervisi.Common.Dtos.Storage;
 using eRezervisi.Common.Dtos.Township;
 using eRezervisi.Common.Shared;
 using eRezervisi.Common.Shared.Pagination;
@@ -19,6 +17,7 @@ using eRezervisi.Infrastructure.Database;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using Microsoft.ML;
 
 namespace eRezervisi.Core.Services
 {
@@ -29,6 +28,9 @@ namespace eRezervisi.Core.Services
         private readonly IJwtTokenReader _jwtTokenReader;
         private readonly IStorageService _storageService;
         private readonly IBackgroundJobClient _backgroundJobClient;
+        private static MLContext? _mlContext;
+        private static object isLocked = new();
+        private static ITransformer? _model;
 
         public AccommodationUnitService(eRezervisiDbContext dbContext,
             IMapper mapper,
@@ -71,8 +73,10 @@ namespace eRezervisi.Core.Services
                 new List<(bool shouldFilter, Expression<Func<AccommodationUnit, bool>> FilterExpression)>()
                 {
                     (!string.IsNullOrEmpty(searchTerm), x => x.Title.ToLower().Contains(searchTerm)),
+                    (request.Scope == Domain.Authorization.ScopeType.Mobile, x => x.OwnerId != userId),
                     (request.OwnerId.HasValue, x => x.OwnerId == request.OwnerId!.Value),
                     (request.CategoryId.HasValue, x => x.AccommodationUnitCategoryId == request.CategoryId!.Value),
+                    (request.Status.HasValue, x => x.Status == request.Status)
                 },
                 GetOrderByExpression(pagingRequest.OrderByColumn),
                 x => new AccommodationUnitGetDto
@@ -81,12 +85,13 @@ namespace eRezervisi.Core.Services
                     Title = x.Title,
                     Price = (double)x.Price,
                     Note = x.Note,
-                    Category = new CategoryGetDto
+                    OwnerId = x.OwnerId,
+                    AccommodationUnitCategory = new CategoryGetDto
                     {
                         Id = x.AccommodationUnitCategoryId,
                         Title = x.AccommodationUnitCategory.Title
                     },
-                    Policy = new Common.Dtos.AccommodationUnitPolicy.PolicyGetDto
+                    AccommodationUnitPolicy = new Common.Dtos.AccommodationUnitPolicy.PolicyGetDto
                     {
                         AlcoholAllowed = x.AccommodationUnitPolicy.AlcoholAllowed,
                         Capacity = x.AccommodationUnitPolicy.Capacity,
@@ -120,6 +125,146 @@ namespace eRezervisi.Core.Services
             return accommodationUnits;
         }
 
+        public async Task<PagedResponse<AccommodationUnitGetDto>> GetPopularAccommodationUnitsPagedAsync(GetAccommodationUnitsRequest request, CancellationToken cancellationToken)
+        {
+            var userId = _jwtTokenReader.GetUserIdFromToken();
+
+            var queryable = _dbContext.AccommodationUnits
+                .GroupJoin(
+                _dbContext.Reservations,
+                unit => unit.Id,
+                reservation => reservation.AccommodationUnitId,
+                (unit, reservations) => new { Unit = unit, ReservationCount = reservations.Count() })
+            .OrderByDescending(x => x.ReservationCount)
+            .Select(x => x.Unit as AccommodationUnit)
+            .AsQueryable();
+
+            var pagingRequest = _mapper.Map<PagedRequest<AccommodationUnit>>(request);
+            var searchTerm = pagingRequest.SearchTermLower;
+
+            var accommodationUnits = await queryable.GetPagedAsync(pagingRequest,
+                new List<(bool shouldFilter, Expression<Func<AccommodationUnit, bool>> FilterExpression)>()
+                {
+                    (request.Scope == Domain.Authorization.ScopeType.Mobile, x => x.OwnerId != userId),
+                    (true, x => x.Status == AccommodationUnitStatus.Active),
+                },
+                GetOrderByExpression(pagingRequest.OrderByColumn),
+                x => new AccommodationUnitGetDto
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Price = (double)x.Price,
+                    Note = x.Note,
+                    OwnerId = x.OwnerId,
+                    AccommodationUnitCategory = new CategoryGetDto
+                    {
+                        Id = x.AccommodationUnitCategoryId,
+                        Title = x.AccommodationUnitCategory.Title
+                    },
+                    AccommodationUnitPolicy = new Common.Dtos.AccommodationUnitPolicy.PolicyGetDto
+                    {
+                        AlcoholAllowed = x.AccommodationUnitPolicy.AlcoholAllowed,
+                        Capacity = x.AccommodationUnitPolicy.Capacity,
+                        BirthdayPartiesAllowed = x.AccommodationUnitPolicy.BirthdayPartiesAllowed,
+                        HasPool = x.AccommodationUnitPolicy.HasPool,
+                        OneNightOnly = x.AccommodationUnitPolicy.OneNightOnly,
+                    },
+                    Township = new TownshipGetDto
+                    {
+                        Id = x.TownshipId,
+                        Title = x.Township.Title,
+                        CantonId = x.Township.CantonId,
+                        Canton = new CantonGetDto
+                        {
+                            Id = x.Township.CantonId,
+                            Title = x.Township.Canton.Title,
+                            ShortTitle = x.Township.Canton.ShortTitle,
+                        }
+                    },
+                    Latitude = x.Latitude,
+                    Longitude = x.Longitude,
+                    ThumbnailImage = x.ThumbnailImage,
+                    Favorite = _dbContext.FavoriteAccommodationUnits.Any(f => f.Id == x.Id && x.CreatedBy == userId),
+                    Images = x.Images.Select(i => new ImageGetDto
+                    {
+                        Id = i.Id,
+                        FileName = i.FileName,
+                    }).ToList(),
+                }, cancellationToken);
+
+            return accommodationUnits;
+        }
+
+        public async Task<PagedResponse<AccommodationUnitGetDto>> GetLatestAccommodationUnitsPagedAsync(GetAccommodationUnitsRequest request, CancellationToken cancellationToken)
+        {
+            var userId = _jwtTokenReader.GetUserIdFromToken();
+
+            var queryable = _dbContext.AccommodationUnits
+                .OrderByDescending(x => x.CreatedAt)
+                .AsQueryable();
+
+            var pagingRequest = _mapper.Map<PagedRequest<AccommodationUnit>>(request);
+            var searchTerm = pagingRequest.SearchTermLower;
+
+            var accommodationUnits = await queryable.GetPagedAsync(pagingRequest,
+                new List<(bool shouldFilter, Expression<Func<AccommodationUnit, bool>> FilterExpression)>()
+                {
+                    (request.Scope == Domain.Authorization.ScopeType.Mobile, x => x.OwnerId != userId),
+                    (true, x => x.Status == AccommodationUnitStatus.Active),
+                },
+                GetOrderByExpression(pagingRequest.OrderByColumn),
+                x => new AccommodationUnitGetDto
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Price = (double)x.Price,
+                    Note = x.Note,
+                    OwnerId = x.OwnerId,
+                    AccommodationUnitCategory = new CategoryGetDto
+                    {
+                        Id = x.AccommodationUnitCategoryId,
+                        Title = x.AccommodationUnitCategory.Title
+                    },
+                    AccommodationUnitPolicy = new Common.Dtos.AccommodationUnitPolicy.PolicyGetDto
+                    {
+                        AlcoholAllowed = x.AccommodationUnitPolicy.AlcoholAllowed,
+                        Capacity = x.AccommodationUnitPolicy.Capacity,
+                        BirthdayPartiesAllowed = x.AccommodationUnitPolicy.BirthdayPartiesAllowed,
+                        HasPool = x.AccommodationUnitPolicy.HasPool,
+                        OneNightOnly = x.AccommodationUnitPolicy.OneNightOnly,
+                    },
+                    Township = new TownshipGetDto
+                    {
+                        Id = x.TownshipId,
+                        Title = x.Township.Title,
+                        CantonId = x.Township.CantonId,
+                        Canton = new CantonGetDto
+                        {
+                            Id = x.Township.CantonId,
+                            Title = x.Township.Canton.Title,
+                            ShortTitle = x.Township.Canton.ShortTitle,
+                        }
+                    },
+                    Latitude = x.Latitude,
+                    Longitude = x.Longitude,
+                    ThumbnailImage = x.ThumbnailImage,
+                    Favorite = _dbContext.FavoriteAccommodationUnits.Any(f => f.Id == x.Id && x.CreatedBy == userId),
+                    Images = x.Images.Select(i => new ImageGetDto
+                    {
+                        Id = i.Id,
+                        FileName = i.FileName,
+                    }).ToList(),
+                }, cancellationToken);
+
+            return accommodationUnits;
+
+        }
+
+        public async Task<PagedResponse<AccommodationUnitGetDto>> GetRecommendedAccommodationUnitsPagedAsync(GetAccommodationUnitsRequest request, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<AccommodationUnitGetDto> CreateAccommodationUnitAsync(AccommodationUnitCreateDto request, CancellationToken cancellationToken)
         {
             DuplicateException.ThrowIf(await _dbContext.AccommodationUnits.AnyAsync(x => x.Title == request.Title, cancellationToken));
@@ -130,9 +275,13 @@ namespace eRezervisi.Core.Services
 
             NotFoundException.ThrowIfNull(user);
 
+            bool firstTimeOwner = false;
+
             if (user.RoleId != Roles.Owner.Id)
             {
                 user.ChangeRole(Roles.Owner.Id);
+
+                firstTimeOwner = true;
             }
 
             var thumbnailImage = request.Files.FirstOrDefault(x => x.IsThumbnail);
@@ -170,6 +319,11 @@ namespace eRezervisi.Core.Services
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
+            if (firstTimeOwner)
+            {
+                _backgroundJobClient.Enqueue<INotifyService>(x => x.NotifyAboutFirstTimeOwnership(ownerId));
+            }
+
             return _mapper.Map<AccommodationUnitGetDto>(accommodationUnit);
         }
 
@@ -183,7 +337,7 @@ namespace eRezervisi.Core.Services
                 .OrderByDescending(x => x.To)
                 .FirstOrDefaultAsync(cancellationToken);
 
-            var deactivationDate = DateOnly.FromDateTime(DateTime.UtcNow);
+            var deactivationDate = DateOnly.FromDateTime(DateTime.Now);
 
             if (lastReservation != null)
             {
@@ -206,7 +360,7 @@ namespace eRezervisi.Core.Services
             NotFoundException.ThrowIfNull(accommodationUnit);
 
             accommodationUnit.Deleted = true;
-            accommodationUnit.DeletedAt = DateTime.UtcNow;
+            accommodationUnit.DeletedAt = DateTime.Now;
             accommodationUnit.DeletedBy = _jwtTokenReader.GetUserIdFromToken();
 
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -232,28 +386,27 @@ namespace eRezervisi.Core.Services
             return response;
         }
 
-        public async Task<PagedResponse<GetReviewsResponse>> GetAccommodationUnitReviewsPagedAsync(GetAccommodationUnitReviewsRequest request, CancellationToken cancellationToken)
+        public async Task<PagedResponse<ReviewGetDto>> GetAccommodationUnitReviewsPagedAsync(GetAccommodationUnitReviewsRequest request, CancellationToken cancellationToken)
         {
-            var queryable = _dbContext.AccommodationUnits.AsQueryable();
+            var loggedUserId = _jwtTokenReader.GetUserIdFromToken();
 
-            var pagingRequest = _mapper.Map<PagedRequest<AccommodationUnit>>(request);
+            var queryable = _dbContext.AccommodationUnitReviews.AsQueryable();
+
+            var pagingRequest = _mapper.Map<PagedRequest<AccommodationUnitReview>>(request);
             var searchTerm = pagingRequest.SearchTermLower;
 
             var reviews = await queryable.GetPagedAsync(pagingRequest,
-                new List<(bool shouldFilter, Expression<Func<AccommodationUnit, bool>> FilterExpression)>()
+                new List<(bool shouldFilter, Expression<Func<AccommodationUnitReview, bool>> FilterExpression)>()
                 {
-                    (true, x => x.Id == request.AccommodationUnitId)
+                    (request.Scope.HasValue, x => request.Scope == Domain.Authorization.ScopeType.Application && x.AccommodationUnit.OwnerId == loggedUserId)
                 },
-                GetOrderByExpression(pagingRequest.OrderByColumn),
-                x => new GetReviewsResponse
+                GetReviewsOrderByExpression(pagingRequest.OrderByColumn),
+                x => new ReviewGetDto
                 {
-                    Reviews = x.Reviews == null ? new() : x.Reviews.Select(x => new ReviewGetDto
-                    {
-                        Id = x.ReviewId,
-                        Note = x.Review.Note,
-                        Title = x.Review.Title,
-                        Rating = x.Review.Rating,
-                    }).ToList()
+                    Id = x.Review.Id,
+                    Note = x.Review.Note,
+                    Title = x.Review.Title,
+                    Rating = x.Review.Rating,
                 }, cancellationToken);
 
             return reviews;
@@ -366,6 +519,22 @@ namespace eRezervisi.Core.Services
             _dbContext.RemoveRange(images);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        private float ComputeCosineSimilarity(RecommendedItemsGetDto unitA, RecommendedItemsGetDto unitB)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Expression<Func<AccommodationUnitReview, object>> GetReviewsOrderByExpression(string orderBy)
+        {
+            switch (orderBy)
+            {
+                case "title":
+                    return x => x.Review.Title;
+                default:
+                    return x => x.Review.Id;
+            }
         }
 
         private Expression<Func<AccommodationUnit, object>> GetOrderByExpression(string orderBy)

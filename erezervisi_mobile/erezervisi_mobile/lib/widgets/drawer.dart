@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, camel_case_types
 
+import 'dart:io';
+
 import 'package:erezervisi_mobile/helpers/custom_theme.dart';
 import 'package:erezervisi_mobile/screens/chat.dart';
 import 'package:erezervisi_mobile/screens/my_reviews.dart';
@@ -7,6 +9,7 @@ import 'package:erezervisi_mobile/screens/reservations.dart';
 import 'package:erezervisi_mobile/screens/settings.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:erezervisi_mobile/shared/navigator/navigate.dart';
+import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:flutter/material.dart';
 
 class eRezervisiDrawer extends StatefulWidget {
@@ -30,14 +33,36 @@ class _eRezervisiDrawerState extends State<eRezervisiDrawer> {
             margin: EdgeInsets.only(left: 8),
             child: Row(
               children: [
-                Container(
-                  margin: EdgeInsets.only(left: 20),
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage('assets/images/user.png'))),
-                ),
+                Globals.image != null
+                    ? Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.only(left: 20),
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          image: DecorationImage(
+                              image: FileImage(File(Globals.image!.path)),
+                              fit: BoxFit.contain),
+                        ),
+                      )
+                    : Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.only(left: 20),
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Text(
+                          Globals.loggedUser!.initials,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
                 SizedBox(
                   width: 10,
                 ),
@@ -46,7 +71,6 @@ class _eRezervisiDrawerState extends State<eRezervisiDrawer> {
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
                 Spacer(),
-                
               ],
             ),
           ),
@@ -95,7 +119,8 @@ class _eRezervisiDrawerState extends State<eRezervisiDrawer> {
             padding: EdgeInsets.only(left: 15, top: 5),
             child: ListTile(
               onTap: () {
-                Navigate.next(context, MyReservations(), true);
+                Navigate.next(context, AppRoutes.reservations.routeName,
+                    MyReservations(), true);
               },
               leading: Icon(
                 Icons.calendar_today_outlined,
@@ -138,29 +163,13 @@ class _eRezervisiDrawerState extends State<eRezervisiDrawer> {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 15, top: 5),
-            child: ListTile(
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => MyChat()));
-              },
-              leading: Icon(
-                Icons.history,
-                color: Colors.white,
-              ),
-              title: Text(
-                'Historija rezervacija',
-                style: CustomTheme.menuItemTextStyle,
-              ),
-            ),
-          ),
           Spacer(), // Spacer to push the last two options to the bottom
           Padding(
             padding: EdgeInsets.only(left: 15, top: 5),
             child: ListTile(
               onTap: () {
-                Navigate.next(context, SettingsScreen(), true);
+                Navigate.next(context, AppRoutes.settings.routeName,
+                    SettingsScreen(), true);
               },
               leading: Icon(
                 Icons.settings_outlined,

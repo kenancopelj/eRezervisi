@@ -1,20 +1,19 @@
 ﻿using AutoMapper;
-using eRezervisi.Common.Dtos.Guest;
-using eRezervisi.Common.Dtos.Reservation;
+using eRezervisi.Common.Dtos.Mail;
 using eRezervisi.Common.Dtos.Review;
 using eRezervisi.Common.Dtos.Role;
 using eRezervisi.Common.Dtos.User;
 using eRezervisi.Common.Dtos.UserSettings;
-using eRezervisi.Common.Shared;
-using eRezervisi.Common.Shared.Pagination;
 using eRezervisi.Core.Domain.Entities;
 using eRezervisi.Core.Domain.Enums;
 using eRezervisi.Core.Domain.Exceptions;
 using eRezervisi.Core.Services.Interfaces;
+using eRezervisi.Infrastructure.Common.Configuration;
 using eRezervisi.Infrastructure.Common.Constants;
 using eRezervisi.Infrastructure.Database;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace eRezervisi.Core.Services
 {
@@ -26,13 +25,17 @@ namespace eRezervisi.Core.Services
         private readonly IMapper _mapper;
         private readonly IStorageService _storageService;
         private readonly IJwtTokenReader _jwtTokenReader;
+        private readonly IRabbitMQProducer _rabbitMQProducer;
+        private readonly MailConfig _mailConfig;
 
         public UserService(eRezervisiDbContext dbContext,
             IHashService hashService,
             IMapper mapper,
             IBackgroundJobClient backgroundJobClient,
             IStorageService storageService,
-            IJwtTokenReader jwtTokenReader)
+            IJwtTokenReader jwtTokenReader,
+            IRabbitMQProducer rabbitMQProducer,
+            IOptionsSnapshot<MailConfig> mailConfig)
         {
             _dbContext = dbContext;
             _hashService = hashService;
@@ -40,6 +43,8 @@ namespace eRezervisi.Core.Services
             _backgroundJobClient = backgroundJobClient;
             _storageService = storageService;
             _jwtTokenReader = jwtTokenReader;
+            _rabbitMQProducer = rabbitMQProducer;
+            _mailConfig = mailConfig.Value;
         }
 
         public async Task<UserGetDto> CreateUserAsync(UserCreateDto request, CancellationToken cancellationToken)
@@ -66,12 +71,12 @@ namespace eRezervisi.Core.Services
                 Username = request.Username,
                 RefreshToken = null,
                 RefreshTokenExpiresAtUtc = null,
-                LastPasswordChangeAt = DateTime.UtcNow,
+                LastPasswordChangeAt = DateTime.Now,
             };
 
             user.UserSettings = new UserSettings
             {
-                RecieveEmails = true,
+                ReceiveEmails = true,
             };
 
             if (request.ImageBase64 != null)
@@ -85,16 +90,25 @@ namespace eRezervisi.Core.Services
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
+            SendWelcomeMail(user);
+
             return _mapper.Map<UserGetDto>(user);
         }
 
         public async Task<UserGetDto> GetUserByIdAsync(long id, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            var user = await _dbContext.Users
+                .Include(x => x.UserCredentials)
+                .Include(x => x.UserSettings)
+                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
             NotFoundException.ThrowIfNull(user);
 
-            return _mapper.Map<UserGetDto>(user);
+            var response = _mapper.Map<UserGetDto>(user);
+
+            response.Username = user.UserCredentials!.Username;
+
+            return response;
         }
 
         public async Task<UserGetDto> ChangePasswordAsync(long id, ChangePasswordDto request, CancellationToken cancellationToken)
@@ -121,7 +135,7 @@ namespace eRezervisi.Core.Services
                     PasswordSalt = passwordSalt,
                     RefreshToken = null,
                     RefreshTokenExpiresAtUtc = null,
-                    LastPasswordChangeAt = DateTime.UtcNow,
+                    LastPasswordChangeAt = DateTime.Now,
                 };
             }
             else
@@ -236,11 +250,11 @@ namespace eRezervisi.Core.Services
 
         public async Task<UserSettingsGetDto> UpdateSettingsAsync(long id, UpdateSettingsDto request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Set<User>().FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            var user = await _dbContext.Set<User>().Include(x => x.UserSettings).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
             NotFoundException.ThrowIfNull(user);
 
-            user.UserSettings ??= _mapper.Map<UserSettings>(request);
+            user.UserSettings = _mapper.Map<UserSettings>(request);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
@@ -289,6 +303,19 @@ namespace eRezervisi.Core.Services
             {
                 Reviews = accommodationUnitReviews
             };
+        }
+
+        private void SendWelcomeMail(User user)
+        {
+            var mail = new MailCreateDto
+            {
+                Subject = "Mail dobrodošlice.",
+                Content = "Dobro došli u eRezerviši",
+                Recipient = user.Email,
+                Sender = _mailConfig.Username
+            };
+
+            _rabbitMQProducer.SendMessage(mail);
         }
     }
 }

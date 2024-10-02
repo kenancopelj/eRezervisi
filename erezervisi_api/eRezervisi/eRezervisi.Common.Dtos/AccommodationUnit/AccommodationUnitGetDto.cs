@@ -11,8 +11,9 @@ namespace eRezervisi.Common.Dtos.AccommodationUnit
         public string Title { get; set; } = null!;
         public double Price { get; set; }
         public string? Note { get; set; }
-        public PolicyGetDto Policy { get; set; } = null!;
-        public CategoryGetDto Category { get; set; } = null!;
+        public long OwnerId { get; set; }
+        public PolicyGetDto AccommodationUnitPolicy { get; set; } = null!;
+        public CategoryGetDto AccommodationUnitCategory { get; set; } = null!;
         public TownshipGetDto Township { get; set; } = null!;
         public double Latitude { get; set; }
         public double Longitude { get; set; }

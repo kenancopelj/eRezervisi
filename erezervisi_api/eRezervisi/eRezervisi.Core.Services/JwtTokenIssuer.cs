@@ -32,10 +32,10 @@ namespace eRezervisi.Core.Services
             var issuer = _jwtOptions.Issuer;
             var audience = _jwtOptions.Audience;
             var key = Encoding.ASCII.GetBytes(_jwtOptions.Key);
-            var expiresAt = DateTime.UtcNow.Add(_jwtOptions.ExpirationTime);
+            var expiresAt = DateTime.Now.Add(_jwtOptions.ExpirationTime);
 
             var refreshToken = Guid.NewGuid().ToString();
-            var refreshTokenExpiresAt = DateTime.UtcNow.Add(_jwtOptions.RefreshTokenExpirationTime);
+            var refreshTokenExpiresAt = DateTime.Now.Add(_jwtOptions.RefreshTokenExpirationTime);
 
             string tokenId = Guid.NewGuid().ToString();
 
@@ -71,7 +71,8 @@ namespace eRezervisi.Core.Services
             var jwtToken = tokenHandler.WriteToken(token);
             var stringToken = tokenHandler.WriteToken(token);
 
-            return new JwtTokenResponse(true, stringToken, expiresAt, refreshToken, refreshTokenExpiresAt, user.RoleId, user.FirstName, user.LastName, user.Email, user.UserCredentials!.Username, user.Id);
+            return new JwtTokenResponse(true, stringToken, expiresAt, refreshToken, refreshTokenExpiresAt, 
+                user.RoleId, user.FirstName, user.LastName, user.Email, user.UserCredentials!.Username, user.Id, user.Image, user.UserSettings!.ReceiveNotifications);
         }
     }
 }

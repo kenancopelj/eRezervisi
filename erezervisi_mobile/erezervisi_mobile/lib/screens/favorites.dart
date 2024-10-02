@@ -1,7 +1,12 @@
 import 'package:erezervisi_mobile/helpers/custom_theme.dart';
+import 'package:erezervisi_mobile/models/requests/favorites/get_favorites_request.dart';
+import 'package:erezervisi_mobile/models/responses/base/paged_response.dart';
+import 'package:erezervisi_mobile/models/responses/favorites/favorite_get_dto.dart';
+import 'package:erezervisi_mobile/providers/favorites_provider.dart';
 import 'package:erezervisi_mobile/widgets/favorites/favorite_card.dart';
 import 'package:erezervisi_mobile/widgets/master_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MyFavourites extends StatefulWidget {
   const MyFavourites({super.key});
@@ -11,14 +16,36 @@ class MyFavourites extends StatefulWidget {
 }
 
 class _MyFavouritesState extends State<MyFavourites> {
+  late FavoritesProvider favoritesProvider;
+
+  var accommodationUnits = PagedResponse<FavoriteGetDto>.empty();
+  var request = GetFavoritesRequest.def();
+
+  @override
+  void initState() {
+    super.initState();
+
+    favoritesProvider = context.read<FavoritesProvider>();
+
+    loadFavorites();
+  }
+
+  Future loadFavorites() async {
+    var response = await favoritesProvider.getPaged(request);
+
+    setState(() {
+      accommodationUnits = response;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterWidget(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Row(
@@ -27,28 +54,27 @@ class _MyFavouritesState extends State<MyFavourites> {
                   "Omiljeni",
                   style: CustomTheme.largeTextStyle,
                 ),
-                Spacer(),
-                Icon(Icons.search)
+                const Spacer(),
+                const Icon(Icons.search)
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
-            FavoriteCard(),
-            SizedBox(
-              height: 15,
-            ),
-            FavoriteCard(),
-            SizedBox(
-              height: 15,
-            ),
-            FavoriteCard(),
-            SizedBox(
-              height: 15,
-            ),
-            FavoriteCard(),
-            SizedBox(
-              height: 15,
+            Expanded(
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: accommodationUnits.items.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: FavoriteCard(
+                      accommodationUnit: accommodationUnits
+                          .items[index].accommodationUnitGetDto,
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),

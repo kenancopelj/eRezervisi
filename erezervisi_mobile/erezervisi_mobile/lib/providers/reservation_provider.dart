@@ -57,7 +57,7 @@ class ReservationProvider extends BaseProvider {
     String endpoint = "reservations";
     var url = Globals.apiUrl + endpoint;
 
-    var response = await dio.post(url);
+    var response = await dio.post(url, data: jsonEncode(request.toJson()));
 
     if (response.statusCode == 200) {
       Globals.notifier.setInfo("Uspješno kreirano", ToastType.Success);

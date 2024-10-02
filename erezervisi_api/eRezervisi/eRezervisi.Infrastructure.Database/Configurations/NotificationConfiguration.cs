@@ -22,6 +22,10 @@ namespace eRezervisi.Infrastructure.Database.Configurations
             builder.Property(x => x.Description).IsRequired(false);
 
             builder.Property(x => x.Status).HasDefaultValueSql("1");
+
+            builder.Property(x => x.Type).HasDefaultValueSql("3");
+
+            builder.Property(x => x.AccommodationUnitId).IsRequired(false);
         }
     }
 }

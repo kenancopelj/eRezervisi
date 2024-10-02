@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
@@ -7,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:erezervisi_mobile/enums/button_type.dart';
 import 'package:erezervisi_mobile/enums/toast_type.dart';
 import 'package:erezervisi_mobile/helpers/custom_theme.dart';
+import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/models/requests/auth/auth_dto.dart';
 import 'package:erezervisi_mobile/models/responses/auth/jwt_token_response.dart';
 import 'package:erezervisi_mobile/providers/accommodation_unit_provider.dart';
@@ -15,7 +17,10 @@ import 'package:erezervisi_mobile/providers/base_provider.dart';
 import 'package:erezervisi_mobile/providers/category_provider.dart';
 import 'package:erezervisi_mobile/providers/favorites_provider.dart';
 import 'package:erezervisi_mobile/providers/file_provider.dart';
+import 'package:erezervisi_mobile/providers/message_provider.dart';
+import 'package:erezervisi_mobile/providers/notification_provider.dart';
 import 'package:erezervisi_mobile/providers/reservation_provider.dart';
+import 'package:erezervisi_mobile/providers/township_provider.dart';
 import 'package:erezervisi_mobile/providers/user_provider.dart';
 import 'package:erezervisi_mobile/screens/home.dart';
 import 'package:erezervisi_mobile/screens/register.dart';
@@ -25,8 +30,10 @@ import 'package:erezervisi_mobile/shared/components/form/input.dart';
 import 'package:erezervisi_mobile/shared/components/loader.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:erezervisi_mobile/shared/navigator/navigate.dart';
+import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:erezervisi_mobile/shared/style.dart';
 import 'package:erezervisi_mobile/shared/validators/auth/login.dart';
+import 'package:erezervisi_mobile/widgets/master_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -44,10 +51,10 @@ Future<void> main() async {
   final prefs = await SharedPreferences.getInstance();
 
   try {
-    var erezervisiKeyUser = prefs.getString(Globals.erezerivisKeyUser);
+    var erezervisiKeyUser = prefs.getString(Globals.erezervisiKeyUser);
 
     Globals.keyboardHeight =
-        prefs.getDouble(Globals.erezerivisKeyKeyboardHeight) ?? 0;
+        prefs.getDouble(Globals.erezervisiKeyKeyboardHeight) ?? 0;
 
     if (erezervisiKeyUser != null && erezervisiKeyUser.isNotEmpty) {
       Globals.loggedUser =
@@ -56,7 +63,7 @@ Future<void> main() async {
       if (!Globals.loggedUser!.expiresAtUtc.isAfter(DateTime.now().toUtc())) {
         Globals.loggedUser = null;
 
-        prefs.setString(Globals.erezerivisKeyUser, "");
+        prefs.setString(Globals.erezervisiKeyUser, "");
       }
     }
   } catch (_) {}
@@ -78,8 +85,21 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => AccommodationUnitProvider()),
           ChangeNotifierProvider(create: (_) => FileProvider()),
           ChangeNotifierProvider(create: (_) => UserProvider()),
-          ChangeNotifierProvider(create: (_) => FavoritesProvider(),),
-          ChangeNotifierProvider(create: (_) => ReservationProvider(),),
+          ChangeNotifierProvider(
+            create: (_) => FavoritesProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => ReservationProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => NotificationProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => MessageProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => TownshipProvider(),
+          ),
         ],
         child: MaterialApp(
           title: 'eRezervisi',
@@ -163,6 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool hidePassword = true;
 
   late AuthProvider authProvider;
+  late FileProvider fileProvider;
 
   var validator = AuthValidator();
 
@@ -175,6 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
     getRememberMe();
 
     authProvider = context.read<AuthProvider>();
+    fileProvider = context.read<FileProvider>();
   }
 
   Future<void> getRememberMe() async {
@@ -184,25 +206,25 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final encrypted = encrypter.encrypt("------", iv: iv).base64;
 
-    var savedUsername = prefs.getString(Globals.erezerivisKeyUsername) ?? '';
-    var savePassword = prefs.getString(Globals.erezerivisKeyPassword) ?? '';
+    var savedUsername = prefs.getString(Globals.erezervisiKeyUsername) ?? '';
+    var savePassword = prefs.getString(Globals.erezervisiKeyPassword) ?? '';
 
     if (savedUsername == '') {
-      prefs.setString(Globals.erezerivisKeyUsername, encrypted);
+      prefs.setString(Globals.erezervisiKeyUsername, encrypted);
     }
     if (savePassword == '') {
-      prefs.setString(Globals.erezerivisKeyPassword, encrypted);
+      prefs.setString(Globals.erezervisiKeyPassword, encrypted);
     }
 
-    if ((prefs.getBool(Globals.erezerivisKeyRememberMe) ?? false) == false) {
-      prefs.setBool(Globals.erezerivisKeyRememberMe, false);
+    if ((prefs.getBool(Globals.erezervisiKeyRememberMe) ?? false) == false) {
+      prefs.setBool(Globals.erezervisiKeyRememberMe, false);
     } else {
       setState(() {
         rememberMe = true;
       });
 
-      var u1 = prefs.getString(Globals.erezerivisKeyUsername);
-      var p1 = prefs.getString(Globals.erezerivisKeyPassword);
+      var u1 = prefs.getString(Globals.erezervisiKeyUsername);
+      var p1 = prefs.getString(Globals.erezervisiKeyPassword);
 
       final u1EncryptedAlready = encrypt.Key.fromBase64(u1!);
       final u1Decrypted = encrypter.decrypt(u1EncryptedAlready, iv: iv);
@@ -219,63 +241,66 @@ class _LoginScreenState extends State<LoginScreen> {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-        body: Form(
-      key: _loginKey,
-      child: SizedBox(
-        width: w,
-        height: h,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 150,
-              ),
-              const Text(
-                "Dobro došli!",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 30,
-                    fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(
-                height: 100,
-              ),
-              Column(
-                children: [
-                  Input(
-                    controller: _usernameController,
-                    validator: validator.required,
-                    label: 'Korisničko ime',
-                    hintText: "korisnik@example.com",
-                  ),
-                  Input(
-                    controller: _passwordController,
-                    validator: validator.required,
-                    obscureText: true,
-                    label: 'Lozinka',
-                    hintText: "Unesite Vašu lozinku",
-                  ),
-                  FormSwitch(
-                      label: 'Zapamti me',
-                      value: rememberMe,
-                      onChange: handleRememberMeChange),
-                  Button(
-                    label: "PRIJAVI SE",
-                    onClick: handleSubmit,
-                  ),
-                  Button(
-                    label: "Nemate nalog? Registrujte se",
-                    type: ButtonType.Link,
-                    onClick: navigateToRegisterScreen,
-                  )
-                ],
-              )
-            ],
+    return MasterWidget(
+      isLogin: true,
+      child: Scaffold(
+          body: Form(
+        key: _loginKey,
+        child: SizedBox(
+          width: w,
+          height: h,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 150,
+                ),
+                const Text(
+                  "Dobro došli!",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(
+                  height: 100,
+                ),
+                Column(
+                  children: [
+                    Input(
+                      controller: _usernameController,
+                      validator: validator.required,
+                      label: 'Korisničko ime',
+                      hintText: "korisnik@example.com",
+                    ),
+                    Input(
+                      controller: _passwordController,
+                      validator: validator.required,
+                      obscureText: true,
+                      label: 'Lozinka',
+                      hintText: "Unesite Vašu lozinku",
+                    ),
+                    FormSwitch(
+                        label: 'Zapamti me',
+                        value: rememberMe,
+                        onChange: handleRememberMeChange),
+                    Button(
+                      label: "PRIJAVI SE",
+                      onClick: handleSubmit,
+                    ),
+                    Button(
+                      label: "Nemate nalog? Registrujte se",
+                      type: ButtonType.Link,
+                      onClick: navigateToRegisterScreen,
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 
   handleRememberMeChange(newValue) {
@@ -292,7 +317,21 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   navigateToRegisterScreen() {
-    Navigate.next(context, const RegisterScreen(), true);
+    Navigate.next(
+        context, AppRoutes.register.routeName, const RegisterScreen(), true);
+  }
+
+  Future loadImage(String? fileName) async {
+    if (fileName != null && fileName.trim().isEmpty) return;
+
+    try {
+      var response = await fileProvider.downloadUserImage(fileName!);
+      var xfile = await getXFileFromBytes(response.bytes, response.fileName);
+
+      setState(() {
+        Globals.image = xfile;
+      });
+    } catch (_) {}
   }
 
   Future handleSubmit() async {
@@ -317,6 +356,8 @@ class _LoginScreenState extends State<LoginScreen> {
     if (response != null) {
       Globals.loggedUser = response;
 
+      loadImage(Globals.loggedUser!.image);
+
       var prefs = await SharedPreferences.getInstance();
       var encrypter = encrypt.Encrypter(encrypt.AES(key));
 
@@ -333,14 +374,16 @@ class _LoginScreenState extends State<LoginScreen> {
         encryptedPassword = encrypter.encrypt("------", iv: iv).base64;
       }
 
-      prefs.setString(Globals.erezerivisKeyUsername, encryptedUsername);
-      prefs.setString(Globals.erezerivisKeyPassword, encryptedPassword);
-      prefs.setBool(Globals.erezerivisKeyRememberMe, rememberMe);
+      prefs.setString(Globals.erezervisiKeyUsername, encryptedUsername);
+      prefs.setString(Globals.erezervisiKeyPassword, encryptedPassword);
+      prefs.setBool(Globals.erezervisiKeyRememberMe, rememberMe);
+      prefs.setBool(Globals.erezervisiKeyGetNotifications,
+          Globals.loggedUser!.receiveNotifications);
 
       var responseString = jsonEncode(response.toJson());
-      prefs.setString(Globals.erezerivisKeyUser, responseString);
+      prefs.setString(Globals.erezervisiKeyUser, responseString);
 
-      Navigate.next(context, const Home(), true);
+      Navigate.next(context, AppRoutes.home.routeName, const Home(), true);
     }
   }
 }

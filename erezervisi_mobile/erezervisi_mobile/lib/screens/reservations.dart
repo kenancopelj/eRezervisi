@@ -53,7 +53,7 @@ class _MyReservationsState extends State<MyReservations>
       case ReservationStatus.Confirmed:
         return Colors.green[600]!;
       case ReservationStatus.Draft:
-        return Colors.orangeAccent[600]!;
+        return Colors.orange[600]!;
       case ReservationStatus.Completed:
         return Colors.blueAccent;
       default:

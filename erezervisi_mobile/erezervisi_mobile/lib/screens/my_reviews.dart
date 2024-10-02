@@ -60,9 +60,9 @@ class _MyChatState extends State<MyReviews> {
                   itemSize: 16,
                   onRatingUpdate: (rating) {},
                   ratingWidget: RatingWidget(
-                      full: Icon(Icons.star),
-                      half: Icon(Icons.star),
-                      empty: Icon(Icons.star)),
+                      full: const Icon(Icons.star),
+                      half: const Icon(Icons.star),
+                      empty: const Icon(Icons.star)),
                 ),
               ],
             ),

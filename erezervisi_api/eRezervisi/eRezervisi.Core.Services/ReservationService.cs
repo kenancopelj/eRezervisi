@@ -53,7 +53,7 @@ namespace eRezervisi.Core.Services
             }
 
             var alreadyReserved = await _dbContext.Reservations.AnyAsync(x => x.AccommodationUnitId == request.AccommodationUnitId &&
-                                                                              x.From > request.From && x.To < request.To);
+                                                                              x.From >= request.From && x.To <= request.To);
 
             DuplicateException.ThrowIf(alreadyReserved, "Rezervacija za odabrani period već postoji!");
 
@@ -78,7 +78,7 @@ namespace eRezervisi.Core.Services
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            if (accommodationUnit.Owner.UserSettings!.RecieveEmails)
+            if (accommodationUnit.Owner.UserSettings!.ReceiveEmails)
             {
                 // Notify owner about new reservation via email if enabled in user settings
                 NotifyOwner(reservation.Id);
@@ -102,7 +102,7 @@ namespace eRezervisi.Core.Services
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            if (reservation.AccommodationUnit.Owner.UserSettings!.RecieveEmails)
+            if (reservation.AccommodationUnit.Owner.UserSettings!.ReceiveEmails)
             {
                 NotifyOwner(reservation.Id);
             }
@@ -128,7 +128,7 @@ namespace eRezervisi.Core.Services
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            if (reservation.AccommodationUnit.Owner.UserSettings!.RecieveEmails)
+            if (reservation.AccommodationUnit.Owner.UserSettings!.ReceiveEmails)
             {
                 NotifyOwner(reservation.Id);
             }
@@ -141,7 +141,7 @@ namespace eRezervisi.Core.Services
             NotFoundException.ThrowIfNull(reservation);
 
             reservation.Deleted = true;
-            reservation.DeletedAt = DateTime.UtcNow;
+            reservation.DeletedAt = DateTime.Now;
             reservation.DeletedBy = _jwtTokenReader.GetUserIdFromToken();
 
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -168,7 +168,7 @@ namespace eRezervisi.Core.Services
                     {
                         Id = x.AccommodationUnitId,
                         Title = x.AccommodationUnit.Title,
-                        Category = new CategoryGetDto
+                        AccommodationUnitCategory = new CategoryGetDto
                         {
                             Id = x.AccommodationUnit.AccommodationUnitCategory.Id,
                             Title = x.AccommodationUnit.AccommodationUnitCategory.Title
@@ -246,7 +246,7 @@ namespace eRezervisi.Core.Services
 
         private async Task<string> GenerateCode(AccommodationUnit accommodationUnit, CancellationToken cancellationToken)
         {
-            var currentYear = DateTime.UtcNow.Year;
+            var currentYear = DateTime.Now.Year;
 
             var lastNumber = await _dbContext.Reservations.Where(x => x.AccommodationUnitId == accommodationUnit.Id &&
                                                                       x.CreatedAt.Year == currentYear)

@@ -76,7 +76,7 @@ namespace eRezervisi.Core.Services
 
             return new UploadedFileGetDto
             {
-                FileName = fileName,
+                FileName = uniqueFileName,
             };
         }
 

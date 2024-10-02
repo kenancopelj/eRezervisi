@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using eRezervisi.Common.Dtos.AccommodationUnit;
+using eRezervisi.Common.Dtos.AccommodationUnitCategories;
+using eRezervisi.Common.Dtos.Canton;
 using eRezervisi.Common.Dtos.FavoriteAccommodationUnit;
+using eRezervisi.Common.Dtos.Township;
 using eRezervisi.Common.Shared;
 using eRezervisi.Common.Shared.Pagination;
 using eRezervisi.Common.Shared.Requests.FavoriteAccommodationUnit;
@@ -38,6 +41,13 @@ namespace eRezervisi.Core.Services
                 CreatedBy = userId,
             };
 
+            var alreadyFavorite = await _dbContext.FavoriteAccommodationUnits.AnyAsync(x => x.CreatedBy == userId && x.AccommodationUnitId == id);
+
+            if (alreadyFavorite)
+            {
+                throw new DomainException("AlreadyInFavorites", "Objekat je već dodan u omiljene");
+            }
+
             await _dbContext.AddAsync(favorite, cancellationToken);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -62,11 +72,34 @@ namespace eRezervisi.Core.Services
                 x => new FavoriteAccommodationUnitGetDto
                 {
                     Id = x.Id,
-                    AcoommodationUnitId = x.AccommodationUnitId,
+                    AccommodationUnitId = x.AccommodationUnitId,
                     AccommodationUnit = new AccommodationUnitGetDto
                     {
                         Id = x.AccommodationUnit.Id,
-                        Title = x.AccommodationUnit.Title
+                        Title = x.AccommodationUnit.Title,
+                        Price = x.AccommodationUnit.Price,
+                        Note = x.AccommodationUnit.Note,
+                        OwnerId = x.AccommodationUnit.OwnerId,
+                        AccommodationUnitCategory = new CategoryGetDto
+                        {
+                            Id = x.AccommodationUnit.AccommodationUnitCategory.Id,
+                            Title = x.AccommodationUnit.AccommodationUnitCategory.Title,
+                        },
+                        Township = new TownshipGetDto
+                        {
+                            Id = x.AccommodationUnit.Township.Id,
+                            Title = x.AccommodationUnit.Township.Title,
+                            CantonId = x.AccommodationUnit.Township.CantonId,
+                            Canton = new CantonGetDto
+                            {
+                                Id = x.AccommodationUnit.Township.Canton.Id,
+                                Title = x.AccommodationUnit.Township.Canton.Title,
+                                ShortTitle = x.AccommodationUnit.Township.Canton.ShortTitle
+                            }
+                        },
+                        Latitude = x.AccommodationUnit.Latitude,
+                        Longitude = x.AccommodationUnit.Longitude,
+                        ThumbnailImage = x.AccommodationUnit.ThumbnailImage,
                     }
                 }, cancellationToken);
 

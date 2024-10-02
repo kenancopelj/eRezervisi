@@ -2,7 +2,6 @@
 using eRezervisi.Core.Services.Interfaces;
 using eRezervisi.Infrastructure.Common.Configuration;
 using eRezervisi.Infrastructure.Common.Interfaces;
-using Microsoft.Extensions.Options;
 
 namespace eRezervisi.Api.Extensions
 {
@@ -12,6 +11,9 @@ namespace eRezervisi.Api.Extensions
         {
             services.Configure<HangfireConfiguration>(configuration.GetSection("Hangfire"));
             services.Configure<StorageOptions>(configuration.GetSection("Storage"));
+            services.Configure<MailConfig>(configuration.GetSection("MailConfig"));
+
+            services.AddSignalR();
 
             services.AddHttpContextAccessor();
 
@@ -34,6 +36,8 @@ namespace eRezervisi.Api.Extensions
             services.AddScoped<INotifyService, NotifyService>();
             services.AddScoped<IFavoriteAccommodationUnitService, FavoriteAccommodationUnitService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IRabbitMQProducer, RabbitMQProducer>();
+            services.AddScoped<IDashboardService, DashboardService>();
         }
     }
 }

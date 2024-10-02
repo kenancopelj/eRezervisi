@@ -1,6 +1,7 @@
 import 'package:erezervisi_mobile/screens/notification_settings.dart';
 import 'package:erezervisi_mobile/screens/profile.dart';
 import 'package:erezervisi_mobile/shared/navigator/navigate.dart';
+import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -54,7 +55,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
           child: InkWell(
             onTap: () {
-              Navigate.next(context, const MyProfile(), true);
+              Navigate.next(context, AppRoutes.profile.routeName, const MyProfile(), true);
             },
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -83,7 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
           child: InkWell(
             onTap: () {
-              Navigate.next(context, const NotificationSettings(), true);
+              Navigate.next(context, AppRoutes.notificationSettings.routeName, const NotificationSettings(), true);
             },
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

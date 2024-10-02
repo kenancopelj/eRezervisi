@@ -19,7 +19,7 @@ class BaseProvider with ChangeNotifier {
         options.headers['Authorization'] =
             'bearer ${Globals.loggedUser!.token}';
       }
-      options.headers['User-Agent'] = 'mobile-android.erezerivisi';
+      options.headers['User-Agent'] = 'mobile-android.erezervisii';
       return handler.next(options);
     }, onResponse: (response, handler) {
       bool skipDefaultLoader =

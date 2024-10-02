@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:erezervisi_mobile/enums/toast_type.dart';
+import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/models/requests/image/image_create_dto.dart';
+import 'package:erezervisi_mobile/models/requests/user/user_update_dto.dart';
 import 'package:erezervisi_mobile/models/responses/user/user_get_dto.dart';
 import 'package:erezervisi_mobile/providers/file_provider.dart';
 import 'package:erezervisi_mobile/providers/user_provider.dart';
@@ -10,6 +14,7 @@ import 'package:erezervisi_mobile/shared/components/form/input.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:erezervisi_mobile/shared/style.dart';
 import 'package:erezervisi_mobile/shared/validators/auth/register.dart';
+import 'package:erezervisi_mobile/widgets/image/preview_image.dart';
 import 'package:erezervisi_mobile/widgets/master_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -64,6 +69,7 @@ class _MyProfileState extends State<MyProfile> {
         phoneController.text = user!.phone;
         addressController.text = user!.address;
         emailController.text = user!.email;
+        usernameController.text = user!.username;
       }
     });
 
@@ -75,13 +81,14 @@ class _MyProfileState extends State<MyProfile> {
 
     try {
       var response = await fileProvider.downloadUserImage(fileName);
+      var xfile = await getXFileFromBytes(response.bytes, response.fileName);
 
       setState(() {
         profileImage = ImageCreateDto(
-          imageBase64: base64Encode(response.bytes),
-          imageFileName: response.fileName,
-          isThumbnail: false,
-        );
+            image: xfile,
+            isThumbnail: false,
+            imageBase64: null,
+            imageFileName: null);
       });
     } catch (_) {}
   }
@@ -118,20 +125,53 @@ class _MyProfileState extends State<MyProfile> {
                     alignment: Alignment.center,
                     child: Stack(
                       children: [
-                        Container(
-                          alignment: Alignment.center,
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            image: DecorationImage(
-                                image: profileImage != null
-                                    ? FileImage(File(profileImage!.image!.path))
-                                    : const AssetImage(
-                                        "assets/images/user.png"),
-                                fit: BoxFit.contain),
-                          ),
+                        InkWell(
+                          onTap: () {
+                            if (profileImage != null) {
+                              showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return PreviewImage(
+                                    image: profileImage!.image!,
+                                  );
+                                },
+                              );
+                            }
+                          },
+                          child: profileImage != null
+                              ? Container(
+                                  alignment: Alignment.center,
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    image: DecorationImage(
+                                        image: FileImage(
+                                            File(profileImage!.image!.path)),
+                                        fit: BoxFit.contain),
+                                  ),
+                                )
+                              : Container(
+                                  alignment: Alignment.center,
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Text(
+                                    Globals.loggedUser!.initials,
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                         ),
                         Positioned(
                           right: 15,
@@ -422,33 +462,37 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   Future handleSubmit() async {
-    //   if (!formKey.currentState!.validate()) {
-    //     return;
-    //   }
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
 
-    //   var payload = UserCreateDto(
-    //       firstName: firstNameController.text,
-    //       lastName: lastNameController.text,
-    //       phone: phoneController.text,
-    //       address: addressController.text,
-    //       email: addressController.text,
-    //       username: usernameController.text,
-    //       password: passwordController.text);
+    var payload = UserUpdateDto(
+        firstName: firstNameController.text,
+        lastName: lastNameController.text,
+        phone: phoneController.text,
+        address: addressController.text,
+        email: addressController.text,
+        username: usernameController.text,
+        imageBase64: profileImage?.imageBase64,
+        imageFileName: profileImage?.imageFileName,
+        newPassword: null);
 
-    //   UserGetDto? response;
+    UserGetDto? response;
 
-    //   try {
-    //     response = await userProvider.create(payload);
-    //   } catch (ex) {
-    //     if (ex is DioException) {
-    //       var error = ex.response?.data["Error"];
-    //       Globals.notifier.setInfo(error, ToastType.Error);
-    //     }
-    //   }
+    try {
+      response = await userProvider.update(Globals.loggedUser!.userId, payload);
 
-    //   if (response != null && mounted) {
-    //     Navigate.next(context, const LoginScreen(), true);
-    //   }
-    // }
+      Globals.image = profileImage!.image;
+
+      Globals.notifier.setInfo('Uspješno ažurirano', ToastType.Success);
+
+      profileImage = null;
+      loadProfile();
+    } catch (ex) {
+      if (ex is DioException) {
+        var error = ex.response?.data["Error"];
+        Globals.notifier.setInfo(error, ToastType.Error);
+      }
+    }
   }
 }

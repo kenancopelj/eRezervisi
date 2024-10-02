@@ -16,10 +16,13 @@ namespace eRezervisi.Core.Services.Interfaces
         Task DeleteAccommodationUnitAsync(long id, CancellationToken cancellationToken);
         Task<AccommodationUnitGetDto> ActivateAccommodationUnitAsync(long id, CancellationToken cancellationToken);
         Task<AccommodationUnitGetDto> DeactivateAccommodationUnitAsync(long id, CancellationToken cancellationToken);
-        Task<PagedResponse<GetReviewsResponse>> GetAccommodationUnitReviewsPagedAsync(GetAccommodationUnitReviewsRequest request, CancellationToken cancellationToken);
+        Task<PagedResponse<ReviewGetDto>> GetAccommodationUnitReviewsPagedAsync(GetAccommodationUnitReviewsRequest request, CancellationToken cancellationToken);
         Task<ReviewGetDto> CreateAccommodationUnitReviewAsync(long id, ReviewCreateDto request, CancellationToken cancellationToken);
         Task<ImageGetDto> UpdateThumbnailImageAsync(long id, ImageCreateDto request, CancellationToken cancellationToken);
         Task<AccommodationUnitGetDto> AddImagesAsync(long id, List<ImageCreateDto> request, CancellationToken cancellationToken);
         Task RemoveImagesAsync(long id, List<long> imageIds, CancellationToken cancellationToken);
+        Task<PagedResponse<AccommodationUnitGetDto>> GetPopularAccommodationUnitsPagedAsync(GetAccommodationUnitsRequest request, CancellationToken cancellationToken);
+        Task<PagedResponse<AccommodationUnitGetDto>> GetLatestAccommodationUnitsPagedAsync(GetAccommodationUnitsRequest request, CancellationToken cancellationToken);
+        Task<PagedResponse<AccommodationUnitGetDto>> GetRecommendedAccommodationUnitsPagedAsync(GetAccommodationUnitsRequest request, CancellationToken cancellationToken);
     }
 }

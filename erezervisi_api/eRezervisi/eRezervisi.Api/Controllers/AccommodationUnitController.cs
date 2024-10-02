@@ -37,6 +37,25 @@ namespace eRezervisi.Api.Controllers
             return Ok(result);
         }
 
+        [HttpPost("popular")]
+        [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
+        public async Task<IActionResult> GetMostPopularPagedAsync([FromBody] GetAccommodationUnitsRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _service.GetPopularAccommodationUnitsPagedAsync(request, cancellationToken);
+
+            return Ok(result);
+        }
+
+
+        [HttpPost("latest")]
+        [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
+        public async Task<IActionResult> GetLatestPagedAsync([FromBody] GetAccommodationUnitsRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _service.GetLatestAccommodationUnitsPagedAsync(request, cancellationToken);
+
+            return Ok(result);
+        }
+
         [HttpPut("{id}/activate")]
         [CustomAuthorize(Roles.Owner.Name)]
         public async Task<IActionResult> ActivateAsync(long id, CancellationToken cancellationToken)

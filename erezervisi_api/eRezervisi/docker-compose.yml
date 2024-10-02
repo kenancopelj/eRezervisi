@@ -1,39 +1,84 @@
-version: '3.4'
-# name: erezervisi
+version: '3'
 services:
-  erezervisi.sql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+  rabbitMQ:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq_container'
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    expose:
+      - 5672
+    networks: 
+      - erezervisi_network
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  erezervisi_sql:
+    container_name: erezervisi_db
+    image: mcr.microsoft.com/mssql/server:2019-latest
     restart: unless-stopped
-    # container_name: erezervisi.sql
     environment:
       - ACCEPT_EULA=Y
+      - ASPNETCORE_ENVIRONMENT=Development
       - SA_PASSWORD=Test12345!
       - MSSQL_PID=Developer
     ports:
-      - 1401:1433
+      - 1405:1433
     expose:
       - 1433
     networks:
-      - erezervisinet2024
+      - erezervisi_network
 
-  erezervisi.api:
+  erezervisi_api:
     restart: unless-stopped
-    # container_name: erezervisi.api
     build:
       context: .
-      # dockerfile: eRezervisi.Api/Dockerfile
     environment:
-      - ConnectionStrings:eRezervisiDb=Server=erezervisi.sql, 1433; Database=IB200054_Dev; User=sa; Password=Test12345!; ConnectRetryCount=0;TrustServerCertificate=True;Trusted_Connection=False;
+      - ConnectionStrings:DefaultConnection=Server=erezervisi_sql,1433;Database=IB200054;User=sa;Password=Test12345!;ConnectRetryCount=0;TrustServerCertificate=True
       - ASPNETCORE_ENVIRONMENT=Docker
+      - RABBITMQ_HOST=rabbitMQ
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      # - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
     ports:
       - 5269:5269
     networks:
-      - erezervisinet2024
+      - erezervisi_network
     links:
-      - erezervisi.sql
+      - erezervisi_sql
     depends_on:
-      - erezervisi.sql
-      
+      - erezervisi_sql
+      - rabbitMQ
+    # volumes:
+    #   - ./SeedImages:/app/SeedImages
+
+  rabbitmq-consumer:
+    restart: unless-stopped
+    build:
+      context: ./RabbitMQConsumer
+    environment:
+      - RABBITMQ_HOST=rabbitMQ
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - SMTP_SERVER=smtp.gmail.com
+      - SMTP_PORT=465
+      - SMTP_USERNAME=kenancopelj@gmail.com
+      - SMTP_PASSWORD=zvjq jzmd bmmc lhxk
+    depends_on:
+      - erezervisi_sql
+      - erezervisi_api
+      - rabbitMQ
+    networks:
+      - erezervisi_network
+
+volumes:
+  rabbitmq_data:
+
 networks:
-  erezervisinet2024:
-    driver: bridge      
+  erezervisi_network:
+    driver: bridge

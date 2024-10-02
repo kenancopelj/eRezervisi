@@ -10,16 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="key.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FirebaseAdmin" Version="3.0.0" />
     <PackageReference Include="Hangfire" Version="1.8.12" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.12" />
     <PackageReference Include="Hangfire.Core" Version="1.8.12" />
     <PackageReference Include="Hangfire.Dashboard.Basic.Authentication" Version="7.0.1" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.8.12" />
+    <PackageReference Include="MassTransit" Version="8.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
       <PrivateAssets>all</PrivateAssets>
@@ -59,12 +56,6 @@
 
   <ItemGroup>
     <None Remove="..\.dockerignore" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="key.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
