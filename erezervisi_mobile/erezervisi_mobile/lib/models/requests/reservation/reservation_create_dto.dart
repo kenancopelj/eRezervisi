@@ -25,7 +25,7 @@ class ReservationCreateDto {
       'note': note,
       'numberOfAdults': numberOfAdults,
       'numberOfChildren': numberOfChildren,
-      'paymenthMethod': paymenthMethod,
+      'paymentMethod': paymenthMethod,
     };
   }
 }

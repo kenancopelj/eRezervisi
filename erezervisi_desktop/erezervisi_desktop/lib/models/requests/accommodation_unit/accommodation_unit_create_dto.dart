@@ -3,8 +3,8 @@ import 'package:erezervisi_desktop/models/requests/image/image_create_dto.dart';
 
 class AccommodationUnitCreateDto {
   late String title;
-  late String shortTitle;
   late num price;
+  late String address;
   String? note;
   late PolicyCreateDto policy;
   late num categoryId;
@@ -15,8 +15,8 @@ class AccommodationUnitCreateDto {
 
   AccommodationUnitCreateDto(
       {required this.title,
-      required this.shortTitle,
       required this.price,
+      required this.address,
       this.note,
       required this.policy,
       required this.categoryId,
@@ -28,15 +28,15 @@ class AccommodationUnitCreateDto {
   Map<String, dynamic> toJson() {
     return {
       'title': title,
-      'shortTitle': shortTitle,
-      'price': price.toString(),
+      'price': price,
+      'address': address,
       'note': note,
       'policy': policy.toJson(),
       'accommodationUnitCategoryId': categoryId,
       'files': files.map((file) => file.toJson()).toList(),
-      'townshipId': townshipId.toString(),
-      'latitude': latitude.toString(),
-      'longitude': longitude.toString(),
+      'townshipId': townshipId,
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 }

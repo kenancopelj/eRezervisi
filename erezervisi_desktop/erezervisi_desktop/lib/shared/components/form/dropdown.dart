@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class Dropdown extends StatefulWidget {
-  final num? value;
+  final num? value; // Using num to match the DropdownItem key type
   final String placeholder;
   final String? label;
   final List<DropdownItem> items;
   final TextEditingController controller;
   String? hintText;
   final void Function(dynamic)? onChanged;
+  Icon? labelIcon;
+  final String? Function(num?)? validator;
+
   Dropdown(
       {super.key,
       required this.value,
@@ -19,7 +22,9 @@ class Dropdown extends StatefulWidget {
       required this.controller,
       required this.onChanged,
       this.label,
-      this.hintText});
+      this.hintText,
+      this.labelIcon,
+      this.validator});
 
   @override
   State<Dropdown> createState() => _DropdownState();
@@ -36,17 +41,27 @@ class _DropdownState extends State<Dropdown> {
             children: [
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  widget.label ?? "",
-                  style: const TextStyle(fontSize: 10, color: Colors.black),
+                child: Row(
+                  children: [
+                    widget.labelIcon ?? SizedBox.shrink(),
+                    widget.labelIcon != null
+                        ? const SizedBox(width: 10)
+                        : const SizedBox.shrink(),
+                    Text(
+                      widget.label ?? "",
+                      style: const TextStyle(fontSize: 10, color: Colors.black),
+                    ),
+                  ],
                 ),
-              )
+              ),
             ],
           ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10),
-          child: DropdownButtonFormField2<dynamic>(
+          child: DropdownButtonFormField2<num>(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: widget.validator,
             isExpanded: true,
             hint: Text(
               widget.placeholder,
@@ -56,8 +71,8 @@ class _DropdownState extends State<Dropdown> {
               ),
             ),
             items: widget.items
-                .map((item) => DropdownMenuItem(
-                      value: item,
+                .map((item) => DropdownMenuItem<num>(
+                      value: item.key, // Set value to item.key
                       child: Text(
                         item.value,
                         style: const TextStyle(
@@ -66,8 +81,11 @@ class _DropdownState extends State<Dropdown> {
                       ),
                     ))
                 .toList(),
-            value: widget.value,
-            onChanged: widget.onChanged,
+            value: widget.value, // categoryId should match a key from the items
+            onChanged: (value) {
+              widget.onChanged
+                  ?.call(value); // Call onChanged with the new value
+            },
             dropdownStyleData: const DropdownStyleData(
               maxHeight: 300,
             ),
@@ -75,6 +93,18 @@ class _DropdownState extends State<Dropdown> {
               height: 40,
             ),
             dropdownSearchData: DropdownSearchData(
+               searchMatchFn: (item, searchValue) {
+                // Cast the item to DropdownMenuItem<num> to access its child (which contains the text).
+                final dropdownMenuItem = item;
+                // Find the corresponding DropdownItem by matching the key.
+                final dropdownItem = widget.items.firstWhere(
+                  (element) => element.key == dropdownMenuItem.value,
+                  orElse: () => DropdownItem(key: 0, value: ""),
+                );
+                return dropdownItem.value
+                    .toLowerCase()
+                    .contains(searchValue.toLowerCase());
+              },
               searchController: widget.controller,
               searchInnerWidgetHeight: 50,
               searchInnerWidget: Container(
@@ -89,6 +119,7 @@ class _DropdownState extends State<Dropdown> {
                   expands: true,
                   maxLines: null,
                   controller: widget.controller,
+                  style: const TextStyle(fontSize: 11),
                   decoration: InputDecoration(
                     isDense: true,
                     contentPadding: const EdgeInsets.symmetric(
@@ -103,15 +134,7 @@ class _DropdownState extends State<Dropdown> {
                   ),
                 ),
               ),
-              searchMatchFn: (item, searchValue) {
-                return item.value.toString().contains(searchValue);
-              },
             ),
-            onMenuStateChange: (isOpen) {
-              if (!isOpen) {
-                widget.controller.clear();
-              }
-            },
           ),
         ),
       ],

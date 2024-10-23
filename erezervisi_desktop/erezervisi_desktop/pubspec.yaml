@@ -52,7 +52,12 @@ dependencies:
   flutter_local_notifications: ^17.2.2
   dropdown_button2: ^2.3.9
   intl: ^0.19.0
-  sidebarx: ^0.17.1
+  syncfusion_flutter_charts: ^26.1.40
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  syncfusion_flutter_calendar: ^26.2.12
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

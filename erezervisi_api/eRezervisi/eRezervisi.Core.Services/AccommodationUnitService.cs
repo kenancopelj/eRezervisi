@@ -85,6 +85,7 @@ namespace eRezervisi.Core.Services
                     Title = x.Title,
                     Price = (double)x.Price,
                     Note = x.Note,
+                    Address = x.Address,
                     OwnerId = x.OwnerId,
                     AccommodationUnitCategory = new CategoryGetDto
                     {
@@ -154,6 +155,7 @@ namespace eRezervisi.Core.Services
                     Id = x.Id,
                     Title = x.Title,
                     Price = (double)x.Price,
+                    Address = x.Address,
                     Note = x.Note,
                     OwnerId = x.OwnerId,
                     AccommodationUnitCategory = new CategoryGetDto
@@ -219,6 +221,7 @@ namespace eRezervisi.Core.Services
                     Title = x.Title,
                     Price = (double)x.Price,
                     Note = x.Note,
+                    Address = x.Address,
                     OwnerId = x.OwnerId,
                     AccommodationUnitCategory = new CategoryGetDto
                     {
@@ -284,28 +287,22 @@ namespace eRezervisi.Core.Services
                 firstTimeOwner = true;
             }
 
-            var thumbnailImage = request.Files.FirstOrDefault(x => x.IsThumbnail);
-
-            if (thumbnailImage == null)
-            {
-                throw new DomainException("ThumbnailImageRequired", "Odaberite thumbnail sliku");
-            }
-
             var accommodationUnit = _mapper.Map<AccommodationUnit>(request);
-
-            var thumbImage = await _storageService.UploadFileAsync(FileType.AccommodationUnitLogo, thumbnailImage.ImageFileName, thumbnailImage.ImageBase64, cancellationToken);
-
-            accommodationUnit.ThumbnailImage = thumbImage.FileName;
 
             accommodationUnit.OwnerId = ownerId;
 
-            accommodationUnit.Status = AccommodationUnitStatus.Registered;
+            accommodationUnit.Status = firstTimeOwner ? AccommodationUnitStatus.Registered : AccommodationUnitStatus.Active;
 
             var uploadedImages = new List<Image>();
 
             foreach (var item in request.Files)
             {
-                var uploadedFile = await _storageService.UploadFileAsync(FileType.AccommodationUnitLogo, item.ImageFileName, item.ImageBase64, cancellationToken);
+                var uploadedFile = await _storageService.UploadFileAsync(item.ImageFileName, item.ImageBase64, cancellationToken);
+
+                if (item.IsThumbnail)
+                {
+                    accommodationUnit.ThumbnailImage = uploadedFile.FileName;
+                }
 
                 accommodationUnit.Images.Add(new Image
                 {
@@ -414,19 +411,42 @@ namespace eRezervisi.Core.Services
 
         public async Task<AccommodationUnitGetDto> UpdateAccommodationUnitAsync(long id, AccommodationUnitUpdateDto request, CancellationToken cancellationToken)
         {
-            var accommodationUnit = await _dbContext.AccommodationUnits.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            try
+            {
 
-            NotFoundException.ThrowIfNull(accommodationUnit);
 
-            DuplicateException.ThrowIf(await _dbContext.AccommodationUnits.AnyAsync(x => x.Title == request.Title && x.Id != id, cancellationToken));
+                var accommodationUnit = await _dbContext.AccommodationUnits.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-            _mapper.Map<AccommodationUnit>(request);
+                NotFoundException.ThrowIfNull(accommodationUnit);
 
-            accommodationUnit.AccommodationUnitPolicy ??= _mapper.Map<AccommodationUnitPolicy>(request.Policy);
+                DuplicateException.ThrowIf(await _dbContext.AccommodationUnits.AnyAsync(x => x.Title == request.Title && x.Id != id, cancellationToken));
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+                _mapper.Map<AccommodationUnit>(request);
 
-            return _mapper.Map<AccommodationUnitGetDto>(accommodationUnit);
+                accommodationUnit.AccommodationUnitPolicy = _mapper.Map<AccommodationUnitPolicy>(request.Policy);
+
+                _mapper.Map(request, accommodationUnit);
+
+                var imagesToUpload = request.Files.Where(x => x.ImageBase64 != null).ToList();
+
+                await AddImagesAsync(id, imagesToUpload, cancellationToken);
+
+                if (request.Files.Any(x => x.Id != null && x.Delete))
+                {
+                    var imagesToRemove = request.Files.Where(x => x.Delete).Select(x => x.Id ?? 0).ToList();
+
+                    await RemoveImagesAsync(id, imagesToRemove, cancellationToken);
+                }
+
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                return _mapper.Map<AccommodationUnitGetDto>(accommodationUnit);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         public async Task<ReviewGetDto> CreateAccommodationUnitReviewAsync(long id, ReviewCreateDto request, CancellationToken cancellationToken)
@@ -477,7 +497,7 @@ namespace eRezervisi.Core.Services
 
             NotFoundException.ThrowIfNull(accommodationUnit);
 
-            var uploadedImage = await _storageService.UploadFileAsync(FileType.AccommodationUnitLogo, request.ImageFileName, request.ImageBase64, cancellationToken);
+            var uploadedImage = await _storageService.UploadFileAsync(request.ImageFileName, request.ImageBase64, cancellationToken);
 
             accommodationUnit.ThumbnailImage = uploadedImage.FileName;
 
@@ -486,29 +506,40 @@ namespace eRezervisi.Core.Services
             return _mapper.Map<ImageGetDto>(uploadedImage);
         }
 
-        public async Task<AccommodationUnitGetDto> AddImagesAsync(long id, List<ImageCreateDto> request, CancellationToken cancellationToken)
+        private async Task AddImagesAsync(long id, List<ImageUpdateDto> request, CancellationToken cancellationToken)
         {
-            var accommodationUnit = await _dbContext.AccommodationUnits.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-
-            NotFoundException.ThrowIfNull(accommodationUnit);
-
-            var uploadedImages = new List<Image>();
-
-            foreach (var item in request)
+            try
             {
-                var uploadedFile = await _storageService.UploadFileAsync(FileType.AccommodationUnitLogo, item.ImageFileName, item.ImageBase64, cancellationToken);
 
-                accommodationUnit.Images.Add(_mapper.Map<Image>(uploadedFile));
+
+                var accommodationUnit = await _dbContext.AccommodationUnits.Include(x => x.Images).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+                NotFoundException.ThrowIfNull(accommodationUnit);
+
+                var uploadedImages = new List<Image>();
+
+                foreach (var item in request)
+                {
+                    if (item.ImageFileName != null && accommodationUnit.Images.FirstOrDefault(x => x.AccommodationUnitId == id && x.FileName == item.ImageFileName) is null)
+                    {
+                        var uploadedFile = await _storageService.UploadFileAsync(item.ImageFileName!, item.ImageBase64!, cancellationToken);
+
+                        accommodationUnit.Images.Add(_mapper.Map<Image>(uploadedFile));
+                    }
+                }
+
+                _dbContext.Update(accommodationUnit);
+
+                await _dbContext.SaveChangesAsync(cancellationToken);
             }
+            catch (Exception ex)
+            {
 
-            await _dbContext.AddAsync(accommodationUnit, cancellationToken);
-
-            await _dbContext.SaveChangesAsync(cancellationToken);
-
-            return _mapper.Map<AccommodationUnitGetDto>(accommodationUnit);
+                throw;
+            }
         }
 
-        public async Task RemoveImagesAsync(long id, List<long> imageIds, CancellationToken cancellationToken)
+        private async Task RemoveImagesAsync(long id, List<long> imageIds, CancellationToken cancellationToken)
         {
             var accommodationUnit = await _dbContext.AccommodationUnits.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -516,7 +547,23 @@ namespace eRezervisi.Core.Services
 
             var images = await _dbContext.Images.Where(x => imageIds.Contains(x.Id)).ToListAsync(cancellationToken);
 
+            var deleteThumbnailImage = images.Select(x => x.FileName).Contains(accommodationUnit.ThumbnailImage);
+
+            if (deleteThumbnailImage)
+            {
+                var thumbnailImage = await _dbContext.Images.Where(x => x.FileName == accommodationUnit.ThumbnailImage).FirstAsync(cancellationToken);
+
+                images.Add(thumbnailImage);
+
+                accommodationUnit.ThumbnailImage = string.Empty;
+            }
+
             _dbContext.RemoveRange(images);
+
+            foreach (var image in images)
+            {
+                await _storageService.DeleteFileAsync(image.FileName, cancellationToken);
+            }
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
@@ -543,8 +590,6 @@ namespace eRezervisi.Core.Services
             {
                 case "title":
                     return x => x.Title;
-                case "shortTile":
-                    return x => x.ShortTitle;
                 case "township":
                     return x => x.Township.Title;
                 default:

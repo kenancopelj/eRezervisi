@@ -9,7 +9,16 @@ import 'package:image_picker/image_picker.dart';
 
 class Globals {
   Globals._();
-  static String apiUrl = "http://localhost:5269/";
+  // Docker
+  // static String apiUrl = "http://localhost:5269/";
+
+  // Emulator
+  static String apiUrl = 'https://10.0.2.2:7158/';
+
+  // Windows app
+  // static String apiUrl = "https://localhost:7158/";
+
+  static String imageBasePath = "${apiUrl}Uploads/Images/";
 
   static Notifications notifications = Notifications(notifications: []);
 
@@ -17,7 +26,7 @@ class Globals {
 
   static bool enableNotifications = true;
 
-  static XFile? image;
+  static String? image;
 
   static GlobalNotifier notifier = GlobalNotifier();
 
@@ -43,18 +52,6 @@ class Globals {
   static int? imageQuality = 85;
   static double? imageMaxHeight = 1000;
   static double? imageMaxWidth = 1000;
-
-  static navigate(BuildContext context, Widget next,
-      [bool followRoute = false]) {
-    if (followRoute) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          PageRouteBuilder(pageBuilder: (_, __, ___) => next),
-          (Route<dynamic> route) => false);
-    } else {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => next));
-    }
-  }
 
   static BaseGetAllRequest baseGetAllRequest =
       BaseGetAllRequest(searchTerm: '');

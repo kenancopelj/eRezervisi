@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:erezervisi_desktop/enums/toast_type.dart';
 import 'package:erezervisi_desktop/models/requests/accommodation_unit/accommodation_unit_create_dto.dart';
+import 'package:erezervisi_desktop/models/requests/accommodation_unit/accommodation_unit_update_dto.dart';
 import 'package:erezervisi_desktop/models/requests/accommodation_unit/get_accommodation_units_request.dart';
 import 'package:erezervisi_desktop/models/requests/reviews/get_reviews_request.dart';
 import 'package:erezervisi_desktop/models/responses/accommodation_unit/accommodation_unit_get_dto.dart';
@@ -96,7 +97,8 @@ class AccommodationUnitProvider extends BaseProvider {
     throw response;
   }
 
-  Future<AccommodationUnitGetDto> create(AccommodationUnitCreateDto request) async {
+  Future<AccommodationUnitGetDto> create(
+      AccommodationUnitCreateDto request) async {
     String endpoint = "accommodation-units";
     var url = Globals.apiUrl + endpoint;
 
@@ -106,6 +108,35 @@ class AccommodationUnitProvider extends BaseProvider {
       Globals.notifier.setInfo("Uspješno kreirano", ToastType.Success);
       var accommodationUnit = AccommodationUnitGetDto.fromJson(response.data);
       return accommodationUnit;
+    }
+    throw response;
+  }
+
+  Future update(AccommodationUnitUpdateDto request) async {
+    String endpoint = "accommodation-units/${request.id}";
+    var url = Globals.apiUrl + endpoint;
+
+    var response = await dio.put(url, data: request.toJson());
+
+    if (response.statusCode == 200) {
+      Globals.notifier.setInfo("Uspješno ažurirano", ToastType.Success);
+      var accommodationUnit = AccommodationUnitGetDto.fromJson(response.data);
+      return accommodationUnit;
+    }
+    throw response;
+  }
+
+  Future delete(num id) async {
+    String endpoint = "accommodation-units/$id";
+    var url = Globals.apiUrl + endpoint;
+
+    var response = await dio.delete(
+      url,
+    );
+
+    if (response.statusCode == 200) {
+      Globals.notifier.setInfo("Uspješno obrisano", ToastType.Success);
+      return;
     }
     throw response;
   }

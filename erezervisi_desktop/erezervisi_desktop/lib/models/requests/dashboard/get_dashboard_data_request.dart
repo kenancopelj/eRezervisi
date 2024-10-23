@@ -1,6 +1,6 @@
 class GetDashboardDataRequest {
   late num month;
-  late String year;
+  late num year;
 
   GetDashboardDataRequest({required this.month, required this.year});
 

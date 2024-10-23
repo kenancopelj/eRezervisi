@@ -42,7 +42,8 @@ class _eRezervisiDrawerState extends State<eRezervisiDrawer> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50),
                           image: DecorationImage(
-                              image: FileImage(File(Globals.image!.path)),
+                              image: NetworkImage(
+                                  Globals.imageBasePath + Globals.image!),
                               fit: BoxFit.contain),
                         ),
                       )
@@ -133,8 +134,7 @@ class _eRezervisiDrawerState extends State<eRezervisiDrawer> {
             padding: EdgeInsets.only(left: 15, top: 5),
             child: ListTile(
               onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => MyChat()));
+                Navigate.next(context, AppRoutes.chat.routeName, MyChat(), true);
               },
               leading: Icon(
                 Icons.chat_bubble_outline_outlined,
@@ -150,8 +150,8 @@ class _eRezervisiDrawerState extends State<eRezervisiDrawer> {
             padding: EdgeInsets.only(left: 15, top: 5),
             child: ListTile(
               onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => MyReviews()));
+                Navigate.next(
+                    context, AppRoutes.myReviews.routeName, MyReviews(), true);
               },
               leading: Icon(
                 Icons.thumb_up_alt_outlined,

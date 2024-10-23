@@ -4,6 +4,7 @@ using eRezervisi.Common.Shared;
 using eRezervisi.Common.Shared.Pagination;
 using eRezervisi.Common.Shared.Requests.Guest;
 using eRezervisi.Core.Domain.Entities;
+using eRezervisi.Core.Domain.Enums;
 using eRezervisi.Core.Services.Interfaces;
 using eRezervisi.Infrastructure.Database;
 using System.Linq.Expressions;
@@ -37,6 +38,8 @@ namespace eRezervisi.Core.Services
             var guests = await queryable.GetPagedAsync(pagingRequest,
                 new List<(bool shouldFilter, Expression<Func<Reservation, bool>> filterExpression)>()
                 {
+                    (true, x => x.Status == ReservationStatus.InProgress || x.Status == ReservationStatus.Completed),
+                    (true, x => x.AccommodationUnit.OwnerId == userId),
                     (!string.IsNullOrEmpty(searchTerm), x => x.User.GetFullName().ToLower().Contains(searchTerm))
                 },
                 GetOrderByExpression(pagingRequest.OrderByColumn),
@@ -44,6 +47,8 @@ namespace eRezervisi.Core.Services
                 {
                     Id = x.UserId,
                     FullName = x.User.GetFullName(),
+                    Phone = x.User.Phone,
+                    Email = x.User.Email
                 }, cancellationToken);
 
             return guests;

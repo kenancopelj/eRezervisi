@@ -5,6 +5,7 @@ enum AppRoutes {
   chatDetails,
   chat,
   createAccommodationUnit,
+  editAccommodationUnit,
   favorites,
   home,
   myReviews,
@@ -16,7 +17,9 @@ enum AppRoutes {
   reservations,
   reviews,
   search,
-  settings
+  settings,
+  statistics,
+  maintenances
 }
 
 extension AppRouteExtension on AppRoutes {
@@ -34,6 +37,8 @@ extension AppRouteExtension on AppRoutes {
         return 'chat';
       case AppRoutes.createAccommodationUnit:
         return 'create-accommodation-unit';
+      case AppRoutes.editAccommodationUnit:
+        return 'edit-accommodation-unit';
       case AppRoutes.favorites:
         return 'favorites';
       case AppRoutes.home:
@@ -58,6 +63,10 @@ extension AppRouteExtension on AppRoutes {
         return 'search';
       case AppRoutes.settings:
         return 'settings';
+      case AppRoutes.statistics:
+        return 'statistics';
+      case AppRoutes.maintenances:
+        return 'maintenances';
       default:
         return '/';
     }

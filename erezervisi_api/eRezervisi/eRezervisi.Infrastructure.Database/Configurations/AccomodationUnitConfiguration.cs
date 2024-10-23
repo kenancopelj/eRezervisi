@@ -14,8 +14,6 @@ namespace eRezervisi.Infrastructure.Database.Configurations
 
             builder.Property(x => x.Title);
 
-            builder.Property(x => x.ShortTitle);
-
             builder.Property(x => x.Price);
 
             builder.Property(x => x.OwnerId);
@@ -50,6 +48,8 @@ namespace eRezervisi.Infrastructure.Database.Configurations
             builder.Property(x => x.Latitude);
 
             builder.Property(x => x.Longitude);
+
+            builder.Property(x => x.Address);
         }
     }
 }

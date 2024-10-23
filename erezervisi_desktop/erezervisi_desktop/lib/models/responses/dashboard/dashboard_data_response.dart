@@ -1,4 +1,3 @@
-import 'package:erezervisi_desktop/models/responses/category/category_get_dto.dart';
 import 'package:erezervisi_desktop/models/responses/reservation/reservation_get_short_dto.dart';
 import 'package:erezervisi_desktop/models/responses/review/review_get_dto.dart';
 
@@ -19,16 +18,22 @@ class DashboardDataResponse {
       required this.latestReservations});
 
   factory DashboardDataResponse.fromJson(Map<String, dynamic> json) {
+    var latestReviewsArray = json['latestReviews'] as List<dynamic>;
+    var latestReservationsArray = json['latestReviews'] as List<dynamic>;
+
     return DashboardDataResponse(
         expectedArrivals: json['expectedArrivals'],
         availableAccommodationUnits: json['availableAccommodationUnits'],
         numberOfGuests: json['numberOfGuests'],
         numberOfReviews: json['numberOfReviews'],
-        latestReviews: (json['latestReviews'] as List<ReviewGetDto>)
-            .map((reviewJson) => ReviewGetDto.fromJson(json))
-            .toList(),
-        latestReservations:
-            (json['latestReservations'] as List<ReservationGetShortDto>)
+        latestReviews: latestReviewsArray.isEmpty
+            ? List.empty()
+            : (json['latestReviews'] as List<ReviewGetDto>)
+                .map((reviewJson) => ReviewGetDto.fromJson(json))
+                .toList(),
+        latestReservations: latestReservationsArray.isEmpty
+            ? List.empty()
+            : (json['latestReservations'] as List<ReservationGetShortDto>)
                 .map((reservationJson) => ReservationGetShortDto.fromJson(json))
                 .toList());
   }

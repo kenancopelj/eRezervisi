@@ -4,9 +4,6 @@ import 'package:erezervisi_desktop/helpers/custom_theme.dart';
 import 'package:erezervisi_desktop/helpers/file_helper.dart';
 import 'package:erezervisi_desktop/models/responses/accommodation_unit/accommodation_unit_get_dto.dart';
 import 'package:erezervisi_desktop/providers/file_provider.dart';
-import 'package:erezervisi_desktop/screens/accommodation_unit_details.dart';
-import 'package:erezervisi_desktop/shared/navigator/navigate.dart';
-import 'package:erezervisi_desktop/shared/navigator/route_list.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -46,9 +43,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigate.next(context, AppRoutes.accommodationUnitDetails.routeName, ObjectDetails(accommodationUnitId: widget.accommodationUnit.id), true);
-      },
+      onTap: () {},
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: 100,

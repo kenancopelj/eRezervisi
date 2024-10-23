@@ -28,6 +28,15 @@ namespace eRezervisi.Api.Controllers
             return Ok(result);
         }
 
+        [HttpPut("{id}")]
+        [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
+        public async Task<IActionResult> UpdateAsync(long id, [FromBody] AccommodationUnitUpdateDto request, CancellationToken cancellationToken)
+        {
+            var result = await _service.UpdateAccommodationUnitAsync(id, request, cancellationToken);
+
+            return Ok(result);
+        }
+
         [HttpPost("paged")]
         [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
         public async Task<IActionResult> GetPagedAsync([FromBody] GetAccommodationUnitsRequest request, CancellationToken cancellationToken)

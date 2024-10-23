@@ -1,7 +1,6 @@
 import 'package:erezervisi_desktop/shared/validators/validations.dart';
 
 class BaseValidator {
-
   BaseValidator();
 
   String? required(dynamic value) {
@@ -21,6 +20,20 @@ class BaseValidator {
 
     if (value == null) {
       return ValidationMessages.required;
+    }
+
+    return null;
+  }
+
+  String? numberOnly(dynamic value) {
+    if (value == null || value == 0 || value == '') {
+      return ValidationMessages.required;
+    }
+
+    var parsedValue = num.tryParse(value as String);
+
+    if (parsedValue == null) {
+      return ValidationMessages.invalidFormat;
     }
 
     return null;

@@ -19,7 +19,7 @@ namespace eRezervisi.Core.Domain.Entities
         public int NumberOfAdults { get; set; }
         public int NumberOfChildren { get; set; }
         public int TotalPeople => NumberOfAdults + NumberOfChildren;
-        public int TotalDays => (To - From).Days;
+        public int TotalDays => (To - From).Days + 1;
         public double TotalPrice { get; set; }
 
         public Reservation() { }

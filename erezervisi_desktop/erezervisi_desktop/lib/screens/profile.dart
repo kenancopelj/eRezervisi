@@ -477,10 +477,8 @@ class _MyProfileState extends State<MyProfile> {
         imageFileName: profileImage?.imageFileName,
         newPassword: null);
 
-    UserGetDto? response;
-
     try {
-      response = await userProvider.update(Globals.loggedUser!.userId, payload);
+      await userProvider.update(Globals.loggedUser!.userId, payload);
 
       Globals.image = profileImage!.image;
 

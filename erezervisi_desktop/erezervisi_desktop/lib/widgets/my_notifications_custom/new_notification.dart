@@ -1,13 +1,9 @@
-import 'dart:io';
-
 import 'package:erezervisi_desktop/enums/notification_status.dart';
 import 'package:erezervisi_desktop/enums/notification_type.dart';
 import 'package:erezervisi_desktop/helpers/file_helper.dart';
 import 'package:erezervisi_desktop/models/responses/notification/notification_get_dto.dart';
 import 'package:erezervisi_desktop/providers/file_provider.dart';
-import 'package:erezervisi_desktop/screens/accommodation_unit_details.dart';
-import 'package:erezervisi_desktop/screens/chat.dart';
-import 'package:erezervisi_desktop/screens/chat_details.dart';
+import 'package:erezervisi_desktop/screens/chat/chat.dart';
 import 'package:erezervisi_desktop/shared/navigator/navigate.dart';
 import 'package:erezervisi_desktop/shared/navigator/route_list.dart';
 import 'package:flutter/material.dart';
@@ -107,12 +103,6 @@ class _NewNotificationState extends State<NewNotification> {
     var notification = widget.notification;
     switch (notification.type) {
       case NotificationType.AccommodationUnit:
-        Navigate.next(
-            context,
-            AppRoutes.accommodationUnitDetails.routeName,
-            ObjectDetails(
-                accommodationUnitId: notification.accommodationUnitId!),
-            true);
       case NotificationType.Message:
         Navigate.next(context, AppRoutes.chat.routeName, const MyChat(), true);
         break;

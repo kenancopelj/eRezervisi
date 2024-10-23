@@ -5,7 +5,6 @@ namespace eRezervisi.Core.Domain.Entities
     public class AccommodationUnit : BaseEntity<long>
     {
         public string Title { get; set; } = null!;
-        public string ShortTitle { get; set; } = null!;
         public double Price { get; set; }
         public List<Image> Images { get; set; } = new();
         public User Owner { get; set; } = null!;
@@ -22,6 +21,7 @@ namespace eRezervisi.Core.Domain.Entities
         public Township Township { get; set; } = null!;
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+        public string Address { get; set; } = null!;
         public DateOnly? DeactivateAt { get; set; } // In case user wants to deactivate object, but there are still reservations in progress. Enqueue it to job
 
         public AccommodationUnit() { }

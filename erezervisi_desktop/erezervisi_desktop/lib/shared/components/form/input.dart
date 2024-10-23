@@ -11,6 +11,7 @@ class Input extends StatefulWidget {
   final InputType? type;
   final bool? rounded;
   final Icon? suffixIcon;
+  final Icon? labelIcon;
 
   const Input(
       {super.key,
@@ -21,7 +22,8 @@ class Input extends StatefulWidget {
       this.obscureText,
       this.hintText,
       this.rounded,
-      this.suffixIcon});
+      this.suffixIcon,
+      this.labelIcon});
 
   @override
   State<Input> createState() => _InputState();
@@ -48,9 +50,19 @@ class _InputState extends State<Input> {
           children: [
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                widget.label ?? "",
-                style: const TextStyle(fontSize: 12, color: Colors.black),
+              child: Row(
+                children: [
+                  widget.labelIcon ?? const SizedBox.shrink(),
+                  widget.labelIcon != null
+                      ? SizedBox(
+                          width: 5,
+                        )
+                      : const SizedBox.shrink(),
+                  Text(
+                    widget.label ?? "",
+                    style: const TextStyle(fontSize: 12, color: Colors.black),
+                  ),
+                ],
               ),
             )
           ],
@@ -81,9 +93,9 @@ class _InputState extends State<Input> {
                           : widget.suffixIcon,
                   isDense: true,
                   contentPadding: EdgeInsets.symmetric(
-                      vertical: 12,
+                      vertical: 15,
                       horizontal:
-                          widget.rounded != null && widget.rounded! ? 10 : 0),
+                          widget.rounded != null && widget.rounded! ? 12 : 0),
                   hintText: widget.hintText ?? "",
                   hintStyle: TextStyle(color: Style.borderColor),
                   border: widget.rounded != null && widget.rounded!

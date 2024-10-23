@@ -17,7 +17,7 @@ namespace eRezervisi.Api.Controllers
             _guestService = guestService;
         }
 
-        [HttpPost]
+        [HttpPost("paged")]
         [CustomAuthorize(Roles.Owner.Name)]
         public async Task<IActionResult> GetPagedAsync([FromBody] GetGuestsRequest request, CancellationToken cancellationToken)
         {

@@ -25,4 +25,18 @@ class BaseValidator {
 
     return null;
   }
+
+  String? numberOnly(dynamic value) {
+    if (value == null || value == 0 || value == '') {
+      return ValidationMessages.required;
+    }
+
+    var parsedValue = num.tryParse(value as String);
+
+    if (parsedValue == null) {
+      return ValidationMessages.invalidFormat;
+    }
+
+    return null;
+  }
 }

@@ -2,10 +2,10 @@
 
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:erezervisi_desktop/providers/dashboard_provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:dio/dio.dart';
-import 'package:erezervisi_desktop/enums/button_type.dart';
 import 'package:erezervisi_desktop/enums/toast_type.dart';
 import 'package:erezervisi_desktop/helpers/custom_theme.dart';
 import 'package:erezervisi_desktop/helpers/file_helper.dart';
@@ -17,9 +17,11 @@ import 'package:erezervisi_desktop/providers/base_provider.dart';
 import 'package:erezervisi_desktop/providers/category_provider.dart';
 import 'package:erezervisi_desktop/providers/favorites_provider.dart';
 import 'package:erezervisi_desktop/providers/file_provider.dart';
+import 'package:erezervisi_desktop/providers/guest_provider.dart';
 import 'package:erezervisi_desktop/providers/message_provider.dart';
 import 'package:erezervisi_desktop/providers/notification_provider.dart';
 import 'package:erezervisi_desktop/providers/reservation_provider.dart';
+import 'package:erezervisi_desktop/providers/statistics_provider.dart';
 import 'package:erezervisi_desktop/providers/township_provider.dart';
 import 'package:erezervisi_desktop/providers/user_provider.dart';
 import 'package:erezervisi_desktop/screens/home.dart';
@@ -99,8 +101,23 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (_) => TownshipProvider(),
           ),
+          ChangeNotifierProvider(
+            create: (_) => GuestProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => StatisticsProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => DashboardProvider(),
+          ),
         ],
         child: MaterialApp(
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate
+          ],
+          supportedLocales: const [Locale('bs')],
+          locale: const Locale('bs'),
           title: 'eRezervisi',
           builder: (context, child) => MediaQuery(
               data:
@@ -237,9 +254,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var h = MediaQuery.of(context).size.height;
-    var w = MediaQuery.of(context).size.width;
-
     return MasterWidget(
       isLogin: true,
       child: Scaffold(
@@ -247,17 +261,16 @@ class _LoginScreenState extends State<LoginScreen> {
         key: _loginKey,
         child: Center(
           child: Container(
-            margin:  EdgeInsets.symmetric(vertical: 130),
-            decoration:
-                BoxDecoration(border: Border.all(color: Colors.black)),
+            margin: const EdgeInsets.symmetric(vertical: 130),
+            decoration: BoxDecoration(border: Border.all(color: Colors.black)),
             child: Column(
               children: [
                 const SizedBox(
                   height: 150,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: const Text(
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  child: Text(
                     "Dobro došli na eRezerviši Administraciju",
                     style: TextStyle(
                         color: Colors.black,
@@ -265,12 +278,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.w600),
                   ),
                 ),
-                SizedBox(height: 30,),
+                const SizedBox(
+                  height: 30,
+                ),
                 const Text(
                   "Molimo prijavite se",
                   style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,),
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
                 ),
                 const SizedBox(
                   height: 100,

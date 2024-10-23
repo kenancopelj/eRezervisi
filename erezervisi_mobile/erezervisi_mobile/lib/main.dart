@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:dio/dio.dart';
@@ -16,9 +17,9 @@ import 'package:erezervisi_mobile/providers/auth_provider.dart';
 import 'package:erezervisi_mobile/providers/base_provider.dart';
 import 'package:erezervisi_mobile/providers/category_provider.dart';
 import 'package:erezervisi_mobile/providers/favorites_provider.dart';
-import 'package:erezervisi_mobile/providers/file_provider.dart';
 import 'package:erezervisi_mobile/providers/message_provider.dart';
 import 'package:erezervisi_mobile/providers/notification_provider.dart';
+import 'package:erezervisi_mobile/providers/payment_provider.dart';
 import 'package:erezervisi_mobile/providers/reservation_provider.dart';
 import 'package:erezervisi_mobile/providers/township_provider.dart';
 import 'package:erezervisi_mobile/providers/user_provider.dart';
@@ -36,12 +37,24 @@ import 'package:erezervisi_mobile/shared/validators/auth/login.dart';
 import 'package:erezervisi_mobile/widgets/master_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
-
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+  }
+}
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+ HttpOverrides.global = MyHttpOverrides();
+
+  Stripe.publishableKey =
+      const String.fromEnvironment('STRIPE_PUBLISHABLE_KEY', defaultValue: "");
 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
@@ -83,7 +96,6 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => AuthProvider()),
           ChangeNotifierProvider(create: (_) => CategoryProvider()),
           ChangeNotifierProvider(create: (_) => AccommodationUnitProvider()),
-          ChangeNotifierProvider(create: (_) => FileProvider()),
           ChangeNotifierProvider(create: (_) => UserProvider()),
           ChangeNotifierProvider(
             create: (_) => FavoritesProvider(),
@@ -99,6 +111,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(
             create: (_) => TownshipProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => PaymentProvider(),
           ),
         ],
         child: MaterialApp(
@@ -183,7 +198,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool hidePassword = true;
 
   late AuthProvider authProvider;
-  late FileProvider fileProvider;
 
   var validator = AuthValidator();
 
@@ -196,7 +210,6 @@ class _LoginScreenState extends State<LoginScreen> {
     getRememberMe();
 
     authProvider = context.read<AuthProvider>();
-    fileProvider = context.read<FileProvider>();
   }
 
   Future<void> getRememberMe() async {
@@ -321,19 +334,6 @@ class _LoginScreenState extends State<LoginScreen> {
         context, AppRoutes.register.routeName, const RegisterScreen(), true);
   }
 
-  Future loadImage(String? fileName) async {
-    if (fileName != null && fileName.trim().isEmpty) return;
-
-    try {
-      var response = await fileProvider.downloadUserImage(fileName!);
-      var xfile = await getXFileFromBytes(response.bytes, response.fileName);
-
-      setState(() {
-        Globals.image = xfile;
-      });
-    } catch (_) {}
-  }
-
   Future handleSubmit() async {
     if (!_loginKey.currentState!.validate()) {
       return;
@@ -355,8 +355,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (response != null) {
       Globals.loggedUser = response;
-
-      loadImage(Globals.loggedUser!.image);
 
       var prefs = await SharedPreferences.getInstance();
       var encrypter = encrypt.Encrypter(encrypt.AES(key));

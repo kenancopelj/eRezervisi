@@ -111,6 +111,11 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("accommodation_unit_category_id");
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("address");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -168,11 +173,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float")
                         .HasColumnName("price");
-
-                    b.Property<string>("ShortTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("short_title");
 
                     b.Property<int>("Status")
                         .HasColumnType("int")
@@ -1350,18 +1350,18 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                                 new
                                 {
                                     UserId = 1L,
-                                    LastPasswordChangeAt = new DateTime(2024, 8, 29, 11, 32, 51, 665, DateTimeKind.Local).AddTicks(4039),
-                                    PasswordHash = "e38fa1a920da144b4f91c910b3e8f432c1cd3a6dd27f40a8bad40317e25981cf",
-                                    PasswordSalt = "a45e7aa02fd2414eb66c0c24562205ba",
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
                                     ReminderSent = false,
                                     Username = "desktop"
                                 },
                                 new
                                 {
                                     UserId = 2L,
-                                    LastPasswordChangeAt = new DateTime(2024, 8, 29, 11, 32, 51, 665, DateTimeKind.Local).AddTicks(4090),
-                                    PasswordHash = "e38fa1a920da144b4f91c910b3e8f432c1cd3a6dd27f40a8bad40317e25981cf",
-                                    PasswordSalt = "a45e7aa02fd2414eb66c0c24562205ba",
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
                                     ReminderSent = false,
                                     Username = "mobile"
                                 });

@@ -3,6 +3,8 @@ import 'package:erezervisi_mobile/models/requests/message/get_messages_request.d
 import 'package:erezervisi_mobile/models/responses/base/paged_response.dart';
 import 'package:erezervisi_mobile/models/responses/message/message_get_dto.dart';
 import 'package:erezervisi_mobile/providers/message_provider.dart';
+import 'package:erezervisi_mobile/shared/navigator/navigate.dart';
+import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:erezervisi_mobile/widgets/master_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -74,13 +76,10 @@ class _MyChatState extends State<MyChat> {
 
                         return GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ChatDetails(userId: message.senderId),
-                              ),
-                            );
+                            Navigate.next(
+                                context,
+                                AppRoutes.chatDetails.routeName,
+                                ChatDetails(userId: message.senderId), true);
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),

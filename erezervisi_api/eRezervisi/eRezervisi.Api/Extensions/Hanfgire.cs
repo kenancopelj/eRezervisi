@@ -69,6 +69,9 @@ namespace eRezervisi.Api.Extensions
                 RecurringJob.AddOrUpdate<IJobService>(Jobs.CheckUsers, x => x.CheckUsersAsync(CancellationToken.None), configuration.GetValue<string>("CheckUsersJobCron"),
                     jobOptions);
 
+                RecurringJob.AddOrUpdate<IJobService>(Jobs.CompleteReservations, x => x.CompleteReservationsAsync(CancellationToken.None), configuration.GetValue<string>("CompleteReservationsJobCron"),
+                    jobOptions);
+
                 RecurringJob.AddOrUpdate<IJobService>(Jobs.CheckAccommodationUnits, x => x.CheckAccommodationUnitsAsync(CancellationToken.None), configuration.GetValue<string>("CheckAccommodationUnitsJobCron"),
                     jobOptions);
 

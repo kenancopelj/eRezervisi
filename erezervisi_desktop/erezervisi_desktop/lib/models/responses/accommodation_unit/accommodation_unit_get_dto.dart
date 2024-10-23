@@ -8,11 +8,15 @@ class AccommodationUnitGetDto {
   late String title;
   late num price;
   late String? note;
+  late String address;
   late PolicyGetDto? policy;
+  late num categoryId;
   late CategoryGetDto? category;
+  late num townshipId;
   late TownshipGetDto township;
   late num latitude;
   late num longitude;
+  late num tapPosition;
   late String thumbnailImage;
   late List<ImageGetDto> images;
   late bool favorite;
@@ -23,11 +27,15 @@ class AccommodationUnitGetDto {
       required this.title,
       required this.price,
       this.note,
+      required this.address,
       required this.policy,
       required this.category,
+      required this.categoryId,
+      required this.townshipId,
       required this.township,
       required this.latitude,
       required this.longitude,
+      required this.tapPosition,
       required this.thumbnailImage,
       required this.images,
       required this.favorite,
@@ -37,16 +45,20 @@ class AccommodationUnitGetDto {
     return AccommodationUnitGetDto(
         id: json['id'] as num,
         title: json['title'],
+        address: json['address'],
         price: json['price'] as num,
         policy: json['accommodationUnitPolicy'] != null
             ? PolicyGetDto.fromJson(json['accommodationUnitPolicy'])
             : null,
+        categoryId: json['accommodationUnitCategoryId'] as num,
+        townshipId: json['townshipId'] as num,
         category: json['category'] != null
             ? CategoryGetDto.fromJson(json['accommodationUnitCategory'])
             : null,
         township: TownshipGetDto.fromJson(json['township']),
         latitude: json['latitude'] as num,
         longitude: json['longitude'] as num,
+        tapPosition: json['tapPosition'] as num,
         thumbnailImage: json['thumbnailImage'],
         favorite: json['favorite'],
         ownerId: json['ownerId'] as num,

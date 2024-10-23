@@ -1,5 +1,4 @@
 import 'package:erezervisi_desktop/shared/components/form/button.dart';
-import 'package:erezervisi_desktop/shared/components/form/input.dart';
 import 'package:erezervisi_desktop/shared/style.dart';
 import 'package:erezervisi_desktop/widgets/master_widget.dart';
 import 'package:flutter/material.dart';
@@ -38,16 +37,22 @@ class _SearchState extends State<Search> {
                     const SizedBox(height: 10),
                     Row(
                       children: [
-                        const SizedBox(width: 10,),
+                        const SizedBox(
+                          width: 10,
+                        ),
                         IconButton(
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            icon: const Icon(Icons.arrow_back_ios, size: 16,)),
+                            icon: const Icon(
+                              Icons.arrow_back_ios,
+                              size: 16,
+                            )),
                         Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: TextFormField(
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             style: const TextStyle(
                               fontSize: 12,
                             ),
@@ -106,7 +111,8 @@ class _SearchState extends State<Search> {
                             itemCount: searches.length,
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
                                 child: Text(
                                   searches[index],
                                   style: const TextStyle(fontSize: 14),

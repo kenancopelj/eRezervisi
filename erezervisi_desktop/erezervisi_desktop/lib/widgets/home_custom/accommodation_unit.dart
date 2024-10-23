@@ -1,12 +1,6 @@
-import 'dart:io';
-import 'package:erezervisi_desktop/helpers/custom_theme.dart';
-import 'package:erezervisi_desktop/helpers/file_helper.dart';
 import 'package:erezervisi_desktop/models/responses/accommodation_unit/accommodation_unit_get_dto.dart';
-import 'package:erezervisi_desktop/providers/file_provider.dart';
-import 'package:erezervisi_desktop/screens/accommodation_unit_details.dart';
+import 'package:erezervisi_desktop/shared/globals.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class AccommodationUnit extends StatefulWidget {
   final AccommodationUnitGetDto item;
@@ -23,28 +17,6 @@ class AccommodationUnit extends StatefulWidget {
 }
 
 class _AccommodationUnitState extends State<AccommodationUnit> {
-  late FileProvider fileProvider;
-  XFile? image;
-
-  @override
-  void initState() {
-    super.initState();
-
-    fileProvider = context.read<FileProvider>();
-
-    loadImage();
-  }
-
-  Future loadImage() async {
-    var response = await fileProvider
-        .downloadAccommodationUnitImage(widget.item.thumbnailImage);
-    var xfile = await getXFileFromBytes(response.bytes, response.fileName);
-
-    setState(() {
-      image = xfile;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -65,12 +37,11 @@ class _AccommodationUnitState extends State<AccommodationUnit> {
                 ),
               ),
               SizedBox(
-                height: 60,
-                width: 60,
-                child: image != null
-                    ? Image.file(File(image!.path), fit: BoxFit.cover)
-                    : const Icon(Icons.image, size: 60, color: Colors.grey),
-              ),
+                  height: 60,
+                  width: 60,
+                  child: Image.network(
+                      Globals.imageBasePath + widget.item.thumbnailImage,
+                      fit: BoxFit.cover)),
               SizedBox(width: 120, child: Text(widget.item.title)),
               SizedBox(width: 120, child: Text(widget.item.township.title)),
               SizedBox(

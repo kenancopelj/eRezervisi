@@ -1,12 +1,11 @@
-import 'package:erezervisi_desktop/models/responses/accommodation_unit/accommodation_unit_get_dto.dart';
-
 class ReservationGetDto {
   late num id;
   late String code;
   late num guestId;
   late String guest;
   late num accommodationUnitId;
-  late AccommodationUnitGetDto accommodationUnit;
+  late String accommodationUnitTitle;
+  String? accommodationUnitThumbnailImage;
   late DateTime from;
   late DateTime to;
   late num paymentMethod;
@@ -23,7 +22,8 @@ class ReservationGetDto {
     required this.guestId,
     required this.guest,
     required this.accommodationUnitId,
-    required this.accommodationUnit,
+    required this.accommodationUnitTitle,
+    this.accommodationUnitThumbnailImage,
     required this.from,
     required this.to,
     required this.paymentMethod,
@@ -42,8 +42,9 @@ class ReservationGetDto {
       guestId: json['guestId'] as num,
       guest: json['guest'] as String,
       accommodationUnitId: json['accommodationUnitId'] as num,
-      accommodationUnit:
-          AccommodationUnitGetDto.fromJson(json['accommodationUnit']),
+      accommodationUnitTitle: json['accommodationUnit']['title'],
+      accommodationUnitThumbnailImage: json['accommodationUnit']
+          ['thumbnailImage'],
       from: DateTime.parse(json['from']),
       to: DateTime.parse(json['to']),
       paymentMethod: json['paymentMethod'] as num,
@@ -52,7 +53,7 @@ class ReservationGetDto {
       totalPeople: json['totalPeople'] as num,
       totalDays: json['totalDays'] as num,
       totalPrice: json['totalPrice'] as num,
-      createdAt: json['createdAt'] as DateTime,
+      createdAt: DateTime.parse(json['createdAt']),
     );
   }
 }

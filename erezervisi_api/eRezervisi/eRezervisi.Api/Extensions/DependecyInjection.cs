@@ -10,8 +10,8 @@ namespace eRezervisi.Api.Extensions
         public static void AddDependencyInjection(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             services.Configure<HangfireConfiguration>(configuration.GetSection("Hangfire"));
-            services.Configure<StorageOptions>(configuration.GetSection("Storage"));
             services.Configure<MailConfig>(configuration.GetSection("MailConfig"));
+            services.Configure<StripeConfig>(configuration.GetSection("Stripe"));
 
             services.AddSignalR();
 
@@ -38,6 +38,7 @@ namespace eRezervisi.Api.Extensions
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IRabbitMQProducer, RabbitMQProducer>();
             services.AddScoped<IDashboardService, DashboardService>();
+            services.AddScoped<IStatisticsService, StatisticsService>();
         }
     }
 }

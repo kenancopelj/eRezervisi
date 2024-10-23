@@ -149,13 +149,18 @@ namespace eRezervisi.Core.Services
 
         public async Task<PagedResponse<ReservationGetDto>> GetReservationPagedAsync(GetReservationsRequest request, CancellationToken cancellationToken)
         {
+            var userId = _jwtTokenReader.GetUserIdFromToken();
+
             var queryable = _dbContext.Reservations.AsQueryable();
 
             var pagingRequest = _mapper.Map<PagedRequest<Reservation>>(request);
             var searchTerm = pagingRequest.SearchTermLower;
 
             var reservations = await queryable.GetPagedAsync(pagingRequest,
-                new List<(bool shouldFilter, Expression<Func<Reservation, bool>> FilterExpression)>(),
+                new List<(bool shouldFilter, Expression<Func<Reservation, bool>> FilterExpression)>()
+                {
+                    (true, x => x.AccommodationUnit.OwnerId == userId)
+                },
                 GetOrderByExpression(pagingRequest.OrderByColumn),
                 x => new ReservationGetDto
                 {
@@ -164,27 +169,7 @@ namespace eRezervisi.Core.Services
                     GuestId = x.UserId,
                     Guest = x.User.GetFullName(),
                     AccommodationUnitId = x.AccommodationUnitId,
-                    AccommodationUnit = new AccommodationUnitGetDto
-                    {
-                        Id = x.AccommodationUnitId,
-                        Title = x.AccommodationUnit.Title,
-                        AccommodationUnitCategory = new CategoryGetDto
-                        {
-                            Id = x.AccommodationUnit.AccommodationUnitCategory.Id,
-                            Title = x.AccommodationUnit.AccommodationUnitCategory.Title
-                        },
-                        Township = new TownshipGetDto
-                        {
-                            Id = x.AccommodationUnit.TownshipId,
-                            Title = x.AccommodationUnit.Township.Title,
-                            Canton = new CantonGetDto
-                            {
-                                Id = x.AccommodationUnit.Township.CantonId,
-                                Title = x.AccommodationUnit.Township.Canton.Title,
-                                ShortTitle = x.AccommodationUnit.Township.Canton.ShortTitle
-                            }
-                        }
-                    },
+                    AccommodationUnit = _mapper.Map<AccommodationUnitGetDto>(x.AccommodationUnit),
                     From = x.From,
                     To = x.To,
                     PaymentMethod = x.PaymentMethod,
@@ -252,7 +237,7 @@ namespace eRezervisi.Core.Services
                                                                       x.CreatedAt.Year == currentYear)
                                                           .CountAsync(cancellationToken);
 
-            return $"{accommodationUnit.ShortTitle}-{lastNumber + 1}/{currentYear}";
+            return $"{accommodationUnit.Title.Trim()}-{lastNumber + 1}/{currentYear}";
         }
 
         private Expression<Func<Reservation, object>> GetOrderByExpression(string orderBy)

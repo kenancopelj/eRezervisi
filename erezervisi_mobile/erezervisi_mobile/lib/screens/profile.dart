@@ -7,7 +7,6 @@ import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/models/requests/image/image_create_dto.dart';
 import 'package:erezervisi_mobile/models/requests/user/user_update_dto.dart';
 import 'package:erezervisi_mobile/models/responses/user/user_get_dto.dart';
-import 'package:erezervisi_mobile/providers/file_provider.dart';
 import 'package:erezervisi_mobile/providers/user_provider.dart';
 import 'package:erezervisi_mobile/shared/components/form/button.dart';
 import 'package:erezervisi_mobile/shared/components/form/input.dart';
@@ -40,7 +39,6 @@ class _MyProfileState extends State<MyProfile> {
   final formKey = GlobalKey<FormState>();
 
   late UserProvider userProvider;
-  late FileProvider fileProvider;
 
   UserGetDto? user;
 
@@ -53,7 +51,6 @@ class _MyProfileState extends State<MyProfile> {
     super.initState();
 
     userProvider = context.read<UserProvider>();
-    fileProvider = context.read<FileProvider>();
 
     loadProfile();
   }
@@ -63,6 +60,7 @@ class _MyProfileState extends State<MyProfile> {
 
     setState(() {
       user = response;
+      print(response.image);
       if (user != null) {
         firstNameController.text = user!.firstName;
         lastNameController.text = user!.lastName;
@@ -70,27 +68,13 @@ class _MyProfileState extends State<MyProfile> {
         addressController.text = user!.address;
         emailController.text = user!.email;
         usernameController.text = user!.username;
+
+        if (user!.image != null) {
+          profileImage =
+              ImageCreateDto(imageFileName: user!.image, isThumbnail: false);
+        }
       }
     });
-
-    loadImage(user!.image ?? "");
-  }
-
-  Future loadImage(String fileName) async {
-    if (fileName.trim().isEmpty) return;
-
-    try {
-      var response = await fileProvider.downloadUserImage(fileName);
-      var xfile = await getXFileFromBytes(response.bytes, response.fileName);
-
-      setState(() {
-        profileImage = ImageCreateDto(
-            image: xfile,
-            isThumbnail: false,
-            imageBase64: null,
-            imageFileName: null);
-      });
-    } catch (_) {}
   }
 
   @override
@@ -127,17 +111,17 @@ class _MyProfileState extends State<MyProfile> {
                       children: [
                         InkWell(
                           onTap: () {
-                            if (profileImage != null) {
-                              showDialog(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return PreviewImage(
-                                    image: profileImage!.image!,
-                                  );
-                                },
-                              );
-                            }
+                            // if (profileImage != null) {
+                            //   showDialog(
+                            //     barrierDismissible: false,
+                            //     context: context,
+                            //     builder: (BuildContext context) {
+                            //       return PreviewImage(
+                            //         image: profileImage!.image!,
+                            //       );
+                            //     },
+                            //   );
+                            // }
                           },
                           child: profileImage != null
                               ? Container(
@@ -149,8 +133,9 @@ class _MyProfileState extends State<MyProfile> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(50),
                                     image: DecorationImage(
-                                        image: FileImage(
-                                            File(profileImage!.image!.path)),
+                                        image: NetworkImage(
+                                            Globals.imageBasePath +
+                                                user!.image!),
                                         fit: BoxFit.contain),
                                   ),
                                 )
@@ -482,7 +467,7 @@ class _MyProfileState extends State<MyProfile> {
     try {
       response = await userProvider.update(Globals.loggedUser!.userId, payload);
 
-      Globals.image = profileImage!.image;
+      Globals.image = response!.image;
 
       Globals.notifier.setInfo('Uspješno ažurirano', ToastType.Success);
 

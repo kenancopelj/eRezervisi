@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:erezervisi_mobile/helpers/custom_theme.dart';
 import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/models/responses/accommodation_unit/accommodation_unit_get_dto.dart';
-import 'package:erezervisi_mobile/providers/file_provider.dart';
 import 'package:erezervisi_mobile/screens/accommodation_unit_details.dart';
+import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:erezervisi_mobile/shared/navigator/navigate.dart';
 import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:flutter/material.dart';
@@ -21,28 +21,6 @@ class FavoriteCard extends StatefulWidget {
 }
 
 class _FavoriteCardState extends State<FavoriteCard> {
-  late FileProvider fileProvider;
-  XFile? image;
-
-  @override
-  void initState() {
-    super.initState();
-
-    fileProvider = context.read<FileProvider>();
-
-    loadImage();
-  }
-
-  Future loadImage() async {
-    var response = await fileProvider.downloadAccommodationUnitImage(
-        widget.accommodationUnit.thumbnailImage);
-    var xfile = await getXFileFromBytes(response.bytes, response.fileName);
-
-    setState(() {
-      image = xfile;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -62,9 +40,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: image != null
-                  ? Image.file(File(image!.path))
-                  : const SizedBox.shrink(),
+              child: Image.network(Globals.imageBasePath + widget.accommodationUnit.thumbnailImage)
             ),
             const SizedBox(
               width: 10,

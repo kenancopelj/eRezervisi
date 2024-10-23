@@ -26,8 +26,7 @@ namespace eRezervisi.Core.Services
                 .AsNoTracking()
                 .Where(x => x.Status == Domain.Enums.AccommodationUnitStatus.Active &&
                     (string.IsNullOrEmpty(request.SearchTerm) ||
-                    x.Title.Contains(request.SearchTermLower) ||
-                    x.ShortTitle.Contains(request.SearchTermLower)))
+                    x.Title.Contains(request.SearchTermLower)))
                 .Select(x => new AccommodationUnitGetShortDto
                 {
                     Id = x.Id,
@@ -63,8 +62,6 @@ namespace eRezervisi.Core.Services
             {
                 case "title":
                     return x => x.Title;
-                case "shortTile":
-                    return x => x.ShortTitle;
                 case "township":
                     return x => x.Township.Title;
                 default:

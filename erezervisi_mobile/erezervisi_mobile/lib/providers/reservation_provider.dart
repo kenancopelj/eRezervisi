@@ -60,7 +60,7 @@ class ReservationProvider extends BaseProvider {
     var response = await dio.post(url, data: jsonEncode(request.toJson()));
 
     if (response.statusCode == 200) {
-      Globals.notifier.setInfo("Uspješno kreirano", ToastType.Success);
+      Globals.notifier.setInfo("Rezervacija uspješno kreirana", ToastType.Success);
       var reservation = ReservationGetDto.fromJson(response.data);
       return reservation;
     }

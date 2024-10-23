@@ -1,34 +1,25 @@
 import 'dart:io';
 import 'package:erezervisi_desktop/enums/toast_type.dart';
 import 'package:erezervisi_desktop/helpers/custom_theme.dart';
-import 'package:erezervisi_desktop/helpers/file_helper.dart';
 import 'package:erezervisi_desktop/main.dart';
-import 'package:erezervisi_desktop/models/requests/image/image_create_dto.dart';
-import 'package:erezervisi_desktop/providers/file_provider.dart';
-import 'package:erezervisi_desktop/screens/accommodation_units.dart';
-import 'package:erezervisi_desktop/screens/chat.dart';
-import 'package:erezervisi_desktop/screens/favorites.dart';
+import 'package:erezervisi_desktop/screens/accommodation_units/accommodation_units.dart';
+import 'package:erezervisi_desktop/screens/guests/guests.dart';
 import 'package:erezervisi_desktop/screens/home.dart';
-import 'package:erezervisi_desktop/screens/my_reviews.dart';
-import 'package:erezervisi_desktop/screens/notifications.dart';
-import 'package:erezervisi_desktop/screens/profile.dart';
-import 'package:erezervisi_desktop/screens/reservations.dart';
-import 'package:erezervisi_desktop/screens/reviews.dart';
-import 'package:erezervisi_desktop/screens/search.dart';
-import 'package:erezervisi_desktop/screens/settings.dart';
+import 'package:erezervisi_desktop/screens/reservations/reservations.dart';
+import 'package:erezervisi_desktop/screens/reviews/reviews.dart';
+import 'package:erezervisi_desktop/screens/statistics/statistics.dart';
 import 'package:erezervisi_desktop/shared/components/loader.dart';
 import 'package:erezervisi_desktop/shared/globals.dart';
-import 'package:erezervisi_desktop/shared/navigator/custom_page_route.dart';
 import 'package:erezervisi_desktop/shared/navigator/navigate.dart';
 import 'package:erezervisi_desktop/shared/navigator/route_list.dart';
-import 'package:erezervisi_desktop/shared/navigator/routes.dart';
-import 'package:erezervisi_desktop/shared/style.dart';
+import 'package:erezervisi_desktop/widgets/maintenances/maintenances.dart';
+import 'package:erezervisi_desktop/widgets/toast.dart';
 import 'package:flutter/material.dart';
 
 class MasterWidget extends StatefulWidget {
   final Widget child;
-  bool isLogin;
-  MasterWidget({super.key, required this.child, this.isLogin = false});
+  final bool isLogin;
+  const MasterWidget({super.key, required this.child, this.isLogin = false});
 
   @override
   State<MasterWidget> createState() => _MasterWidgetState();
@@ -52,6 +43,36 @@ class _MasterWidgetState extends State<MasterWidget> {
     }
   }
 
+  Icon getIconBasedOnToastType(ToastType type) {
+    switch (type) {
+      case ToastType.Error:
+        return const Icon(
+          Icons.error_outline,
+          color: Colors.white,
+        );
+      case ToastType.Success:
+        return const Icon(
+          Icons.check_outlined,
+          color: Colors.white,
+        );
+      case ToastType.Warning:
+        return const Icon(
+          Icons.warning_outlined,
+          color: Colors.white,
+        );
+      case ToastType.Info:
+        return const Icon(
+          Icons.info_outline,
+          color: Colors.white,
+        );
+      default:
+        return const Icon(
+          Icons.info_outline,
+          color: Colors.white,
+        );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -60,38 +81,10 @@ class _MasterWidgetState extends State<MasterWidget> {
       if (mounted) {
         setState(() {
           if (Globals.notifier.info.item1.isNotEmpty) {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Container(
-                  constraints: const BoxConstraints(maxHeight: 130),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.info, color: Colors.white),
-                      const SizedBox(width: 12.0),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.6,
-                        child: Text(
-                          Globals.notifier.info.item1,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                behavior: SnackBarBehavior.floating,
-                margin: const EdgeInsets.all(20),
-                shape: const StadiumBorder(),
-                backgroundColor:
-                    getColorBasedOnType(Globals.notifier.info.item2),
-                duration: const Duration(milliseconds: 1500),
-              ),
-            );
+            showToast(
+                Globals.notifier.info.item1,
+                getColorBasedOnType(Globals.notifier.info.item2),
+                getIconBasedOnToastType(Globals.notifier.info.item2));
             Globals.notifier.setInfo("", ToastType.Unknown);
           }
           Globals.isAnyRequestActive = Globals.notifier.isAnyRequestActive;
@@ -116,51 +109,26 @@ class _MasterWidgetState extends State<MasterWidget> {
     Globals.notifier.addListener(globalNotifierListener);
   }
 
+  void showToast(String message, Color backgroundColor, Icon icon) {
+    OverlayEntry overlayEntry = OverlayEntry(
+      builder: (context) => Toast(
+        icon: icon,
+        message: message,
+        backgroundColor: backgroundColor,
+      ),
+    );
+
+    Overlay.of(context).insert(overlayEntry);
+
+    Future.delayed(const Duration(seconds: 2), () {
+      overlayEntry.remove();
+    });
+  }
+
   @override
   void dispose() {
     Globals.notifier.removeListener(globalNotifierListener);
     super.dispose();
-  }
-
-  BarRoute selectedRoute = BarRoute.Home;
-
-  void navigate(BottomNavigationRoute route) {
-    setState(() {
-      selectedRoute = route.route;
-    });
-
-    mapRoute(selectedRoute);
-  }
-
-  mapRoute(selectedRoute) {
-    switch (selectedRoute) {
-      case BarRoute.Home:
-        Navigate.next(context, AppRoutes.home.routeName, const Home(), true);
-        break;
-      case BarRoute.Favorites:
-        Navigate.next(
-            context, AppRoutes.favorites.routeName, const MyFavourites(), true);
-        break;
-      case BarRoute.Search:
-        Navigate.next(
-            context, AppRoutes.search.routeName, const Search(), true);
-        break;
-      case BarRoute.Notifications:
-        Navigate.next(context, AppRoutes.notifications.routeName,
-            const MyNotifications(), true);
-        break;
-      case BarRoute.Profile:
-        Navigate.next(
-            context, AppRoutes.profile.routeName, const MyProfile(), true);
-        break;
-      default:
-        break;
-    }
-  }
-
-  Color selectionColor(BarRoute route) {
-    if (route == selectedRoute) return Style.secondaryColor;
-    return Style.primaryColor100;
   }
 
   @override
@@ -305,8 +273,11 @@ class _MasterWidgetState extends State<MasterWidget> {
                           padding: const EdgeInsets.only(left: 15, top: 5),
                           child: ListTile(
                             onTap: () {
-                              Navigate.next(context, AppRoutes.chat.routeName,
-                                  const MyChat(), true);
+                              Navigate.next(
+                                  context,
+                                  AppRoutes.reservations.routeName,
+                                  const Reservations(),
+                                  true);
                             },
                             leading: const Icon(
                               Icons.calendar_month_outlined,
@@ -322,10 +293,8 @@ class _MasterWidgetState extends State<MasterWidget> {
                           padding: const EdgeInsets.only(left: 15, top: 5),
                           child: ListTile(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const MyReviews()));
+                              Navigate.next(context, AppRoutes.chat.routeName,
+                                  const Guests(), true);
                             },
                             leading: const Icon(
                               Icons.people_outline_outlined,
@@ -341,10 +310,11 @@ class _MasterWidgetState extends State<MasterWidget> {
                           padding: const EdgeInsets.only(left: 15, top: 5),
                           child: ListTile(
                             onTap: () {
-                              Navigator.push(
+                              Navigate.next(
                                   context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const MyReviews()));
+                                  AppRoutes.statistics.routeName,
+                                  const Statistics(),
+                                  true);
                             },
                             leading: const Icon(
                               Icons.bar_chart_outlined,
@@ -360,10 +330,11 @@ class _MasterWidgetState extends State<MasterWidget> {
                           padding: const EdgeInsets.only(left: 15, top: 5),
                           child: ListTile(
                             onTap: () {
-                              Navigator.push(
+                              Navigate.next(
                                   context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const MyReviews()));
+                                  AppRoutes.maintenances.routeName,
+                                  const Maintenances(),
+                                  true);
                             },
                             leading: const Icon(
                               Icons.request_page_outlined,

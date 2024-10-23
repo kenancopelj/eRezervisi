@@ -4,13 +4,15 @@ import 'package:erezervisi_desktop/models/requests/base/base_paged_request.dart'
 import 'package:erezervisi_desktop/models/responses/auth/jwt_token_response.dart';
 import 'package:erezervisi_desktop/models/responses/notification/notifications.dart';
 import 'package:erezervisi_desktop/notifiers/global_notifier.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Globals {
   Globals._();
-  // static String apiUrl = "http://localhost:5269/"; -- Docker
+  // Docker
+  // static String apiUrl = "http://localhost:5269/";
   static String apiUrl = "https://localhost:7158/";
+
+  static String imageBasePath = "${apiUrl}Uploads/Images/";
 
   static Notifications notifications = Notifications(notifications: []);
 

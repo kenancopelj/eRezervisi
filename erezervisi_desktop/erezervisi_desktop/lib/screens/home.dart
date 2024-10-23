@@ -2,20 +2,15 @@
 
 import 'package:erezervisi_desktop/enums/accommodation_unit_filter.dart';
 import 'package:erezervisi_desktop/helpers/custom_theme.dart';
-import 'package:erezervisi_desktop/models/requests/accommodation_unit/get_accommodation_units_request.dart';
-import 'package:erezervisi_desktop/models/requests/category/get_all_categories_request.dart';
-import 'package:erezervisi_desktop/models/responses/accommodation_unit/accommodation_unit_get_dto.dart';
-import 'package:erezervisi_desktop/models/responses/base/paged_response.dart';
-import 'package:erezervisi_desktop/models/responses/category/categories.dart';
+import 'package:erezervisi_desktop/models/requests/dashboard/get_dashboard_data_request.dart';
+import 'package:erezervisi_desktop/models/responses/dashboard/dashboard_data_response.dart';
 import 'package:erezervisi_desktop/models/responses/review/review_get_dto.dart';
-import 'package:erezervisi_desktop/providers/accommodation_unit_provider.dart';
-import 'package:erezervisi_desktop/providers/category_provider.dart';
-import 'package:erezervisi_desktop/screens/accommodation_units.dart';
-import 'package:erezervisi_desktop/screens/create_accommodation_unit.dart';
+import 'package:erezervisi_desktop/providers/dashboard_provider.dart';
+import 'package:erezervisi_desktop/screens/accommodation_units/accommodation_units.dart';
+import 'package:erezervisi_desktop/screens/accommodation_units/create_accommodation_unit.dart';
 import 'package:erezervisi_desktop/shared/globals.dart';
 import 'package:erezervisi_desktop/shared/navigator/navigate.dart';
 import 'package:erezervisi_desktop/shared/navigator/route_list.dart';
-import 'package:erezervisi_desktop/shared/style.dart';
 import 'package:erezervisi_desktop/widgets/home_custom/dashboard_card.dart';
 import 'package:erezervisi_desktop/widgets/master_widget.dart';
 import 'package:erezervisi_desktop/widgets/reviews_custom/review_item.dart';
@@ -30,74 +25,32 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var categories = Categories(categories: []);
-  var accommodationUnits = PagedResponse<AccommodationUnitGetDto>.empty();
-  var latestAccommodationUnits = PagedResponse<AccommodationUnitGetDto>.empty();
-  var popularAccommodationUnits =
-      PagedResponse<AccommodationUnitGetDto>.empty();
+  late DashboardProvider dashboardProvider;
 
-  late CategoryProvider categoryProvider;
-  late AccommodationUnitProvider accommodationUnitProvider;
+  var request = GetDashboardDataRequest(month: 10, year: 2024);
 
-  var request = GetAccommodationUnitsRequest.def();
-  var latestRequest = GetAccommodationUnitsRequest.def();
-  var popularRequest = GetAccommodationUnitsRequest.def();
+  var dashboardData = DashboardDataResponse(
+      availableAccommodationUnits: 0,
+      expectedArrivals: 0,
+      numberOfGuests: 0,
+      numberOfReviews: 0,
+      latestReservations: List.empty(),
+      latestReviews: List.empty());
 
   @override
   void initState() {
     super.initState();
-    categoryProvider = context.read<CategoryProvider>();
-    accommodationUnitProvider = context.read<AccommodationUnitProvider>();
+    dashboardProvider = context.read<DashboardProvider>();
 
-    loadCategories();
-    loadAccommodationUnits();
-    loadLatestAccommodationUnits();
-    loadPopularAccommodationUnits();
+    loadDashboardData();
   }
 
-  Future loadCategories() async {
-    var response = await categoryProvider.getAll(GetAllCategoriesRequest(
-        searchTerm: Globals.baseGetAllRequest.searchTerm));
+  Future loadDashboardData() async {
+    var response = await dashboardProvider.get(request);
 
     if (mounted) {
       setState(() {
-        categories = response;
-      });
-    }
-  }
-
-  Future loadAccommodationUnits() async {
-    var response = await accommodationUnitProvider.getPaged(request);
-
-    if (mounted) {
-      setState(() {
-        accommodationUnits = response;
-      });
-    }
-  }
-
-  Future loadLatestAccommodationUnits() async {
-    latestRequest.pageSize = 5;
-
-    var response =
-        await accommodationUnitProvider.getLatestPaged(latestRequest);
-
-    if (mounted) {
-      setState(() {
-        latestAccommodationUnits = response;
-      });
-    }
-  }
-
-  Future loadPopularAccommodationUnits() async {
-    popularRequest.pageSize = 5;
-
-    var response =
-        await accommodationUnitProvider.getPopularPaged(popularRequest);
-
-    if (mounted) {
-      setState(() {
-        popularAccommodationUnits = response;
+        dashboardData = response;
       });
     }
   }
@@ -123,7 +76,9 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-          Divider(),
+          Divider(
+            thickness: 2,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 50),
             child: Row(
@@ -133,17 +88,17 @@ class _HomeState extends State<Home> {
                     title: "Očekivani dolasci",
                     subtitle: "Broj zakazanih dolazaka za tekući mjesec",
                     icon: Icons.location_on_outlined,
-                    value: 2),
+                    value: dashboardData.expectedArrivals),
                 DashboardCard(
                     title: "Dostupnih objekata",
                     subtitle: "Broj mojih dostupnih objekata",
                     icon: Icons.home_outlined,
-                    value: 3),
+                    value: dashboardData.availableAccommodationUnits),
                 DashboardCard(
                     title: "Broj gostiju",
                     subtitle: "Ukupan broj gostiju u tekućem mjesecu",
                     icon: Icons.people_outline,
-                    value: 8),
+                    value: dashboardData.expectedArrivals),
               ],
             ),
           ),
@@ -160,7 +115,7 @@ class _HomeState extends State<Home> {
                             title: "Broj recenzija",
                             subtitle: "Broj recenzija za aktivne objekte",
                             icon: Icons.favorite_outline,
-                            value: 10),
+                            value: dashboardData.numberOfGuests),
                         SizedBox(
                           height: 30,
                         ),
@@ -215,6 +170,6 @@ class _HomeState extends State<Home> {
 
   showNewAccommodationUnitScreen() {
     Navigate.next(context, AppRoutes.createAccommodationUnit.routeName,
-        const CreateAccommodationUnitScreen(), true);
+        const CreateAccommodationUnit(), true);
   }
 }

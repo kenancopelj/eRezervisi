@@ -62,6 +62,7 @@ namespace eRezervisi.Core.Services.Mapper
             CreateMap<ImageCreateDto, Image>();
             CreateMap<Image, ImageCreateDto>();
             CreateMap<Image, ImageGetDto>();
+            CreateMap<ImageUpdateDto, Image>();
             CreateMap<TownshipGetDto, Township>();
             CreateMap<CantonGetDto, Canton>();
             CreateMap<FavoriteAccommodationUnit, FavoriteAccommodationUnitGetDto>();
@@ -77,7 +78,7 @@ namespace eRezervisi.Core.Services.Mapper
             CreateMap<Message, MessageGetDto>();
             CreateMap<GetMessagesRequest, PagedRequest<Message>>();
             CreateMap<User, UserGetShortDto>();
-            CreateMap<PagedRequest<AccommodationUnitReview>, GetAccommodationUnitReviewsRequest>();
+            CreateMap<GetAccommodationUnitReviewsRequest, PagedRequest<AccommodationUnitReview>>();
         }
     }
 }

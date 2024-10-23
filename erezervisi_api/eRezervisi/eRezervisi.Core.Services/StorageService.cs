@@ -1,60 +1,14 @@
 ﻿using eRezervisi.Common.Dtos.Storage;
-using eRezervisi.Core.Domain.Enums;
 using eRezervisi.Core.Services.Interfaces;
-using eRezervisi.Infrastructure.Common.Configuration;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.Options;
-using System.Reflection;
+using Google.Apis.Logging;
 
 namespace eRezervisi.Core.Services
 {
     public class StorageService : IStorageService
     {
-        private readonly StorageOptions _storageOptions;
-        public StorageService(IOptionsSnapshot<StorageOptions> storageOptions)
+        public async Task<UploadedFileGetDto> UploadFileAsync(string fileName, string base64File, CancellationToken cancellationToken)
         {
-            _storageOptions = storageOptions.Value;
-        }
-
-        public async Task<FileDetails?> DownloadFileAsync(FileType fileType, string fileName, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var folderName = GetFolderName(fileType);
-
-                var fileFullPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, folderName, fileName);
-
-                var bytes = await File.ReadAllBytesAsync(fileFullPath, cancellationToken);
-
-                const string DefaultContentType = "application/octet-stream";
-
-                var provider = new FileExtensionContentTypeProvider();
-
-                if (!provider.TryGetContentType(fileName, out string? contentType))
-                {
-                    contentType = DefaultContentType;
-                }
-
-                return new FileDetails
-                {
-                    Bytes = bytes,
-                    FileName = fileName,
-                    ContentType = contentType,
-                };
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        public async Task<UploadedFileGetDto> UploadFileAsync(FileType fileType, string fileName, string base64File, CancellationToken cancellationToken)
-        {
-            var files = new List<(string Path, string FileName)>();
-
-            var folderName = GetFolderName(fileType);
-
-            var uploadsFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, folderName);
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Images");
 
             var uniqueFileName = Guid.NewGuid().ToString() + "_" + fileName;
 
@@ -65,29 +19,34 @@ namespace eRezervisi.Core.Services
 
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-            using var ms = new MemoryStream(Convert.FromBase64String(base64File));
-
-            ms.Position = 0;
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await ms.CopyToAsync(stream);
-            }
+            var fileBytes = Convert.FromBase64String(base64File);
+            await File.WriteAllBytesAsync(filePath, fileBytes, cancellationToken);
 
             return new UploadedFileGetDto
             {
                 FileName = uniqueFileName,
+                FilePath = $"/Uploads/Images/{uniqueFileName}" 
             };
         }
 
-        private string GetFolderName(FileType fileType)
+        public async Task DeleteFileAsync(string fileName, CancellationToken cancellationToken)
         {
-            return fileType switch
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Images");
+
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            if (File.Exists(filePath))
             {
-                FileType.UserLogo => _storageOptions.UserLogosFolderName,
-                FileType.AccommodationUnitLogo => _storageOptions.AccommodationUnitLogosFolderName,
-                _ => throw new NotImplementedException()
-            };
+                try
+                {
+                    File.Delete(filePath);
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+
+            await Task.CompletedTask;
         }
     }
 }

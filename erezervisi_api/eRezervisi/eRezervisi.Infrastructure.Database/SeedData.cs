@@ -75,7 +75,6 @@ namespace eRezervisi.Infrastructure.Database
                     Username = "desktop",
                     RefreshToken = null,
                     RefreshTokenExpiresAtUtc = null,
-                    LastPasswordChangeAt = DateTime.Now,
                 },
                 new UserCredentials
                 {
@@ -85,7 +84,6 @@ namespace eRezervisi.Infrastructure.Database
                     Username = "mobile",
                     RefreshToken = null,
                     RefreshTokenExpiresAtUtc = null,
-                    LastPasswordChangeAt = DateTime.Now,
                 });
 
             #endregion

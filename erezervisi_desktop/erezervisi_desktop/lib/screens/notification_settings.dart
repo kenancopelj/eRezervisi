@@ -1,5 +1,4 @@
 import 'package:erezervisi_desktop/models/requests/user/update_settings_dto.dart';
-import 'package:erezervisi_desktop/models/responses/user/user_settings_get_dto.dart';
 import 'package:erezervisi_desktop/providers/user_provider.dart';
 import 'package:erezervisi_desktop/shared/globals.dart';
 import 'package:flutter/material.dart';

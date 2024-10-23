@@ -1,7 +1,7 @@
 class AuthDto {
   String username;
   String password;
-  final num scope = 2;
+  final num scope = 1;
 
   AuthDto({
     required this.username,

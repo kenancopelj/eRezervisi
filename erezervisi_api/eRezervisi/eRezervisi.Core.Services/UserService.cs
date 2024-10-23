@@ -81,7 +81,7 @@ namespace eRezervisi.Core.Services
 
             if (request.ImageBase64 != null)
             {
-                var uploadedFile = await _storageService.UploadFileAsync(FileType.UserLogo, request.ImageFileName!, request.ImageBase64, cancellationToken);
+                var uploadedFile = await _storageService.UploadFileAsync(request.ImageFileName!, request.ImageBase64, cancellationToken);
 
                 user.Image = uploadedFile.FileName;
             }
@@ -190,7 +190,7 @@ namespace eRezervisi.Core.Services
 
             if (request.ImageBase64 != null)
             {
-                var uploadedFile = await _storageService.UploadFileAsync(FileType.UserLogo, request.ImageFileName!, request.ImageBase64, cancellationToken);
+                var uploadedFile = await _storageService.UploadFileAsync(request.ImageFileName!, request.ImageBase64, cancellationToken);
 
                 user.Image = uploadedFile.FileName;
             }

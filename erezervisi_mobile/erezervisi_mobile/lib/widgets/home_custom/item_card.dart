@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:erezervisi_mobile/helpers/custom_theme.dart';
 import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/models/responses/accommodation_unit/accommodation_unit_get_dto.dart';
-import 'package:erezervisi_mobile/providers/file_provider.dart';
 import 'package:erezervisi_mobile/screens/accommodation_unit_details.dart';
+import 'package:erezervisi_mobile/shared/globals.dart';
+import 'package:erezervisi_mobile/shared/navigator/navigate.dart';
+import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -18,38 +20,12 @@ class ItemCard extends StatefulWidget {
 }
 
 class _ItemCardState extends State<ItemCard> {
-  late FileProvider fileProvider;
-  XFile? image;
-
-  @override
-  void initState() {
-    super.initState();
-
-    fileProvider = context.read<FileProvider>();
-
-    loadImage();
-  }
-
-  Future loadImage() async {
-    var response = await fileProvider
-        .downloadAccommodationUnitImage(widget.item.thumbnailImage);
-    var xfile = await getXFileFromBytes(response.bytes, response.fileName);
-
-    setState(() {
-      image = xfile;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (_) => ObjectDetails(
-                      accommodationUnitId: widget.item.id,
-                    )));
+        Navigate.next(context, AppRoutes.accommodationUnitDetails.routeName,
+            ObjectDetails(accommodationUnitId: widget.item.id), true);
       },
       child: Material(
         borderRadius: BorderRadius.circular(15),
@@ -66,15 +42,13 @@ class _ItemCardState extends State<ItemCard> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 12),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                     child: SizedBox(
-                      height: 168,
-                      width: 224,
-                      child: image != null
-                          ? Image.file(File(image!.path))
-                          : const SizedBox.shrink(),
-                    ),
+                        height: 168,
+                        width: 224,
+                        child: Image.network(Globals.imageBasePath +
+                            widget.item.thumbnailImage)),
                   ),
                 ],
               ),

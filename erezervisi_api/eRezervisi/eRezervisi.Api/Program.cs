@@ -7,6 +7,7 @@ using eRezervisi.Infrastructure.Database;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
@@ -62,6 +63,12 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseMiddleware<GlobalExceptionHandler>();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Uploads/Images")),
+    RequestPath = "/Uploads/Images"
+});
 
 if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Docker"))
 {

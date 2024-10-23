@@ -6,7 +6,6 @@ import 'package:erezervisi_mobile/enums/toast_type.dart';
 import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/main.dart';
 import 'package:erezervisi_mobile/models/requests/image/image_create_dto.dart';
-import 'package:erezervisi_mobile/providers/file_provider.dart';
 import 'package:erezervisi_mobile/screens/favorites.dart';
 import 'package:erezervisi_mobile/screens/home.dart';
 import 'package:erezervisi_mobile/screens/notifications.dart';
@@ -237,12 +236,13 @@ class _MasterWidgetState extends State<MasterWidget> {
                                   height: 30,
                                   width: 30,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
+                                      borderRadius: BorderRadius.circular(50),
                                       image: DecorationImage(
-                                        fit: BoxFit.fitHeight,
+                                          fit: BoxFit.fitHeight,
                                           image: Globals.image != null
-                                              ? FileImage(File(
-                                                  Globals.image!.path))
+                                              ? NetworkImage(
+                                                  Globals.imageBasePath +
+                                                      Globals.image!)
                                               : const AssetImage(
                                                   "assets/images/user.png"))),
                                 )

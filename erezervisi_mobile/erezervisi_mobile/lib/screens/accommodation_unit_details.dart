@@ -11,7 +11,6 @@ import 'package:erezervisi_mobile/models/responses/accommodation_unit/accommodat
 import 'package:erezervisi_mobile/models/responses/user/user_get_dto.dart';
 import 'package:erezervisi_mobile/providers/accommodation_unit_provider.dart';
 import 'package:erezervisi_mobile/providers/favorites_provider.dart';
-import 'package:erezervisi_mobile/providers/file_provider.dart';
 import 'package:erezervisi_mobile/providers/user_provider.dart';
 import 'package:erezervisi_mobile/screens/chat.dart';
 import 'package:erezervisi_mobile/screens/chat_details.dart';
@@ -20,10 +19,12 @@ import 'package:erezervisi_mobile/screens/reviews.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:erezervisi_mobile/widgets/home_custom/carousel_indicators.dart';
+import 'package:erezervisi_mobile/widgets/image/preview_image.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_map/flutter_map.dart';
 
 import '../shared/navigator/navigate.dart';
 
@@ -39,7 +40,6 @@ class _ObjectDetailsState extends State<ObjectDetails> {
   AccommodationUnitGetDto? accommodationUnit;
 
   late AccommodationUnitProvider accommodationUnitProvider;
-  late FileProvider fileProvider;
   late FavoritesProvider favoritesProvider;
   late UserProvider userProvider;
 
@@ -47,16 +47,14 @@ class _ObjectDetailsState extends State<ObjectDetails> {
 
   bool favorite = false;
 
-  List<XFile> images = [];
+  LatLng? _tappedPoint;
 
   UserGetDto? owner;
-  XFile? userImage;
 
   @override
   void initState() {
     super.initState();
     accommodationUnitProvider = context.read<AccommodationUnitProvider>();
-    fileProvider = context.read<FileProvider>();
     favoritesProvider = context.read<FavoritesProvider>();
     userProvider = context.read<UserProvider>();
 
@@ -70,22 +68,14 @@ class _ObjectDetailsState extends State<ObjectDetails> {
     setState(() {
       accommodationUnit = response;
       favorite = response.favorite;
+
+      _tappedPoint = LatLng(accommodationUnit!.latitude.toDouble(),
+          accommodationUnit!.longitude.toDouble());
+
+          print(_tappedPoint);
     });
 
     loadUser();
-
-    for (var i = 0; i < accommodationUnit!.images.length; i++) {
-      loadImage(accommodationUnit!.images[i].fileName);
-    }
-  }
-
-  Future loadImage(String fileName) async {
-    var response = await fileProvider.downloadAccommodationUnitImage(fileName);
-    var xfile = await getXFileFromBytes(response.bytes, response.fileName);
-
-    setState(() {
-      images.add(xfile);
-    });
   }
 
   Future loadUser() async {
@@ -94,21 +84,6 @@ class _ObjectDetailsState extends State<ObjectDetails> {
     setState(() {
       owner = response;
     });
-
-    loadUserImage(response.image!);
-  }
-
-  Future loadUserImage(String fileName) async {
-    if (fileName.trim().isEmpty) return;
-
-    try {
-      var response = await fileProvider.downloadUserImage(fileName);
-      var xfile = await getXFileFromBytes(response.bytes, response.fileName);
-
-      setState(() {
-        userImage = xfile;
-      });
-    } catch (_) {}
   }
 
   Future addToFavorites() async {
@@ -180,13 +155,12 @@ class _ObjectDetailsState extends State<ObjectDetails> {
                 BottomNavigationBarItem(
                   icon: GestureDetector(
                     onTap: () {
-                      Navigator.push(
+                      Navigate.next(
                           context,
-                          MaterialPageRoute(
-                              builder: (_) => ReservationDetails(
-                                    accommodationUnitId:
-                                        widget.accommodationUnitId,
-                                  )));
+                          AppRoutes.reservationDetails.routeName,
+                          ReservationDetails(
+                              accommodationUnitId: widget.accommodationUnitId),
+                          true);
                     },
                     child: Container(
                       margin: EdgeInsets.only(right: 20),
@@ -213,14 +187,27 @@ class _ObjectDetailsState extends State<ObjectDetails> {
                 children: [
                   CarouselSlider(
                     disableGesture: false,
-                    items: images.map((i) {
+                    items: accommodationUnit!.images.map((i) {
                       return Builder(builder: (_) {
-                        return SizedBox(
-                          height: 350,
-                          width: double.maxFinite,
-                          child: Image.file(
-                            File(i.path),
-                            fit: BoxFit.fitWidth,
+                        return InkWell(
+                          onTap: () {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return PreviewImage(
+                                  imageUrl: Globals.imageBasePath + i.fileName,
+                                );
+                              },
+                            );
+                          },
+                          child: SizedBox(
+                            height: 350,
+                            width: double.maxFinite,
+                            child: Image.network(
+                              Globals.imageBasePath + i.fileName,
+                              fit: BoxFit.fitWidth,
+                            ),
                           ),
                         );
                       });
@@ -243,7 +230,7 @@ class _ObjectDetailsState extends State<ObjectDetails> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
-                      images.length,
+                      accommodationUnit!.images.length,
                       (index) => Container(
                         margin: const EdgeInsets.only(right: 8),
                         height: 6,
@@ -303,8 +290,8 @@ class _ObjectDetailsState extends State<ObjectDetails> {
                           : SizedBox.shrink(),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => Reviews()));
+                          Navigate.next(context, AppRoutes.reviews.routeName,
+                              const Reviews(), true);
                         },
                         child:
                             Text("4.8", style: TextStyle(color: Colors.black)),
@@ -351,7 +338,7 @@ class _ObjectDetailsState extends State<ObjectDetails> {
                         padding: const EdgeInsets.only(right: 20.0),
                         child: Column(
                           children: [
-                            userImage != null
+                            owner?.image != null
                                 ? Container(
                                     alignment: Alignment.center,
                                     width: 50,
@@ -359,8 +346,9 @@ class _ObjectDetailsState extends State<ObjectDetails> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
                                       image: DecorationImage(
-                                          image:
-                                              FileImage(File(userImage!.path)),
+                                          image: NetworkImage(
+                                              Globals.imageBasePath +
+                                                  owner!.image!),
                                           fit: BoxFit.contain),
                                     ),
                                   )
@@ -397,15 +385,35 @@ class _ObjectDetailsState extends State<ObjectDetails> {
                       style: CustomTheme.mediumTextStyle,
                     ),
                   ),
-                  Container(
-                    width: double.maxFinite,
-                    height: 200, // Adjust the height as needed
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                        target: LatLng(37.422131, -122.084801),
-                        zoom: 14,
+                  SizedBox(
+                    height: 250,
+                    width: MediaQuery.of(context).size.width - 10,
+                    child: FlutterMap(
+                      options: MapOptions(
+                        initialCenter: _tappedPoint ?? const LatLng(43.3, 17.807),
+                        initialZoom: 13.0,
                       ),
+                      children: [
+                        TileLayer(
+                          urlTemplate:
+                              "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                          subdomains: const ['a', 'b', 'c'],
+                        ),
+                        MarkerLayer(
+                          markers: _tappedPoint != null
+                              ? [
+                                  Marker(
+                                    point: _tappedPoint!,
+                                    child: const Icon(
+                                      Icons.location_pin,
+                                      color: Colors.red,
+                                      size: 40,
+                                    ),
+                                  )
+                                ]
+                              : [],
+                        ),
+                      ],
                     ),
                   ),
                 ],

@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PreviewImage extends StatelessWidget {
-  final XFile image;
+  final XFile? image;
+  final String? imageUrl;
 
-  const PreviewImage({super.key, required this.image});
+  const PreviewImage({super.key, this.image, this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +15,19 @@ class PreviewImage extends StatelessWidget {
       elevation: 0,
       backgroundColor: Colors.transparent,
       child: Stack(
-        children: <Widget>[
-          Image.file(
-            File(image.path),
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.7,
-          ),
+        children: [
+          if (image != null)
+            Image.file(
+              File(image!.path),
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height * 0.7,
+            ),
+          if (imageUrl != null)
+            Image.network(
+              imageUrl!,
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height * 0.7,
+            ),
           Positioned(
             top: -10,
             right: 0,

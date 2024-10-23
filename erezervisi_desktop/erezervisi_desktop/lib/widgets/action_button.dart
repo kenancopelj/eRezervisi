@@ -25,7 +25,11 @@ class ActionButton extends StatelessWidget {
         backgroundColor: backgroundColor,
         padding: const EdgeInsets.all(16),
       ),
-      icon: Icon(icon, color: iconColor, size: 20,),
+      icon: Icon(
+        icon,
+        color: iconColor,
+        size: 20,
+      ),
       label: Text(
         text,
         style: TextStyle(color: textColor, fontWeight: FontWeight.w400),

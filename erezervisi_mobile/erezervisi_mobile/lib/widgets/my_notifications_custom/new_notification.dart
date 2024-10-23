@@ -4,7 +4,6 @@ import 'package:erezervisi_mobile/enums/notification_status.dart';
 import 'package:erezervisi_mobile/enums/notification_type.dart';
 import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/models/responses/notification/notification_get_dto.dart';
-import 'package:erezervisi_mobile/providers/file_provider.dart';
 import 'package:erezervisi_mobile/screens/accommodation_unit_details.dart';
 import 'package:erezervisi_mobile/screens/chat.dart';
 import 'package:erezervisi_mobile/screens/chat_details.dart';
@@ -23,32 +22,9 @@ class NewNotification extends StatefulWidget {
 }
 
 class _NewNotificationState extends State<NewNotification> {
-  late FileProvider fileProvider;
-
-  XFile? image;
-
   @override
   void initState() {
     super.initState();
-
-    fileProvider = context.read<FileProvider>();
-
-    if (widget.notification.type == NotificationType.Message) {
-      loadImage(widget.notification.user.image);
-    }
-  }
-
-  Future loadImage(String? fileName) async {
-    if (fileName != null && fileName.trim().isEmpty) return;
-
-    try {
-      var response = await fileProvider.downloadUserImage(fileName!);
-      var xfile = await getXFileFromBytes(response.bytes, response.fileName);
-
-      setState(() {
-        image = xfile;
-      });
-    } catch (_) {}
   }
 
   @override
