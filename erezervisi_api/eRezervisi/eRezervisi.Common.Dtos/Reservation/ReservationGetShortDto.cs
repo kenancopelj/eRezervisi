@@ -8,5 +8,6 @@
         public DateTime To { get; set; }
         public double TotalPrice { get; set; }
         public string AccommodationUnit { get; set; } = null!;
+        public string? GuestImage { get; set; }
     }
 }

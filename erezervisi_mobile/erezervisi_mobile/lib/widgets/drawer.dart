@@ -2,7 +2,9 @@
 
 import 'dart:io';
 
+import 'package:erezervisi_mobile/enums/accommodation_unit_filter.dart';
 import 'package:erezervisi_mobile/helpers/custom_theme.dart';
+import 'package:erezervisi_mobile/screens/accommodation_units.dart';
 import 'package:erezervisi_mobile/screens/chat.dart';
 import 'package:erezervisi_mobile/screens/my_reviews.dart';
 import 'package:erezervisi_mobile/screens/reservations.dart';
@@ -93,6 +95,14 @@ class _eRezervisiDrawerState extends State<eRezervisiDrawer> {
               ),
               children: [
                 ListTile(
+                  onTap: () {
+                    Navigate.next(
+                        context,
+                        AppRoutes.accommodationUnits.routeName,
+                        AccommodationUnits(
+                            filter: AccommodationUnitFilter.Popular),
+                        true);
+                  },
                   title: Padding(
                     padding: EdgeInsets.only(left: 50),
                     child:
@@ -100,6 +110,14 @@ class _eRezervisiDrawerState extends State<eRezervisiDrawer> {
                   ),
                 ),
                 ListTile(
+                  onTap: () {
+                    Navigate.next(
+                        context,
+                        AppRoutes.accommodationUnits.routeName,
+                        AccommodationUnits(
+                            filter: AccommodationUnitFilter.Latest),
+                        true);
+                  },
                   title: Padding(
                     padding: EdgeInsets.only(left: 50),
                     child: Text('Nove ponude',
@@ -107,6 +125,14 @@ class _eRezervisiDrawerState extends State<eRezervisiDrawer> {
                   ),
                 ),
                 ListTile(
+                  onTap: () {
+                    Navigate.next(
+                        context,
+                        AppRoutes.accommodationUnits.routeName,
+                        AccommodationUnits(
+                            filter: AccommodationUnitFilter.Recommended),
+                        true);
+                  },
                   title: Padding(
                     padding: EdgeInsets.only(left: 50),
                     child: Text('Preporučeno',
@@ -134,7 +160,8 @@ class _eRezervisiDrawerState extends State<eRezervisiDrawer> {
             padding: EdgeInsets.only(left: 15, top: 5),
             child: ListTile(
               onTap: () {
-                Navigate.next(context, AppRoutes.chat.routeName, MyChat(), true);
+                Navigate.next(
+                    context, AppRoutes.chat.routeName, MyChat(), true);
               },
               leading: Icon(
                 Icons.chat_bubble_outline_outlined,

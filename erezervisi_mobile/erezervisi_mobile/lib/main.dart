@@ -21,6 +21,7 @@ import 'package:erezervisi_mobile/providers/message_provider.dart';
 import 'package:erezervisi_mobile/providers/notification_provider.dart';
 import 'package:erezervisi_mobile/providers/payment_provider.dart';
 import 'package:erezervisi_mobile/providers/reservation_provider.dart';
+import 'package:erezervisi_mobile/providers/search_provider.dart';
 import 'package:erezervisi_mobile/providers/township_provider.dart';
 import 'package:erezervisi_mobile/providers/user_provider.dart';
 import 'package:erezervisi_mobile/screens/home.dart';
@@ -42,16 +43,19 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
-class MyHttpOverrides extends HttpOverrides{
+
+class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext? context){
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
- HttpOverrides.global = MyHttpOverrides();
+  HttpOverrides.global = MyHttpOverrides();
 
   Stripe.publishableKey =
       const String.fromEnvironment('STRIPE_PUBLISHABLE_KEY', defaultValue: "");
@@ -114,6 +118,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(
             create: (_) => PaymentProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => SearchProvider(),
           ),
         ],
         child: MaterialApp(

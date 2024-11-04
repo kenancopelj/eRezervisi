@@ -1,6 +1,7 @@
 using eRezervisi.Api.Extensions;
 using eRezervisi.Api.Middleware;
 using eRezervisi.Core.Services.Hubs;
+using eRezervisi.Core.Services.Interfaces;
 using eRezervisi.Core.Services.Mapper;
 using eRezervisi.Infrastructure.Common.Configuration;
 using eRezervisi.Infrastructure.Database;
@@ -99,8 +100,33 @@ app.MapHub<NotificationHub>("/notification-hub");
 
 app.MapHub<MessageHub>("/message-hub");
 
+TrainRecommenderModel();
+
 app.Run();
 
+async void TrainRecommenderModel()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dataContext = scope.ServiceProvider.GetRequiredService<eRezervisiDbContext>();
+
+        if (!dataContext.Database.CanConnect())
+        {
+            dataContext.Database.Migrate();
+
+            var accommodationUnitService = scope.ServiceProvider.GetRequiredService<IAccommodationUnitService>();
+
+            try
+            {
+                await accommodationUnitService.TrainModelAsync();
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+    }
+}
 
 void AddJwtBearer()
 {

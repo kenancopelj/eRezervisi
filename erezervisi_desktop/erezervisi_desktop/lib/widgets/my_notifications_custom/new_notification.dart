@@ -52,6 +52,7 @@ class _NewNotificationState extends State<NewNotification> {
     return InkWell(
       onTap: handleClick,
       child: Container(
+        width: MediaQuery.of(context).size.width - 350,
         decoration: BoxDecoration(
             border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(10)),
@@ -70,7 +71,6 @@ class _NewNotificationState extends State<NewNotification> {
             ),
             Container(
                 margin: const EdgeInsets.only(left: 10, top: 15),
-                width: MediaQuery.of(context).size.width - 120,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

@@ -2,6 +2,7 @@
 
 import 'package:erezervisi_desktop/enums/accommodation_unit_filter.dart';
 import 'package:erezervisi_desktop/helpers/custom_theme.dart';
+import 'package:erezervisi_desktop/helpers/helpers.dart';
 import 'package:erezervisi_desktop/models/requests/dashboard/get_dashboard_data_request.dart';
 import 'package:erezervisi_desktop/models/responses/dashboard/dashboard_data_response.dart';
 import 'package:erezervisi_desktop/models/responses/review/review_get_dto.dart';
@@ -13,8 +14,10 @@ import 'package:erezervisi_desktop/shared/navigator/navigate.dart';
 import 'package:erezervisi_desktop/shared/navigator/route_list.dart';
 import 'package:erezervisi_desktop/widgets/home_custom/dashboard_card.dart';
 import 'package:erezervisi_desktop/widgets/master_widget.dart';
-import 'package:erezervisi_desktop/widgets/reviews_custom/review_item.dart';
+import 'package:erezervisi_desktop/screens/reservations/reservation.dart';
+import 'package:erezervisi_desktop/screens/reviews/review_item.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -47,6 +50,7 @@ class _HomeState extends State<Home> {
 
   Future loadDashboardData() async {
     var response = await dashboardProvider.get(request);
+    print(response.latestReservations);
 
     if (mounted) {
       setState(() {
@@ -70,7 +74,7 @@ class _HomeState extends State<Home> {
                   width: 10,
                 ),
                 Text(
-                  "Dobrodošli, ${Globals.loggedUser!.firstName} ${Globals.loggedUser!.lastName}",
+                  "Dobro došli, ${Globals.loggedUser!.firstName} ${Globals.loggedUser!.lastName}",
                   style: CustomTheme.mediumTextStyle,
                 )
               ],
@@ -120,19 +124,15 @@ class _HomeState extends State<Home> {
                           height: 30,
                         ),
                         DashboardCard(
-                          title: "Posljednje recenzije",
-                          subtitle: "Pregled posljednjih recenzija",
-                          icon: Icons.favorite_outline,
-                          content: ReviewItem(
-                            item: ReviewGetDto(
-                                id: 1,
-                                title: "Dobar",
-                                note: "Jako uredno i čisto, sve preporuke",
-                                rating: 5,
-                                reviewerId: 1,
-                                reviewer: "Kenan Čopelj"),
-                          ),
-                        ),
+                            title: "Posljednje recenzije",
+                            subtitle: "Pregled posljednjih recenzija",
+                            height: 360,
+                            icon: Icons.favorite_outline,
+                            content: Column(
+                              children: dashboardData.latestReviews
+                                  .map((element) => ReviewItem(item: element))
+                                  .toList(),
+                            )),
                       ],
                     )
                   ],
@@ -141,20 +141,90 @@ class _HomeState extends State<Home> {
               Padding(
                 padding: const EdgeInsets.only(left: 35, top: 30),
                 child: DashboardCard(
-                  width: 1060,
-                  title: "Posljednje rezervacije",
-                  subtitle: "Pregled posljednjih rezervacija",
-                  icon: Icons.favorite_outline,
-                  content: ReviewItem(
-                    item: ReviewGetDto(
-                        id: 1,
-                        title: "Dobar",
-                        note: "Jako uredno i čisto, sve preporuke",
-                        rating: 5,
-                        reviewerId: 1,
-                        reviewer: "Kenan Čopelj"),
-                  ),
-                ),
+                    width: 1060,
+                    height: 600,
+                    title: "Posljednje rezervacije",
+                    subtitle: "Pregled posljednjih rezervacija",
+                    icon: Icons.favorite_outline,
+                    content: Column(
+                      children: dashboardData.latestReservations
+                          .map((element) => Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  height: 70,
+                                  margin: EdgeInsets.only(bottom: 4),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: const Color.fromARGB(
+                                              255, 66, 165, 245))),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        width: 1,
+                                        decoration: BoxDecoration(
+                                            color:
+                                                CustomTheme.bluePrimaryColor),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      if (element.guestImage != null)
+                                        Container(
+                                          width: 50,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: NetworkImage(Globals
+                                                          .imageBasePath +
+                                                      element.guestImage!))),
+                                        ),
+                                      if (element.guestImage == null)
+                                        Container(
+                                          width: 50,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                              color: Colors.black),
+                                          child: Text("Nema slike"),
+                                        ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      Text(
+                                        element.guest,
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      Text(
+                                        element.accommodationUnit,
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      Text(
+                                        "${DateFormat(Globals.dateFormat).format(element.from)} - ${DateFormat(Globals.dateFormat).format(element.to)}",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      Text(
+                                        Helpers.formatPrice(element.totalPrice),
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                    )),
               )
             ],
           ),

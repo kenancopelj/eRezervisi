@@ -118,5 +118,14 @@ namespace eRezervisi.Api.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("recommend/{accommodationUnitId}")]
+        [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
+        public async Task<IActionResult> Recommend(long accommodationUnitId, CancellationToken cancellationToken)
+        {
+            var result = await _service.GetRecommendationsByAccommodationUnitId(accommodationUnitId, cancellationToken);
+
+            return Ok(result);
+        }
     }
 }

@@ -595,7 +595,7 @@ class _ReservationDetailsState extends State<ReservationDetails> {
         paymenthMethod: _selectedPaymentMethod + 1);
 
     try {
-      await reservationProvider.create(payload);
+      var result = await reservationProvider.create(payload);
 
       setState(() {
         showSuccessScreen = true;

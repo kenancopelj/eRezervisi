@@ -108,4 +108,17 @@ class AccommodationUnitProvider extends BaseProvider {
     throw response;
   }
 
+  Future view(num accommodationUnitId) async {
+    print(accommodationUnitId);
+    String endpoint = "accommodation-units/$accommodationUnitId/view";
+    var url = Globals.apiUrl + endpoint;
+
+    var response = await dio.post(url);
+
+    if (response.statusCode == 200) {
+      return;
+    }
+    throw response;
+  }
+
 }

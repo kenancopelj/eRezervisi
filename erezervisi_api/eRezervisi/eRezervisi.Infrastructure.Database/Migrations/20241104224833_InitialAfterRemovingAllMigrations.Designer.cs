@@ -12,8 +12,8 @@ using eRezervisi.Infrastructure.Database;
 namespace eRezervisi.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(eRezervisiDbContext))]
-    [Migration("20240601142143_Initial")]
-    partial class Initial
+    [Migration("20241104224833_InitialAfterRemovingAllMigrations")]
+    partial class InitialAfterRemovingAllMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -77,28 +77,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasName("pk_roles");
 
                     b.ToTable("roles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0L,
-                            Deleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
-                            Name = "Owner"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0L,
-                            Deleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
-                            Name = "MobileUser"
-                        });
                 });
 
             modelBuilder.Entity("eRezervisi.Core.Domain.Entities.AccommodationUnit", b =>
@@ -113,6 +91,11 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     b.Property<long>("AccommodationUnitCategoryId")
                         .HasColumnType("bigint")
                         .HasColumnName("accommodation_unit_category_id");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("address");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -172,11 +155,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasColumnType("float")
                         .HasColumnName("price");
 
-                    b.Property<string>("ShortTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("short_title");
-
                     b.Property<int>("Status")
                         .HasColumnType("int")
                         .HasColumnName("status");
@@ -194,6 +172,12 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     b.Property<long>("TownshipId")
                         .HasColumnType("bigint")
                         .HasColumnName("township_id");
+
+                    b.Property<int>("ViewCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("view_count");
 
                     b.HasKey("Id")
                         .HasName("pk_accommodation_units");
@@ -267,52 +251,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasName("pk_accommodation_unit_categories");
 
                     b.ToTable("accommodation_unit_categories", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0L,
-                            Deleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
-                            ShortTitle = "APT",
-                            Title = "Apartmani"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0L,
-                            Deleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
-                            ShortTitle = "VIL",
-                            Title = "Ville"
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0L,
-                            Deleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
-                            ShortTitle = "VIK",
-                            Title = "Vikendice"
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0L,
-                            Deleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
-                            ShortTitle = "PRI",
-                            Title = "Privatne kuće"
-                        });
                 });
 
             modelBuilder.Entity("eRezervisi.Core.Domain.Entities.AccommodationUnitReview", b =>
@@ -325,18 +263,11 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("accommodation_unit_id");
 
-                    b.Property<long?>("AccommodationUnitId1")
-                        .HasColumnType("bigint")
-                        .HasColumnName("accommodation_unit_id1");
-
                     b.HasKey("ReviewId", "AccommodationUnitId")
                         .HasName("pk_accommodation_unit_reviews");
 
                     b.HasIndex("AccommodationUnitId")
                         .HasDatabaseName("ix_accommodation_unit_reviews_accommodation_unit_id");
-
-                    b.HasIndex("AccommodationUnitId1")
-                        .HasDatabaseName("ix_accommodation_unit_reviews_accommodation_unit_id1");
 
                     b.ToTable("accommodation_unit_reviews", (string)null);
                 });
@@ -544,6 +475,69 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     b.ToTable("images", (string)null);
                 });
 
+            modelBuilder.Entity("eRezervisi.Core.Domain.Entities.Maintenance", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("AccommodationUnitId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("accommodation_unit_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("created_by");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("deleted");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<long?>("DeletedBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("deleted_by");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("modified_at");
+
+                    b.Property<long>("ModifiedBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("modified_by");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("note");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int")
+                        .HasColumnName("priority");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id")
+                        .HasName("pk_maintenances");
+
+                    b.HasIndex("AccommodationUnitId")
+                        .HasDatabaseName("ix_maintenances_accommodation_unit_id");
+
+                    b.ToTable("maintenances", (string)null);
+                });
+
             modelBuilder.Entity("eRezervisi.Core.Domain.Entities.Message", b =>
                 {
                     b.Property<long>("Id")
@@ -592,9 +586,9 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("modified_by");
 
-                    b.Property<long>("RecieverId")
+                    b.Property<long>("ReceiverId")
                         .HasColumnType("bigint")
-                        .HasColumnName("reciever_id");
+                        .HasColumnName("receiver_id");
 
                     b.Property<long>("SenderId")
                         .HasColumnType("bigint")
@@ -603,8 +597,8 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     b.HasKey("Id")
                         .HasName("pk_messages");
 
-                    b.HasIndex("RecieverId")
-                        .HasDatabaseName("ix_messages_reciever_id");
+                    b.HasIndex("ReceiverId")
+                        .HasDatabaseName("ix_messages_receiver_id");
 
                     b.HasIndex("SenderId")
                         .HasDatabaseName("ix_messages_sender_id");
@@ -620,6 +614,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasColumnName("id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("AccommodationUnitId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("accommodation_unit_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -675,6 +673,12 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("title");
 
+                    b.Property<int>("Type")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("type")
+                        .HasDefaultValueSql("3");
+
                     b.Property<long>("UserId")
                         .HasColumnType("bigint")
                         .HasColumnName("user_id");
@@ -686,6 +690,71 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasDatabaseName("ix_notifications_user_id");
 
                     b.ToTable("notifications", (string)null);
+                });
+
+            modelBuilder.Entity("eRezervisi.Core.Domain.Entities.Recommender", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("AccommodationUnitId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("accommodation_unit_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("created_by");
+
+                    b.Property<bool>("Deleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("deleted");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<long?>("DeletedBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("deleted_by");
+
+                    b.Property<long?>("FirstAccommodationUnitId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("first_accommodation_unit_id");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("modified_at")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<long>("ModifiedBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("modified_by");
+
+                    b.Property<long?>("SecondAccommodationUnitId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("second_accommodation_unit_id");
+
+                    b.Property<long?>("ThirdAccommodationUnitId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("third_accommodation_unit_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_recommenders");
+
+                    b.ToTable("recommenders", (string)null);
                 });
 
             modelBuilder.Entity("eRezervisi.Core.Domain.Entities.Reservation", b =>
@@ -700,14 +769,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     b.Property<long>("AccommodationUnitId")
                         .HasColumnType("bigint")
                         .HasColumnName("accommodation_unit_id");
-
-                    b.Property<DateTime?>("CheckedInAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("checked_in_at");
-
-                    b.Property<DateTime?>("CheckedOutAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("checked_out_at");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -1033,40 +1094,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasDatabaseName("ix_users_role_id");
 
                     b.ToTable("users", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Address = "0000",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0L,
-                            Deleted = false,
-                            Email = "kenan.copelj@edu.fit.ba",
-                            FirstName = "Owner",
-                            IsActive = true,
-                            LastName = "User",
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
-                            Phone = "0000",
-                            RoleId = 1L
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Address = "0000",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0L,
-                            Deleted = false,
-                            Email = "kenan.copelj@edu.fit.ba",
-                            FirstName = "Regular",
-                            IsActive = true,
-                            LastName = "User",
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
-                            Phone = "0000",
-                            RoleId = 2L
-                        });
                 });
 
             modelBuilder.Entity("eRezervisi.Core.Domain.Entities.AccommodationUnit", b =>
@@ -1141,16 +1168,11 @@ namespace eRezervisi.Infrastructure.Database.Migrations
             modelBuilder.Entity("eRezervisi.Core.Domain.Entities.AccommodationUnitReview", b =>
                 {
                     b.HasOne("eRezervisi.Core.Domain.Entities.AccommodationUnit", "AccommodationUnit")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("AccommodationUnitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_accommodation_unit_reviews_accommodation_units_accommodation_unit_id");
-
-                    b.HasOne("eRezervisi.Core.Domain.Entities.AccommodationUnit", null)
-                        .WithMany("Reviews")
-                        .HasForeignKey("AccommodationUnitId1")
-                        .HasConstraintName("fk_accommodation_unit_reviews_accommodation_units_accommodation_unit_id1");
 
                     b.HasOne("eRezervisi.Core.Domain.Entities.Review", "Review")
                         .WithMany()
@@ -1219,14 +1241,26 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     b.Navigation("AccommodationUnit");
                 });
 
+            modelBuilder.Entity("eRezervisi.Core.Domain.Entities.Maintenance", b =>
+                {
+                    b.HasOne("eRezervisi.Core.Domain.Entities.AccommodationUnit", "AccommodationUnit")
+                        .WithMany()
+                        .HasForeignKey("AccommodationUnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_maintenances_accommodation_units_accommodation_unit_id");
+
+                    b.Navigation("AccommodationUnit");
+                });
+
             modelBuilder.Entity("eRezervisi.Core.Domain.Entities.Message", b =>
                 {
-                    b.HasOne("eRezervisi.Core.Domain.Entities.User", "Reciever")
+                    b.HasOne("eRezervisi.Core.Domain.Entities.User", "Receiver")
                         .WithMany()
-                        .HasForeignKey("RecieverId")
+                        .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_messages_users_reciever_id");
+                        .HasConstraintName("fk_messages_users_receiver_id");
 
                     b.HasOne("eRezervisi.Core.Domain.Entities.User", "Sender")
                         .WithMany()
@@ -1235,7 +1269,7 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_messages_users_sender_id");
 
-                    b.Navigation("Reciever");
+                    b.Navigation("Receiver");
 
                     b.Navigation("Sender");
                 });
@@ -1322,6 +1356,12 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                                 .HasColumnType("datetime2")
                                 .HasColumnName("refresh_token_expires_at_utc");
 
+                            b1.Property<bool>("ReminderSent")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("bit")
+                                .HasDefaultValue(false)
+                                .HasColumnName("reminder_sent");
+
                             b1.Property<string>("Username")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(450)")
@@ -1344,24 +1384,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("UserId")
                                 .HasConstraintName("fk_user_credentials_users_id");
-
-                            b1.HasData(
-                                new
-                                {
-                                    UserId = 1L,
-                                    LastPasswordChangeAt = new DateTime(2024, 6, 1, 14, 21, 42, 673, DateTimeKind.Utc).AddTicks(2145),
-                                    PasswordHash = "ecb252044b5ea0f679ee78ec1a12904739e2904d",
-                                    PasswordSalt = "960e802d-556e-459d-8b6f-f82f9862af2e",
-                                    Username = "desktop"
-                                },
-                                new
-                                {
-                                    UserId = 2L,
-                                    LastPasswordChangeAt = new DateTime(2024, 6, 1, 14, 21, 42, 673, DateTimeKind.Utc).AddTicks(2151),
-                                    PasswordHash = "d5a46c7224810ce14a50ca129158f72ab583a4b0af3f3c577de3f96369f59c9b",
-                                    PasswordSalt = "9c571753-452b-421d-ad07-174c95108262",
-                                    Username = "mobile"
-                                });
                         });
 
                     b.OwnsOne("eRezervisi.Core.Domain.Entities.UserSettings", "UserSettings", b1 =>
@@ -1370,15 +1392,21 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                                 .HasColumnType("bigint")
                                 .HasColumnName("id");
 
-                            b1.Property<bool>("RecieveEmails")
+                            b1.Property<bool>("MarkObjectAsUncleanAfterReservation")
+                                .HasColumnType("bit")
+                                .HasColumnName("mark_object_as_unclean_after_reservation");
+
+                            b1.Property<bool>("ReceiveEmails")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("bit")
                                 .HasDefaultValue(true)
-                                .HasColumnName("recieve_emails");
+                                .HasColumnName("receive_emails");
 
-                            b1.Property<DateTime?>("SendReminderAt")
-                                .HasColumnType("datetime2")
-                                .HasColumnName("send_reminder_at");
+                            b1.Property<bool>("ReceiveNotifications")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("bit")
+                                .HasDefaultValue(true)
+                                .HasColumnName("receive_notifications");
 
                             b1.HasKey("UserId")
                                 .HasName("pk_user_settings");
@@ -1388,18 +1416,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("UserId")
                                 .HasConstraintName("fk_user_settings_users_id");
-
-                            b1.HasData(
-                                new
-                                {
-                                    UserId = 1L,
-                                    RecieveEmails = true
-                                },
-                                new
-                                {
-                                    UserId = 2L,
-                                    RecieveEmails = true
-                                });
                         });
 
                     b.Navigation("Role");

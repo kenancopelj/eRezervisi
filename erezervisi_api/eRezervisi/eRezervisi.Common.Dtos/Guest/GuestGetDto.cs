@@ -1,4 +1,6 @@
-﻿namespace eRezervisi.Common.Dtos.Guest
+﻿using eRezervisi.Core.Domain.Entities;
+
+namespace eRezervisi.Common.Dtos.Guest
 {
     public class GuestGetDto
     {
@@ -6,5 +8,6 @@
         public string FullName { get; set; } = null!;
         public string Phone { get; set; } = null!;
         public string Email { get; set; } = null!;
+        public string AccommodationUnitTitle { get; set; } = null!;
     }
 }

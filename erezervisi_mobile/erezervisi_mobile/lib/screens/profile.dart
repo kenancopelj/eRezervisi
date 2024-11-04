@@ -60,7 +60,6 @@ class _MyProfileState extends State<MyProfile> {
 
     setState(() {
       user = response;
-      print(response.image);
       if (user != null) {
         firstNameController.text = user!.firstName;
         lastNameController.text = user!.lastName;

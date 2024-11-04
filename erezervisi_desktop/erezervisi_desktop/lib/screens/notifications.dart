@@ -29,7 +29,6 @@ class _MyNotificationsState extends State<MyNotifications> {
         .build();
 
     await connection.start();
-    print('SignalR connected');
 
     connection.on('${Topics.notification}#${Globals.loggedUser!.userId}',
         (arguments) {
@@ -75,12 +74,15 @@ class _MyNotificationsState extends State<MyNotifications> {
               const SizedBox(
                 height: 40,
               ),
-              const Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Moje obavijesti",
-                    style: TextStyle(fontSize: 20, color: Colors.black),
-                  )),
+              Padding(
+                padding: const EdgeInsets.only(left:30),
+                child: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Moje obavijesti",
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                    )),
+              ),
               Container(
                 margin:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 20),

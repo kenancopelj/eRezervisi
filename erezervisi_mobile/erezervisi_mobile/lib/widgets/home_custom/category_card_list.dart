@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 
 class CategoryCardList extends StatefulWidget {
   final Categories categories;
-  final void Function(num) onClick;
-
+  final void Function(num?) onClick;
 
   const CategoryCardList(
       {super.key, required this.categories, required this.onClick});
@@ -22,20 +21,25 @@ class _CategoryCardListState extends State<CategoryCardList> {
     return Row(
       children: [
         Expanded(
-          // Wrap ListView.builder with Expanded
           child: SizedBox(
             height: 45,
             child: ListView.builder(
-              scrollDirection:
-                  Axis.horizontal, // Set scroll direction to horizontal
+              scrollDirection: Axis.horizontal,
               itemCount: widget.categories.categories.length,
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   onTap: () {
-                    widget.onClick(widget.categories.categories[index].id);
-                    setState(() {
-                      selectedIndex = index;
-                    });
+                    if (selectedIndex != index) {
+                      widget.onClick(widget.categories.categories[index].id);
+                      setState(() {
+                        selectedIndex = index;
+                      });
+                    } else {
+                      widget.onClick(null);
+                      setState(() {
+                        selectedIndex = -1;
+                      });
+                    }
                   },
                   child: CategoryCard(
                     title: widget.categories.categories[index].title,

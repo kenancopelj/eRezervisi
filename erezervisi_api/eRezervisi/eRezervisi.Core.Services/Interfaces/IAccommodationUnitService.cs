@@ -4,6 +4,7 @@ using eRezervisi.Common.Dtos.Image;
 using eRezervisi.Common.Dtos.Review;
 using eRezervisi.Common.Shared.Pagination;
 using eRezervisi.Common.Shared.Requests.AccommodationUnit;
+using eRezervisi.Core.Domain.Entities;
 
 namespace eRezervisi.Core.Services.Interfaces
 {
@@ -21,6 +22,8 @@ namespace eRezervisi.Core.Services.Interfaces
         Task<ImageGetDto> UpdateThumbnailImageAsync(long id, ImageCreateDto request, CancellationToken cancellationToken);
         Task<PagedResponse<AccommodationUnitGetDto>> GetPopularAccommodationUnitsPagedAsync(GetAccommodationUnitsRequest request, CancellationToken cancellationToken);
         Task<PagedResponse<AccommodationUnitGetDto>> GetLatestAccommodationUnitsPagedAsync(GetAccommodationUnitsRequest request, CancellationToken cancellationToken);
-        Task<PagedResponse<AccommodationUnitGetDto>> GetRecommendedAccommodationUnitsPagedAsync(GetAccommodationUnitsRequest request, CancellationToken cancellationToken);
+        Task ViewAccommodationUnitAsync(long accommodationUnitId, CancellationToken cancellationToken);
+        Task<Recommender?> GetRecommendationsByAccommodationUnitId(long accommodationUnitId, CancellationToken cancellationToken);
+        Task<PagedResponse<Recommender>> TrainModelAsync(CancellationToken cancellationToken = default);
     }
 }

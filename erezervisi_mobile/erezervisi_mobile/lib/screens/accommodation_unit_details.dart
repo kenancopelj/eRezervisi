@@ -61,6 +61,10 @@ class _ObjectDetailsState extends State<ObjectDetails> {
     loadAccommodationUnit();
   }
 
+  Future markAsViewed() async {
+    await accommodationUnitProvider.view(accommodationUnit!.id);
+  }
+
   Future loadAccommodationUnit() async {
     var response =
         await accommodationUnitProvider.getById(widget.accommodationUnitId);
@@ -71,11 +75,10 @@ class _ObjectDetailsState extends State<ObjectDetails> {
 
       _tappedPoint = LatLng(accommodationUnit!.latitude.toDouble(),
           accommodationUnit!.longitude.toDouble());
-
-          print(_tappedPoint);
     });
 
     loadUser();
+    markAsViewed();
   }
 
   Future loadUser() async {
@@ -88,11 +91,11 @@ class _ObjectDetailsState extends State<ObjectDetails> {
 
   Future addToFavorites() async {
     try {
-      var response = await favoritesProvider.add(widget.accommodationUnitId);
-
       setState(() {
         favorite = true;
       });
+
+      var response = await favoritesProvider.add(widget.accommodationUnitId);
     } catch (ex) {
       if (ex is DioException) {
         var error = ex.response?.data["Error"];
@@ -102,11 +105,11 @@ class _ObjectDetailsState extends State<ObjectDetails> {
   }
 
   Future removeFromFavorites() async {
-    var response = await favoritesProvider.remove(widget.accommodationUnitId);
-
     setState(() {
       favorite = false;
     });
+
+    var response = await favoritesProvider.remove(widget.accommodationUnitId);
   }
 
   @override
@@ -134,13 +137,19 @@ class _ObjectDetailsState extends State<ObjectDetails> {
               items: [
                 BottomNavigationBarItem(
                   icon: IconButton(
-                    icon: Icon(
-                      favorite ? Icons.favorite : Icons.favorite_outline,
-                      color: favorite ? Colors.red : Colors.black,
-                    ),
-                    onPressed: () =>
-                        favorite ? removeFromFavorites() : addToFavorites(),
-                  ),
+                      icon: Icon(
+                        favorite == true
+                            ? Icons.favorite
+                            : Icons.favorite_outline,
+                        color: favorite == true ? Colors.red : Colors.black,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          favorite == true
+                              ? removeFromFavorites()
+                              : addToFavorites();
+                        });
+                      }),
                   label: '',
                 ),
                 BottomNavigationBarItem(
@@ -390,7 +399,8 @@ class _ObjectDetailsState extends State<ObjectDetails> {
                     width: MediaQuery.of(context).size.width - 10,
                     child: FlutterMap(
                       options: MapOptions(
-                        initialCenter: _tappedPoint ?? const LatLng(43.3, 17.807),
+                        initialCenter:
+                            _tappedPoint ?? const LatLng(43.3, 17.807),
                         initialZoom: 13.0,
                       ),
                       children: [

@@ -23,11 +23,21 @@ namespace eRezervisi.Core.Services
         {
             var userId = _jwtTokenReader.GetUserIdFromToken();
 
-            var allMonths = Enumerable.Range(1, 12).ToList();
+            var allMonths = new List<int>();
+
+            if (request.Month.HasValue)
+            {
+                allMonths.Add(request.Month.Value);
+            }
+            else
+            {
+                Enumerable.Range(1, 12).ToList();
+            }
 
             var reservationsByMonth = await _dbContext.Reservations
                 .Where(x => x.AccommodationUnit.OwnerId == userId &&
-                            x.From.Year == request.Year)
+                            x.From.Year == request.Year &&
+                            (!request.Month.HasValue || x.From.Month == request.Month))
                 .GroupBy(x => x.From.Month)
                 .Select(g => new
                 {
@@ -61,11 +71,21 @@ namespace eRezervisi.Core.Services
         {
             var userId = _jwtTokenReader.GetUserIdFromToken();
 
-            var allMonths = Enumerable.Range(1, 12).ToList();
+            var allMonths = new List<int>();
+
+            if (request.Month.HasValue)
+            {
+                allMonths.Add(request.Month.Value);
+            }
+            else
+            {
+                Enumerable.Range(1, 12).ToList();
+            }
 
             var reservationsByMonth = await _dbContext.Reservations
                 .Where(x => x.AccommodationUnit.OwnerId == userId &&
-                            x.From.Year == request.Year)
+                            x.From.Year == request.Year &&
+                            (!request.Month.HasValue || x.From.Month == request.Month))
                 .GroupBy(x => x.From.Month)
                 .Select(g => new
                 {

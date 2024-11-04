@@ -8,5 +8,6 @@
         public string Note { get; set; } = null!;
         public long ReviewerId { get; set; }
         public string Reviewer { get; set; } = null!;
+        public string? ReviewerImage { get; set; } 
     }
 }

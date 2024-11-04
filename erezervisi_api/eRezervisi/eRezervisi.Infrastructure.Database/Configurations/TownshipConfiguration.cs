@@ -14,12 +14,6 @@ namespace eRezervisi.Infrastructure.Database.Configurations
 
             builder.Property(x => x.Title);
 
-            builder.HasIndex(x => new { x.PostCode });
-
-            builder.Property(x => x.Latitude);
-
-            builder.Property(x => x.Longitude);
-
             builder.HasOne(x => x.Canton).WithMany().HasForeignKey(x => x.CantonId);
         }
     }

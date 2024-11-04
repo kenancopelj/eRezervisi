@@ -19,22 +19,25 @@ class DashboardDataResponse {
 
   factory DashboardDataResponse.fromJson(Map<String, dynamic> json) {
     var latestReviewsArray = json['latestReviews'] as List<dynamic>;
-    var latestReservationsArray = json['latestReviews'] as List<dynamic>;
+    var latestReservationsArray = json['latestReservations'] as List<dynamic>;
 
     return DashboardDataResponse(
-        expectedArrivals: json['expectedArrivals'],
-        availableAccommodationUnits: json['availableAccommodationUnits'],
-        numberOfGuests: json['numberOfGuests'],
-        numberOfReviews: json['numberOfReviews'],
-        latestReviews: latestReviewsArray.isEmpty
-            ? List.empty()
-            : (json['latestReviews'] as List<ReviewGetDto>)
-                .map((reviewJson) => ReviewGetDto.fromJson(json))
-                .toList(),
-        latestReservations: latestReservationsArray.isEmpty
-            ? List.empty()
-            : (json['latestReservations'] as List<ReservationGetShortDto>)
-                .map((reservationJson) => ReservationGetShortDto.fromJson(json))
-                .toList());
+      expectedArrivals: json['expectedArrivals'],
+      availableAccommodationUnits: json['availableAccommodationUnits'],
+      numberOfGuests: json['numberOfGuests'],
+      numberOfReviews: json['numberOfReviews'],
+      latestReviews: latestReviewsArray.isEmpty
+          ? []
+          : latestReviewsArray
+              .map((reviewJson) =>
+                  ReviewGetDto.fromJson(reviewJson as Map<String, dynamic>))
+              .toList(),
+      latestReservations: latestReservationsArray.isEmpty
+          ? []
+          : latestReservationsArray
+              .map((reservationJson) => ReservationGetShortDto.fromJson(
+                  reservationJson as Map<String, dynamic>))
+              .toList(),
+    );
   }
 }

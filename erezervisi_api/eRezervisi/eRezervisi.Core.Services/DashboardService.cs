@@ -64,6 +64,7 @@ namespace eRezervisi.Core.Services
                         Rating = x.Review.Rating,
                         Reviewer = _dbContext.Users.First(u => u.Id == x.Review.CreatedBy).GetFullName(),
                         ReviewerId = x.Review.CreatedBy,
+                        ReviewerImage = _dbContext.Users.First(u => u.Id == x.Review.CreatedBy).Image,
                     })
                     .ToListAsync(cancellationToken);
 
@@ -79,7 +80,8 @@ namespace eRezervisi.Core.Services
                         From = x.From,
                         To = x.To,
                         TotalPrice = x.TotalPrice,
-                        AccommodationUnit = x.AccommodationUnit.Title
+                        AccommodationUnit = x.AccommodationUnit.Title,
+                        GuestImage = _dbContext.Users.First(u => u.Id == x.CreatedBy).Image,
                     })
                     .ToListAsync(cancellationToken);
 

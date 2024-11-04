@@ -11,8 +11,6 @@ namespace eRezervisi.Core.Domain.Entities
         public AccommodationUnit AccommodationUnit { get; set; } = null!;
         public DateTime From { get; set; }
         public DateTime To { get; set; }
-        public DateTime? CheckedInAt { get; set; }
-        public DateTime? CheckedOutAt { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public string? Note { get; set; }
         public ReservationStatus Status { get; set; } = ReservationStatus.Draft;

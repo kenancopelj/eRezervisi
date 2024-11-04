@@ -50,6 +50,8 @@ namespace eRezervisi.Infrastructure.Database.Configurations
             builder.Property(x => x.Longitude);
 
             builder.Property(x => x.Address);
+
+            builder.Property(x => x.ViewCount).HasDefaultValue(0);
         }
     }
 }

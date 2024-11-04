@@ -116,6 +116,24 @@ namespace eRezervisi.Core.Services
             await _notificationService.SendAsync(notification, CancellationToken.None);
         }
 
+        public async Task NotifyUserAboutUncleanObject(long accommodationUnitId)
+        {
+            var accommodationUnit = await _dbContext.AccommodationUnits.FirstOrDefaultAsync(x => x.Id == accommodationUnitId);
+
+            NotFoundException.ThrowIfNull(accommodationUnit);
+
+            var notification = new NotificationCreateDto
+            {
+                UserId = accommodationUnit.OwnerId,
+                Title = "Zahtjev za održavanje",
+                ShortTitle = "Test",
+                Description = $"Rezervacija nad objektom {accommodationUnit.Title} je završena, te je kreiran nalog za održavanje pomenutog objekta.",
+                Type = NotificationType.System,
+            };
+
+            await _notificationService.SendAsync(notification, CancellationToken.None);
+        }
+
         public async Task NotifyUsersAboutAccommodationUnitStatus(long accommodationUnitId)
         {
             var accommodationUnit = await _dbContext.AccommodationUnits.FirstOrDefaultAsync(x => x.Id == accommodationUnitId);
@@ -182,7 +200,7 @@ namespace eRezervisi.Core.Services
 
             var users = await _dbContext.Users
                     .Include(x => x.UserSettings)
-                    .Where(x => x.IsActive && x.Id != accommodationUnit.OwnerId 
+                    .Where(x => x.IsActive && x.Id != accommodationUnit.OwnerId
                     && x.UserSettings!.ReceiveEmails
                     && usersSubscribed.Contains(x.Id)).ToListAsync();
 

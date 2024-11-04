@@ -1,18 +1,21 @@
 class UserSettingsGetDto {
   late num userId;
-  late bool receiveMails;
+  late bool receiveEmails;
   late bool receiveNotifications;
+  late bool markObjectAsUncleanAfterReservation;
 
   UserSettingsGetDto({
     required this.userId,
-    required this.receiveMails,
+    required this.receiveEmails,
     required this.receiveNotifications,
+    required this.markObjectAsUncleanAfterReservation
   });
 
   factory UserSettingsGetDto.fromJson(Map<String, dynamic> json) {
     return UserSettingsGetDto(
         userId: json['userId'] as num,
-        receiveMails: json['receiveMails'],
-        receiveNotifications: json['receiveNotifications']);
+        receiveEmails: json['receiveEmails'],
+        receiveNotifications: json['receiveNotifications'],
+        markObjectAsUncleanAfterReservation: json['markObjectAsUncleanAfterReservation'],);
   }
 }

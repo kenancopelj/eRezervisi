@@ -39,6 +39,8 @@ namespace eRezervisi.Api.Extensions
             services.AddScoped<IRabbitMQProducer, RabbitMQProducer>();
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
+            services.AddScoped<IMaintenaceService, MaintenanceService>();
+            services.AddScoped<ISearchService, SearchService>();
         }
     }
 }

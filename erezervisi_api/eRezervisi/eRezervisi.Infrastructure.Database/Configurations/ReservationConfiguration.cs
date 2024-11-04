@@ -22,10 +22,6 @@ namespace eRezervisi.Infrastructure.Database.Configurations
 
             builder.Property(x => x.To);
 
-            builder.Property(x => x.CheckedInAt).IsRequired(false);
-
-            builder.Property(x => x.CheckedOutAt).IsRequired(false);
-
             builder.Property(x => x.PaymentMethod);
 
             builder.Property(x => x.Note).IsRequired(false);

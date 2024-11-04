@@ -18,6 +18,10 @@ using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using Microsoft.ML;
+using Microsoft.ML.Trainers;
+
+using Microsoft.ML.Data;
+using Google.Api;
 
 namespace eRezervisi.Core.Services
 {
@@ -263,10 +267,179 @@ namespace eRezervisi.Core.Services
 
         }
 
-        public async Task<PagedResponse<AccommodationUnitGetDto>> GetRecommendedAccommodationUnitsPagedAsync(GetAccommodationUnitsRequest request, CancellationToken cancellationToken)
+        public async Task<Recommender?> GetRecommendationsByAccommodationUnitId(long accommodationUnitId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var entity = await _dbContext.Recommenders.FirstOrDefaultAsync(x => x.AccommodationUnitId == accommodationUnitId, cancellationToken);
+
+            if (entity is null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<Recommender>(entity);
         }
+
+        private List<AccommodationUnit> Recommend(long accommodationUnitId)
+        {
+            lock (isLocked)
+            {
+                if (_mlContext == null)
+                {
+                    _mlContext = new MLContext();
+
+                    var tmpData = _dbContext.Reservations.Include(x => x.AccommodationUnit).ToList();
+
+                    var data = new List<AccommodationUnitRecommendation>();
+
+                    foreach (var x in tmpData)
+                    {
+                        if (x.AccommodationUnit.ViewCount > 1)
+                        {
+                            var distinctItemId = tmpData.Select(y => y.AccommodationUnitId).ToList();
+
+                            distinctItemId?.ForEach(y =>
+                            {
+                                var relatedItems = tmpData.Select(z => z.AccommodationUnitId).Where(z => z != y);
+
+                                foreach (var z in relatedItems)
+                                {
+                                    data.Add(new AccommodationUnitRecommendation
+                                    {
+                                        AccommodationUnitId = (uint)y,
+                                        CoAccommodationUnitId = (uint)z,
+                                    });
+                                }
+                            });
+                        }
+                    }
+
+                    var trainData = _mlContext.Data.LoadFromEnumerable(data);
+
+                    MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
+                    options.MatrixColumnIndexColumnName = nameof(AccommodationUnitRecommendation.AccommodationUnitId);
+                    options.MatrixRowIndexColumnName = nameof(AccommodationUnitRecommendation.CoAccommodationUnitId);
+                    options.LabelColumnName = "Label";
+
+                    options.LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass;
+                    options.Alpha = 0.01;
+                    options.Lambda = 0.025;
+
+                    options.NumberOfIterations = 100;
+                    options.C = 0.00001;
+
+                    var est = _mlContext.Recommendation().Trainers.MatrixFactorization(options);
+
+                    _model = est.Fit(trainData);
+                }
+            }
+
+            var accommodationUnits = _dbContext.AccommodationUnits.Where(x => x.Id != accommodationUnitId).ToList();
+
+            var predictionResult = new List<Tuple<AccommodationUnit, float>>();
+
+            foreach (var accommodationUnit in accommodationUnits)
+            {
+                var predictionEngine = _mlContext.Model.CreatePredictionEngine<AccommodationUnitRecommendation, CoAccommodationUnitPrediction>(_model);
+
+                var prediction = predictionEngine.Predict(new AccommodationUnitRecommendation
+                {
+                    AccommodationUnitId = (uint)accommodationUnitId,
+                    CoAccommodationUnitId = (uint)accommodationUnit.Id,
+                });
+
+                predictionResult.Add(new Tuple<AccommodationUnit, float>(accommodationUnit, prediction.Score));
+            }
+
+            var finalResult = predictionResult.OrderByDescending(x => x.Item2).Select(x => x.Item1).Take(3).ToList();
+
+            return _mapper.Map<List<AccommodationUnit>>(finalResult);
+        }
+
+        public async Task<PagedResponse<Recommender>> TrainModelAsync(CancellationToken cancellationToken)
+        {
+            var accommodationUnits = await _dbContext.AccommodationUnits.ToListAsync(cancellationToken);
+            var numberOfRecords = await _dbContext.Reservations.CountAsync(cancellationToken);
+
+            if (accommodationUnits.Count > 4 && numberOfRecords > 8)
+            {
+                var recommendList = new List<Recommender>();
+
+                foreach (var accommodationUnit in accommodationUnits)
+                {
+                    var recommendedAccommodationUnits = Recommend(accommodationUnit.Id);
+
+                    var result = new Recommender
+                    {
+                        AccommodationUnitId = accommodationUnit.Id,
+                        FirstAccommodationUnitId = recommendedAccommodationUnits[0].Id,
+                        SecondAccommodationUnitId = recommendedAccommodationUnits[1].Id,
+                        ThirdAccommodationUnitId = recommendedAccommodationUnits[2].Id,
+                    };
+
+                    recommendList.Add(result);
+                }
+
+                await CreateNewRecommendation(recommendList, cancellationToken);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                return _mapper.Map<PagedResponse<Recommender>>(recommendList);
+            }
+            else
+            {
+                throw new Exception("Not enough data to generate recommendations.");
+            }
+        }
+
+        private async Task CreateNewRecommendation(List<Recommender> results, CancellationToken cancellationToken)
+        {
+            var existingRecommendations = await _dbContext.Recommenders.ToListAsync(cancellationToken);
+            var accommodationUnitsCount = await _dbContext.AccommodationUnits.CountAsync(cancellationToken);
+            var recommendationCount = await _dbContext.Recommenders.CountAsync(cancellationToken);
+
+            if (recommendationCount != 0)
+            {
+                if (recommendationCount > accommodationUnitsCount)
+                {
+                    for (int i = 0; i < accommodationUnitsCount; i++)
+                    {
+                        existingRecommendations[i].AccommodationUnitId = results[i].AccommodationUnitId;
+                        existingRecommendations[i].FirstAccommodationUnitId = results[i].FirstAccommodationUnitId;
+                        existingRecommendations[i].SecondAccommodationUnitId = results[i].SecondAccommodationUnitId;
+                        existingRecommendations[i].ThirdAccommodationUnitId = results[i].ThirdAccommodationUnitId;
+                    }
+
+                    for (int i = 0; i < recommendationCount; i++)
+                    {
+                        _dbContext.Recommenders.Remove(existingRecommendations[i]);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < recommendationCount; i++)
+                    {
+                        existingRecommendations[i].AccommodationUnitId = results[i].AccommodationUnitId;
+                        existingRecommendations[i].FirstAccommodationUnitId = results[i].FirstAccommodationUnitId;
+                        existingRecommendations[i].SecondAccommodationUnitId = results[i].SecondAccommodationUnitId;
+                        existingRecommendations[i].ThirdAccommodationUnitId = results[i].ThirdAccommodationUnitId;
+                    }
+
+                    var num = results.Count - recommendationCount;
+
+                    if (num > 0)
+                    {
+                        for (int i = results.Count - num; i < results.Count; i++)
+                        {
+                            await _dbContext.Recommenders.AddAsync(results[i], cancellationToken);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                await _dbContext.Recommenders.AddRangeAsync(results, cancellationToken);
+            }
+        }
+
 
         public async Task<AccommodationUnitGetDto> CreateAccommodationUnitAsync(AccommodationUnitCreateDto request, CancellationToken cancellationToken)
         {
@@ -322,6 +495,11 @@ namespace eRezervisi.Core.Services
             }
 
             return _mapper.Map<AccommodationUnitGetDto>(accommodationUnit);
+        }
+
+        public async Task ClearAllRecommendations(CancellationToken cancellationToken)
+        {
+            await _dbContext.Recommenders.ExecuteDeleteAsync(cancellationToken);
         }
 
         public async Task<AccommodationUnitGetDto> DeactivateAccommodationUnitAsync(long id, CancellationToken cancellationToken)
@@ -506,6 +684,17 @@ namespace eRezervisi.Core.Services
             return _mapper.Map<ImageGetDto>(uploadedImage);
         }
 
+        public async Task ViewAccommodationUnitAsync(long accommodationUnitId, CancellationToken cancellationToken)
+        {
+            var accommodationUnit = await _dbContext.AccommodationUnits.FirstOrDefaultAsync(x => x.Id == accommodationUnitId, cancellationToken);
+
+            NotFoundException.ThrowIfNull(accommodationUnit);
+
+            accommodationUnit.View();
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
         private async Task AddImagesAsync(long id, List<ImageUpdateDto> request, CancellationToken cancellationToken)
         {
             try
@@ -566,11 +755,6 @@ namespace eRezervisi.Core.Services
             }
 
             await _dbContext.SaveChangesAsync(cancellationToken);
-        }
-
-        private float ComputeCosineSimilarity(RecommendedItemsGetDto unitA, RecommendedItemsGetDto unitB)
-        {
-            throw new NotImplementedException();
         }
 
         private Expression<Func<AccommodationUnitReview, object>> GetReviewsOrderByExpression(string orderBy)

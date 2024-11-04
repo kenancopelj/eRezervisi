@@ -6,6 +6,7 @@ import 'package:erezervisi_desktop/models/responses/base/paged_response.dart';
 import 'package:erezervisi_desktop/providers/accommodation_unit_provider.dart';
 import 'package:erezervisi_desktop/screens/accommodation_units/create_accommodation_unit.dart';
 import 'package:erezervisi_desktop/screens/accommodation_units/edit_accommodation_unit.dart';
+import 'package:erezervisi_desktop/shared/components/search_input.dart';
 import 'package:erezervisi_desktop/shared/globals.dart';
 import 'package:erezervisi_desktop/shared/navigator/navigate.dart';
 import 'package:erezervisi_desktop/shared/navigator/route_list.dart';
@@ -17,6 +18,7 @@ import 'package:erezervisi_desktop/widgets/master_widget.dart';
 import 'package:erezervisi_desktop/widgets/pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_debouncer/flutter_debouncer.dart';
 
 class AccommodationUnits extends StatefulWidget {
   const AccommodationUnits({super.key});
@@ -189,24 +191,13 @@ class _AccommodationUnitsState extends State<AccommodationUnits> {
                           }),
                     ],
                   ),
-                  SizedBox(
-                    width: 120,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.filter_list_outlined,
-                          color: CustomTheme.sortByColor,
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Filtriraj",
-                          style: CustomTheme.sortByTextStyle,
-                        ),
-                      ],
-                    ),
-                  ),
+                  SearchInput(onChanged: (value) {
+                    setState(() {
+                      request.searchTerm = value;
+                    });
+
+                    loadAccommodationUnits();
+                  })
                 ],
               ),
             ),

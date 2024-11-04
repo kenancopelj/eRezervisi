@@ -5,6 +5,7 @@ class ReviewGetDto {
   late String note;
   late num reviewerId;
   late String reviewer;
+  String? reveiwerImage;
 
   ReviewGetDto({
     required this.id,
@@ -13,6 +14,7 @@ class ReviewGetDto {
     required this.note,
     required this.reviewerId,
     required this.reviewer,
+    this.reveiwerImage
   });
 
   factory ReviewGetDto.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class ReviewGetDto {
       note: json['note'],
       reviewerId: json['reviewerId'] as num,
       reviewer: json['reviewer'],
+      reveiwerImage: json['reviewerImage'],
     );
   }
 }

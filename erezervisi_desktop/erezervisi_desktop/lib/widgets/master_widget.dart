@@ -1,10 +1,17 @@
 import 'dart:io';
+import 'package:erezervisi_desktop/constants/topics.dart';
+import 'package:erezervisi_desktop/enums/notification_status.dart';
 import 'package:erezervisi_desktop/enums/toast_type.dart';
 import 'package:erezervisi_desktop/helpers/custom_theme.dart';
 import 'package:erezervisi_desktop/main.dart';
+import 'package:erezervisi_desktop/models/responses/notification/notifications.dart';
+import 'package:erezervisi_desktop/providers/notification_provider.dart';
 import 'package:erezervisi_desktop/screens/accommodation_units/accommodation_units.dart';
+import 'package:erezervisi_desktop/screens/chat/chat.dart';
 import 'package:erezervisi_desktop/screens/guests/guests.dart';
 import 'package:erezervisi_desktop/screens/home.dart';
+import 'package:erezervisi_desktop/screens/maintenances/maintenances.dart';
+import 'package:erezervisi_desktop/screens/notifications.dart';
 import 'package:erezervisi_desktop/screens/reservations/reservations.dart';
 import 'package:erezervisi_desktop/screens/reviews/reviews.dart';
 import 'package:erezervisi_desktop/screens/statistics/statistics.dart';
@@ -12,9 +19,12 @@ import 'package:erezervisi_desktop/shared/components/loader.dart';
 import 'package:erezervisi_desktop/shared/globals.dart';
 import 'package:erezervisi_desktop/shared/navigator/navigate.dart';
 import 'package:erezervisi_desktop/shared/navigator/route_list.dart';
-import 'package:erezervisi_desktop/widgets/maintenances/maintenances.dart';
+import 'package:erezervisi_desktop/widgets/settings.dart';
 import 'package:erezervisi_desktop/widgets/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:signalr_netcore/http_connection_options.dart';
+import 'package:signalr_netcore/hub_connection_builder.dart';
 
 class MasterWidget extends StatefulWidget {
   final Widget child;
@@ -25,8 +35,13 @@ class MasterWidget extends StatefulWidget {
   State<MasterWidget> createState() => _MasterWidgetState();
 }
 
+enum SampleItem { itemOne, itemTwo, itemThree }
+
 class _MasterWidgetState extends State<MasterWidget> {
   late VoidCallback globalNotifierListener;
+  late NotificationProvider notificationProvider;
+
+  Notifications notifications = Notifications(notifications: []);
 
   Color getColorBasedOnType(ToastType type) {
     switch (type) {
@@ -77,6 +92,12 @@ class _MasterWidgetState extends State<MasterWidget> {
   void initState() {
     super.initState();
 
+    notificationProvider = context.read<NotificationProvider>();
+
+    runSignalR();
+
+    loadNotifications();
+
     globalNotifierListener = () {
       if (mounted) {
         setState(() {
@@ -109,6 +130,41 @@ class _MasterWidgetState extends State<MasterWidget> {
     Globals.notifier.addListener(globalNotifierListener);
   }
 
+  Future runSignalR() async {
+    final connection = HubConnectionBuilder()
+        .withUrl("${Globals.apiUrl}notification-hub",
+            options: HttpConnectionOptions(
+              accessTokenFactory: () async => Globals.loggedUser!.token,
+            ))
+        .build();
+
+    await connection.start();
+
+    connection.on('${Topics.notification}#${Globals.loggedUser!.userId}',
+        (arguments) {
+      loadNotifications();
+    });
+  }
+
+  Future loadNotifications() async {
+    var response = await notificationProvider.getAll();
+
+    if (mounted) {
+      setState(() {
+        notifications = response;
+      });
+    }
+  }
+
+  void openSettings() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const SettingsDialog();
+      },
+    );
+  }
+
   void showToast(String message, Color backgroundColor, Icon icon) {
     OverlayEntry overlayEntry = OverlayEntry(
       builder: (context) => Toast(
@@ -133,6 +189,10 @@ class _MasterWidgetState extends State<MasterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var unreadNotificationsCount = notifications.notifications
+        .where((item) => item.status == NotificationStatus.Unread)
+        .length;
+
     return widget.isLogin
         ? Scaffold(body: widget.child)
         : Stack(children: [
@@ -145,9 +205,118 @@ class _MasterWidgetState extends State<MasterWidget> {
                 title: Row(
                   children: [
                     const Spacer(),
-                    const Icon(Icons.notifications_outlined),
+                    MenuAnchor(
+                        builder: (BuildContext context,
+                            MenuController controller, Widget? child) {
+                          return Stack(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  if (controller.isOpen) {
+                                    controller.close();
+                                  } else {
+                                    controller.open();
+                                  }
+                                },
+                                icon: const Icon(Icons.notifications_outlined),
+                              ),
+                              if (unreadNotificationsCount > 0)
+                                Positioned(
+                                  right: 8,
+                                  top: 8,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    constraints: const BoxConstraints(
+                                      minWidth: 12,
+                                      minHeight: 12,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        unreadNotificationsCount > 9
+                                            ? '9+'
+                                            : '$unreadNotificationsCount',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 8,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
+                        menuChildren: !notifications.notifications.any((item) =>
+                                item.status == NotificationStatus.Unread)
+                            ? [
+                                const MenuItemButton(
+                                    child: SizedBox(
+                                        width: 300,
+                                        height: 100,
+                                        child: Center(
+                                            child: Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text("Nema novih obavijesti"),
+                                        )))),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 24, vertical: 8),
+                                  child: TextButton(
+                                      onPressed: () {
+                                        Navigate.next(
+                                            context,
+                                            AppRoutes.notifications.routeName,
+                                            const MyNotifications());
+                                      },
+                                      child: const Text("Pogledaj sve")),
+                                )
+                              ]
+                            : [
+                                ...notifications.notifications
+                                    .where((item) =>
+                                        item.status ==
+                                        NotificationStatus.Unread)
+                                    .take(3)
+                                    .map((notification) => MenuItemButton(
+                                          onPressed: () {},
+                                          child: SizedBox(
+                                            width: 450,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: ListTile(
+                                                title: Text(notification.title),
+                                                subtitle: Text(
+                                                    notification.description!),
+                                              ),
+                                            ),
+                                          ),
+                                        ))
+                                    .toList(),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 24, vertical: 8),
+                                  child: TextButton(
+                                      onPressed: () {
+                                        Navigate.next(
+                                            context,
+                                            AppRoutes.notifications.routeName,
+                                            const MyNotifications());
+                                      },
+                                      child: const Text("Pogledaj sve")),
+                                )
+                              ]),
                     const SizedBox(width: 15),
-                    const Icon(Icons.settings_outlined),
+                    IconButton(
+                        onPressed: () {
+                          openSettings();
+                        },
+                        icon: const Icon(Icons.settings_outlined)),
                     const SizedBox(width: 15),
                     IconButton(
                       icon: const Icon(Icons.logout_outlined),
@@ -337,11 +506,28 @@ class _MasterWidgetState extends State<MasterWidget> {
                                   true);
                             },
                             leading: const Icon(
-                              Icons.request_page_outlined,
+                              Icons.cleaning_services_outlined,
                               color: Colors.white,
                             ),
                             title: Text(
                               'Održavanja',
+                              style: CustomTheme.menuItemTextStyle,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15, top: 5),
+                          child: ListTile(
+                            onTap: () {
+                              Navigate.next(context, AppRoutes.chat.routeName,
+                                  const MyChat(), true);
+                            },
+                            leading: const Icon(
+                              Icons.chat_bubble_outline_outlined,
+                              color: Colors.white,
+                            ),
+                            title: Text(
+                              'Chat',
                               style: CustomTheme.menuItemTextStyle,
                             ),
                           ),

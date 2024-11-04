@@ -13,7 +13,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool allowNotifications = false;
-  bool receiveMails = false;
+  bool receiveEmails = false;
 
   @override
   Widget build(BuildContext context) {

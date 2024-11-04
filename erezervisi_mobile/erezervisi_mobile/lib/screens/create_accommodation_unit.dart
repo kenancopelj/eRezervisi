@@ -147,12 +147,10 @@ class _CreateAccommodationUnitScreenState
             TextButton(
               onPressed: () {
                 if (step == 3) {
-                  print('submit');
                   handleSubmit();
                   return;
                 }
                 if (step == 2) {
-                  print('lokacija');
                   setState(() {
                     step = 3;
                     validated = true;
@@ -160,7 +158,6 @@ class _CreateAccommodationUnitScreenState
                   return;
                 }
                 if (validate()) {
-                  print('slike');
                   setState(() {
                     validated = true;
                     step = 2;
@@ -185,7 +182,6 @@ class _CreateAccommodationUnitScreenState
   }
 
   Widget nextChild() {
-    print(step);
     switch (step) {
       case 1:
         return detailsPage();

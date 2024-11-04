@@ -30,7 +30,6 @@ class BaseProvider with ChangeNotifier {
       return handler.next(response);
     }, onError: (DioException e, handler) {
       Globals.notifier.setRequestInactive();
-
       switch (e.type) {
         case DioExceptionType.connectionTimeout:
           {

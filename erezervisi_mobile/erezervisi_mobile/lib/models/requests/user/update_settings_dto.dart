@@ -1,15 +1,15 @@
 class UpdateSettingsDto {
-  final bool receiveMails;
+  final bool receiveEmails;
   final bool receiveNotifications;
 
   UpdateSettingsDto({
-    required this.receiveMails,
+    required this.receiveEmails,
     required this.receiveNotifications,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'receiveMails': receiveMails,
+      'receiveEmails': receiveEmails,
       'receiveNotifications': receiveNotifications,
     };
   }

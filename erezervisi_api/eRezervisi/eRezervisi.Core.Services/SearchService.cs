@@ -20,7 +20,7 @@ namespace eRezervisi.Core.Services
             _dbContext = dbContext;
         }
 
-        public async Task<SearchResponse> GetPagedAsync(BaseGetAllRequest request, CancellationToken cancellationToken)
+        public async Task<SearchResponse> SearchAsync(BaseGetAllRequest request, CancellationToken cancellationToken)
         {
             var accommodationUnits = await _dbContext.AccommodationUnits
                 .AsNoTracking()
@@ -39,7 +39,8 @@ namespace eRezervisi.Core.Services
                 .AsNoTracking()
                 .Where(x => x.IsActive &&
                     (string.IsNullOrEmpty(request.SearchTerm) ||
-                    x.GetFullName().Contains(request.SearchTermLower) ||
+                    x.FirstName.Contains(request.SearchTermLower) ||
+                    x.LastName.Contains(request.SearchTermLower) ||
                     x.UserCredentials!.Username.Contains(request.SearchTermLower)))
                 .Select(x => new UserGetShortDto
                 {

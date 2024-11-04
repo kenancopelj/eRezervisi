@@ -5,6 +5,6 @@ namespace eRezervisi.Core.Services.Interfaces
 {
     public interface ISearchService
     {
-        Task<SearchResponse> GetPagedAsync(BaseGetAllRequest request, CancellationToken cancellationToken);
+        Task<SearchResponse> SearchAsync(BaseGetAllRequest request, CancellationToken cancellationToken);
     }
 }

@@ -1,4 +1,5 @@
-﻿using eRezervisi.Core.Domain.Enums;
+﻿using eRezervisi.Core.Domain.Entities;
+using eRezervisi.Core.Domain.Enums;
 using eRezervisi.Core.Services.Interfaces;
 using eRezervisi.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
@@ -66,10 +67,34 @@ namespace eRezervisi.Core.Services
         {
             var now = DateTime.Now;
 
-            var reservations = await _dbContext.Reservations.Where(x => x.To <= now && x.Status == ReservationStatus.InProgress).ToListAsync(cancellationToken);
+            var reservations = await _dbContext.Reservations
+                .Include(x => x.AccommodationUnit)
+                .Where(x => x.To <= now && x.Status == ReservationStatus.InProgress)
+                .ToListAsync(cancellationToken);
 
             foreach (var item in reservations)
             {
+                var owner = await _dbContext.Users
+                    .Include(x => x.UserSettings)
+                    .FirstOrDefaultAsync(x => x.Id == item.AccommodationUnit.OwnerId);
+
+                if (owner != null && owner.IsActive && owner.UserSettings!.MarkObjectAsUncleanAfterReservation)
+                {
+                    await _notifyService.NotifyUserAboutUncleanObject(item.AccommodationUnitId);
+
+                    var maintenace = new Maintenance
+                    {
+                        Note = $"Prljava soba nakon rezervacije {item.Code}",
+                        AccommodationUnitId = item.AccommodationUnitId,
+                        Status = MaintenanceStatus.Created,
+                        Priority = MaintenacePriority.Medium
+                    };
+
+                    await _dbContext.AddAsync(maintenace, cancellationToken);
+
+                    await _dbContext.SaveChangesAsync(cancellationToken);
+                }
+
                 item.ChangeStatus(ReservationStatus.Completed);
             }
 

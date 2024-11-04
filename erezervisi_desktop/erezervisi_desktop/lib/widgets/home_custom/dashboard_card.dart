@@ -8,6 +8,7 @@ class DashboardCard extends StatelessWidget {
   final num? value;
   final Widget? content;
   final double? width;
+  final double? height;
 
   const DashboardCard(
       {super.key,
@@ -16,7 +17,8 @@ class DashboardCard extends StatelessWidget {
       required this.icon,
       this.value,
       this.content,
-      this.width});
+      this.width,
+      this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class DashboardCard extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       child: SizedBox(
         width: width ?? 510,
-        height: content != null ? 500 : 200,
+        height: content != null ? height : 200,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

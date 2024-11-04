@@ -3,6 +3,9 @@ import 'package:erezervisi_mobile/models/requests/accommodation_unit/get_accommo
 import 'package:erezervisi_mobile/models/responses/accommodation_unit/accommodation_unit_get_dto.dart';
 import 'package:erezervisi_mobile/models/responses/base/paged_response.dart';
 import 'package:erezervisi_mobile/providers/accommodation_unit_provider.dart';
+import 'package:erezervisi_mobile/screens/home.dart';
+import 'package:erezervisi_mobile/shared/navigator/navigate.dart';
+import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:erezervisi_mobile/widgets/home_custom/item_card.dart';
 import 'package:erezervisi_mobile/widgets/master_widget.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +77,8 @@ class _AccommodationUnitsState extends State<AccommodationUnits> {
                 iconSize: 14,
                 color: Colors.black,
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigate.next(
+                      context, AppRoutes.home.routeName, const Home());
                 },
               ),
               Padding(

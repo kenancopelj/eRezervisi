@@ -1,16 +1,18 @@
 class UpdateSettingsDto {
-  final bool receiveMails;
+  final bool receiveEmails;
   final bool receiveNotifications;
+  final bool markObjectAsUncleanAfterReservation;
 
-  UpdateSettingsDto({
-    required this.receiveMails,
-    required this.receiveNotifications,
-  });
+  UpdateSettingsDto(
+      {required this.receiveEmails,
+      required this.receiveNotifications,
+      required this.markObjectAsUncleanAfterReservation});
 
   Map<String, dynamic> toJson() {
     return {
-      'receiveMails': receiveMails,
+      'receiveEmails': receiveEmails,
       'receiveNotifications': receiveNotifications,
+      'markObjectAsUncleanAfterReservation': markObjectAsUncleanAfterReservation
     };
   }
 }

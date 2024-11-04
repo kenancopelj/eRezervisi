@@ -145,7 +145,7 @@ class _HomeState extends State<Home> {
                   ),
                   CategoryCardList(
                     categories: categories,
-                    onClick: (num value) {
+                    onClick: (num? value) {
                       setState(() {
                         request.categoryId = value;
                         accommodationUnits =

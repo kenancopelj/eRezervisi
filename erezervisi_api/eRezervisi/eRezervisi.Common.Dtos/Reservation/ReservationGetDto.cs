@@ -9,6 +9,7 @@ namespace eRezervisi.Common.Dtos.Reservation
         public string Code { get; set; } = null!;
         public long GuestId { get; set; }
         public string Guest { get; set; } = null!;
+        public string GuestContact { get; set; } = null!;
         public long AccommodationUnitId { get; set; }
         public AccommodationUnitGetDto AccommodationUnit { get; set; } = null!;
         public DateTime From { get; set; }
@@ -20,5 +21,6 @@ namespace eRezervisi.Common.Dtos.Reservation
         public int TotalDays { get; set; }
         public double TotalPrice { get; set; }
         public DateTime CreatedAt { get; set; }
+        public ReservationStatus Status { get; set; }
     }
 }

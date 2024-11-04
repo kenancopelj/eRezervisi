@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using eRezervisi.Common.Dtos.Guest;
+using eRezervisi.Common.Dtos.Review;
 using eRezervisi.Common.Shared;
 using eRezervisi.Common.Shared.Pagination;
 using eRezervisi.Common.Shared.Requests.Guest;
 using eRezervisi.Core.Domain.Entities;
 using eRezervisi.Core.Domain.Enums;
+using eRezervisi.Core.Domain.Exceptions;
 using eRezervisi.Core.Services.Interfaces;
 using eRezervisi.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace eRezervisi.Core.Services
@@ -24,6 +27,38 @@ namespace eRezervisi.Core.Services
             _dbContext = dbContext;
             _jwtTokenReader = jwtTokenReader;
             _mapper = mapper;
+        }
+
+        public async Task CreateGuestReviewAsync(long guestId, ReviewCreateDto request, CancellationToken cancellationToken)
+        {
+            var guest = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == guestId, cancellationToken);
+
+            NotFoundException.ThrowIfNull(guest);
+
+            var review = _mapper.Map<Review>(request);
+
+            await _dbContext.Reviews.AddAsync(review, cancellationToken);
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            var guestReview = new GuestReview
+            {
+                ReviewId = review.Id,
+                GuestId = guestId
+            };
+
+            await _dbContext.GuestReviews.AddAsync(guestReview, cancellationToken);
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<GuestReview?> GetReviewByOwnerId(long guestId, CancellationToken cancellationToken)
+        {
+            var userId = _jwtTokenReader.GetUserIdFromToken();
+
+            var review = await _dbContext.GuestReviews.Include(x => x.Review).FirstOrDefaultAsync(x => x.Review.CreatedBy == userId && x.GuestId == guestId);
+
+            return review;
         }
 
         public async Task<PagedResponse<GuestGetDto>> GetGuestsPagedAsync(GetGuestsRequest request, CancellationToken cancellationToken)
@@ -48,7 +83,8 @@ namespace eRezervisi.Core.Services
                     Id = x.UserId,
                     FullName = x.User.GetFullName(),
                     Phone = x.User.Phone,
-                    Email = x.User.Email
+                    Email = x.User.Email,
+                    AccommodationUnitTitle = x.AccommodationUnit.Title,
                 }, cancellationToken);
 
             return guests;

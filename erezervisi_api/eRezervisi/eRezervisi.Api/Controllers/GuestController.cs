@@ -1,4 +1,5 @@
 ﻿using eRezervisi.Api.Authorization;
+using eRezervisi.Common.Dtos.Review;
 using eRezervisi.Common.Shared.Requests.Guest;
 using eRezervisi.Core.Services.Interfaces;
 using eRezervisi.Infrastructure.Common.Constants;
@@ -24,6 +25,15 @@ namespace eRezervisi.Api.Controllers
             var result = await _guestService.GetGuestsPagedAsync(request, cancellationToken);
 
             return Ok(result);
+        }
+
+        [HttpPost("{guestId}/review")]
+        [CustomAuthorize(Roles.Owner.Name)]
+        public async Task<IActionResult> ReviewGuestAsync([FromRoute] long guestId, [FromBody] ReviewCreateDto request, CancellationToken cancellationToken)
+        {
+            await _guestService.CreateGuestReviewAsync(guestId, request, cancellationToken);
+
+            return Ok();
         }
     }
 }

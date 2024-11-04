@@ -23,6 +23,7 @@ namespace eRezervisi.Core.Domain.Entities
         public double Longitude { get; set; }
         public string Address { get; set; } = null!;
         public DateOnly? DeactivateAt { get; set; } // In case user wants to deactivate object, but there are still reservations in progress. Enqueue it to job
+        public int ViewCount { get; set; }
 
         public AccommodationUnit() { }
 
@@ -36,6 +37,11 @@ namespace eRezervisi.Core.Domain.Entities
         {
             Status = AccommodationUnitStatus.Active;
             DeactivateAt = null;
+        }
+
+        public void View()
+        {
+            ViewCount++;
         }
     }
 }

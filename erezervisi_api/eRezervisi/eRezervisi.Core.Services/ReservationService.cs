@@ -168,6 +168,7 @@ namespace eRezervisi.Core.Services
                     Code = x.Code,
                     GuestId = x.UserId,
                     Guest = x.User.GetFullName(),
+                    GuestContact = x.User.Phone,
                     AccommodationUnitId = x.AccommodationUnitId,
                     AccommodationUnit = _mapper.Map<AccommodationUnitGetDto>(x.AccommodationUnit),
                     From = x.From,
@@ -178,7 +179,8 @@ namespace eRezervisi.Core.Services
                     TotalPeople = x.TotalPeople,
                     TotalDays = x.TotalDays,
                     CreatedAt = x.CreatedAt,
-                    TotalPrice = x.TotalPrice
+                    TotalPrice = x.TotalPrice,
+                    Status = x.Status
                 }, cancellationToken);
 
             return reservations;

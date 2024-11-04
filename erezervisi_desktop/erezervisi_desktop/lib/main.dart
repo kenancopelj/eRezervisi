@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:erezervisi_desktop/providers/dashboard_provider.dart';
+import 'package:erezervisi_desktop/providers/maintenance_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:dio/dio.dart';
@@ -109,6 +110,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(
             create: (_) => DashboardProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => MaintenanceProvider(),
           ),
         ],
         child: MaterialApp(

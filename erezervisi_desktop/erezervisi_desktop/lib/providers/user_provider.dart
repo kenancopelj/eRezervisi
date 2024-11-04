@@ -1,3 +1,4 @@
+import 'package:erezervisi_desktop/enums/toast_type.dart';
 import 'package:erezervisi_desktop/models/requests/user/update_settings_dto.dart';
 import 'package:erezervisi_desktop/models/requests/user/user_create_dto.dart';
 import 'package:erezervisi_desktop/models/requests/user/user_update_dto.dart';
@@ -72,6 +73,7 @@ class UserProvider extends BaseProvider {
     var response = await dio.put(url, data: request.toJson());
 
     if (response.statusCode == 200) {
+      Globals.notifier.setInfo("Uspješno ažurirano", ToastType.Success);
       return UserSettingsGetDto.fromJson(response.data);
     }
     throw response;

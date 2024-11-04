@@ -1,3 +1,4 @@
+import 'package:erezervisi_desktop/enums/reservation_status.dart';
 import 'package:erezervisi_desktop/helpers/custom_theme.dart';
 import 'package:erezervisi_desktop/models/requests/reservation/get_reservations_request.dart';
 import 'package:erezervisi_desktop/models/responses/base/paged_response.dart';
@@ -8,7 +9,7 @@ import 'package:erezervisi_desktop/widgets/action_button.dart';
 import 'package:erezervisi_desktop/widgets/empty.dart';
 import 'package:erezervisi_desktop/widgets/master_widget.dart';
 import 'package:erezervisi_desktop/widgets/pagination.dart';
-import 'package:erezervisi_desktop/widgets/reservations/reservation.dart';
+import 'package:erezervisi_desktop/screens/reservations/reservation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -124,22 +125,25 @@ class _ReservationsState extends State<Reservations> {
                         });
                       },
                     ),
-                  SizedBox(
-                    width: 120,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.filter_list_outlined,
-                          color: CustomTheme.sortByColor,
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Filtriraj",
-                          style: CustomTheme.sortByTextStyle,
-                        ),
-                      ],
+                  InkWell(
+                    onTap: () {},
+                    child: SizedBox(
+                      width: 120,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.filter_list_outlined,
+                            color: CustomTheme.sortByColor,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Filtriraj",
+                            style: CustomTheme.sortByTextStyle,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -233,7 +237,7 @@ class _ReservationsState extends State<Reservations> {
                           return ReservationItem(
                               item: item,
                               isSelected: selectedReservations
-                                  .any((unit) => unit == item.id),
+                                  .any((res) => res == item.id),
                               onSelected: (bool? value) =>
                                   handleSelectReservation(item.id));
                         },
@@ -274,10 +278,46 @@ class _ReservationsState extends State<Reservations> {
                         _openReservationsDialog(context, reservation);
                       }
                     },
-                  ))
+                  )),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Row(
+                children: [
+                  Container(
+                    height: 20,
+                    width: 40,
+                    decoration: const BoxDecoration(color: Colors.yellow),
+                  ),
+                  const SizedBox(width: 5),
+                  const Text('U toku'),
+                  _spacer(),
+                  Container(
+                    height: 20,
+                    width: 40,
+                    decoration: const BoxDecoration(color: Colors.green),
+                  ),
+                  const SizedBox(width: 5),
+                  const Text('Potvrđeno'),
+                  _spacer(),
+                  Container(
+                    height: 20,
+                    width: 40,
+                    decoration: const BoxDecoration(color: Colors.blue),
+                  ),
+                  const SizedBox(width: 5),
+                  const Text('Kreirano'),
+                ],
+              ),
+            )
           ],
         ),
       ),
+    );
+  }
+
+  _spacer() {
+    return const SizedBox(
+      width: 20,
     );
   }
 
@@ -292,6 +332,19 @@ class _ReservationsState extends State<Reservations> {
         );
       },
     );
+  }
+}
+
+Color getReservationColor(ReservationGetDto reservation) {
+  switch (reservation.status) {
+    case ReservationStatus.InProgress:
+      return Colors.yellow;
+    case ReservationStatus.Confirmed:
+      return Colors.green;
+    case ReservationStatus.Draft:
+      return Colors.blue;
+    default:
+      return CustomTheme.bluePrimaryColor;
   }
 }
 
@@ -314,6 +367,12 @@ class ReservationDataSource extends CalendarDataSource {
   String getSubject(int index) {
     var reservation = _getReservationData(index);
     return "${reservation.accommodationUnitTitle} - ${reservation.guest}";
+  }
+
+  @override
+  Color getColor(int index) {
+    var reservation = _getReservationData(index);
+    return getReservationColor(reservation);
   }
 
   ReservationGetDto _getReservationData(int index) {

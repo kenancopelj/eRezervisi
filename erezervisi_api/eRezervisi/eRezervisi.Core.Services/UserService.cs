@@ -254,7 +254,9 @@ namespace eRezervisi.Core.Services
 
             NotFoundException.ThrowIfNull(user);
 
-            user.UserSettings = _mapper.Map<UserSettings>(request);
+            user.UserSettings!.ReceiveEmails = request.ReceiveEmails;
+            user.UserSettings!.ReceiveNotifications = request.ReceiveNotifications;
+            user.UserSettings!.MarkObjectAsUncleanAfterReservation = request.MarkObjectAsUncleanAfterReservation;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 

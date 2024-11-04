@@ -192,6 +192,12 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("township_id");
 
+                    b.Property<int>("ViewCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("view_count");
+
                     b.HasKey("Id")
                         .HasName("pk_accommodation_units");
 
@@ -205,6 +211,488 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasDatabaseName("ix_accommodation_units_township_id");
 
                     b.ToTable("accommodation_units", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            AccommodationUnitCategoryId = 1L,
+                            Address = "Mula Mustafe Bašeskije",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.856430000000003,
+                            Longitude = 18.413029000000002,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 1L,
+                            Price = 150.0,
+                            Status = 1,
+                            ThumbnailImage = "63f06b1f-f76e-45b7-82ed-0631381f85fc_VistaSarajevoThumb.jpg",
+                            Title = "Central Vista Apartments Sarajevo",
+                            TownshipId = 66L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            AccommodationUnitCategoryId = 2L,
+                            Address = "Pehlivanuša 67",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.856430000000003,
+                            Longitude = 18.413029000000002,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 1L,
+                            Price = 898.0,
+                            Status = 1,
+                            ThumbnailImage = "55899be7-94fe-40b8-84a0-b66b00b022c8_OneLoveThumb.jpg",
+                            Title = "One Love",
+                            TownshipId = 68L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            AccommodationUnitCategoryId = 1L,
+                            Address = "Soldina 3",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.856430000000003,
+                            Longitude = 18.413029000000002,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 3L,
+                            Price = 369.0,
+                            Status = 1,
+                            ThumbnailImage = "f9d7eb2e-1ca3-42e4-8b0c-c901492d238e_CittaThumb.jpg",
+                            Title = "Apartment Citta Vecchia",
+                            TownshipId = 55L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            AccommodationUnitCategoryId = 2L,
+                            Address = "II. bojne rudničke 185A",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.856430000000003,
+                            Longitude = 18.413029000000002,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 3L,
+                            Price = 369.0,
+                            Status = 1,
+                            ThumbnailImage = "49f38bd6-1d31-4458-997d-b5739e5d7fda_FlumenThumb.jpg",
+                            Title = "Villa Flumen",
+                            TownshipId = 55L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            AccommodationUnitCategoryId = 2L,
+                            Address = "Alice Rizikala, 8 I sprat, zgrada",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.856430000000003,
+                            Longitude = 18.413029000000002,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 4L,
+                            Price = 450.0,
+                            Status = 1,
+                            ThumbnailImage = "88af37ec-030c-45d4-9045-b941843e8c30_MostarThumb.jpg",
+                            Title = "Villa Mostar",
+                            TownshipId = 55L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            AccommodationUnitCategoryId = 5L,
+                            Address = "Ferida Srnje 16",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.856430000000003,
+                            Longitude = 18.413029000000002,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 4L,
+                            Price = 300.0,
+                            Status = 1,
+                            ThumbnailImage = "74d8c129-57dd-42b9-8f7d-903f6aa04398_BungaloviSarajevo.jpg",
+                            Title = "Bungalovi Sarajevo",
+                            TownshipId = 68L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            AccommodationUnitCategoryId = 2L,
+                            Address = "15 Fra Grge Martića",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.856430000000003,
+                            Longitude = 18.413029000000002,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 3L,
+                            Price = 250.0,
+                            Status = 1,
+                            ThumbnailImage = "bebefb25-41da-474b-8bcb-fdd291162409_RoyalThumb.jpg",
+                            Title = "Apartman ROYAL Bulvear",
+                            TownshipId = 35L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            AccommodationUnitCategoryId = 3L,
+                            Address = "Vladislava Skarića 5",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.856299999999997,
+                            Longitude = 18.4131,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 4L,
+                            Price = 200.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Apartment Europe Sarajevo",
+                            TownshipId = 68L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            AccommodationUnitCategoryId = 3L,
+                            Address = "Hrasnička cesta bb",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.856299999999997,
+                            Longitude = 18.4131,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 1L,
+                            Price = 230.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Malak Regency Apartment",
+                            TownshipId = 67L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            AccommodationUnitCategoryId = 3L,
+                            Address = "Kneza Domagoja bb",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.343800000000002,
+                            Longitude = 17.8078,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 1L,
+                            Price = 180.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Bungalovi Mostar",
+                            TownshipId = 65L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            AccommodationUnitCategoryId = 3L,
+                            Address = "Fra Filipa Lastrića 2",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.856299999999997,
+                            Longitude = 18.4131,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 1L,
+                            Price = 220.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Bristol",
+                            TownshipId = 55L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            AccommodationUnitCategoryId = 3L,
+                            Address = "Ravne 1",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.856299999999997,
+                            Longitude = 18.4131,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 1L,
+                            Price = 250.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Pino Nature",
+                            TownshipId = 55L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 13L,
+                            AccommodationUnitCategoryId = 1L,
+                            Address = "Cara Dušana 10",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 44.7333,
+                            Longitude = 18.083300000000001,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 3L,
+                            Price = 160.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Villa Park Doboj",
+                            TownshipId = 87L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 14L,
+                            AccommodationUnitCategoryId = 3L,
+                            Address = "Babanovac Bb",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 44.311500000000002,
+                            Longitude = 17.594999999999999,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 4L,
+                            Price = 280.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Blanca Resort & Spa",
+                            TownshipId = 55L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 15L,
+                            AccommodationUnitCategoryId = 1L,
+                            Address = "Kralja Tomislava bb",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.121600000000001,
+                            Longitude = 17.684100000000001,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 4L,
+                            Price = 140.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Villa Mogorjelo",
+                            TownshipId = 52L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 16L,
+                            AccommodationUnitCategoryId = 2L,
+                            Address = "Cvijetni trg 1",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 42.708599999999997,
+                            Longitude = 18.328299999999999,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 1L,
+                            Price = 190.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Apartman Platani",
+                            TownshipId = 81L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 17L,
+                            AccommodationUnitCategoryId = 2L,
+                            Address = "Lacina 9a",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.343800000000002,
+                            Longitude = 17.8078,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 1L,
+                            Price = 150.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Nar Mostar",
+                            TownshipId = 55L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 18L,
+                            AccommodationUnitCategoryId = 1L,
+                            Address = "Lacina bb",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.343800000000002,
+                            Longitude = 17.8078,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 1L,
+                            Price = 170.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Villa Park",
+                            TownshipId = 71L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 19L,
+                            AccommodationUnitCategoryId = 2L,
+                            Address = "Kameni Spavač bb",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 44.203600000000002,
+                            Longitude = 17.907299999999999,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 3L,
+                            Price = 200.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Apartman Kenan",
+                            TownshipId = 12L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 20L,
+                            AccommodationUnitCategoryId = 1L,
+                            Address = "Ski Resort, Mostar",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.343800000000002,
+                            Longitude = 17.8078,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 3L,
+                            Price = 240.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Hotel Snježna Kuća",
+                            TownshipId = 40L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 21L,
+                            AccommodationUnitCategoryId = 3L,
+                            Address = "Ulica fra Slavka Barbarića",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.186399999999999,
+                            Longitude = 17.679099999999998,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 4L,
+                            Price = 210.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Medjugorje Hotel & Spa",
+                            TownshipId = 48L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 22L,
+                            AccommodationUnitCategoryId = 1L,
+                            Address = "Blagaj Bb",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.255099999999999,
+                            Longitude = 17.886399999999998,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 4L,
+                            Price = 160.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Villa Blagaj",
+                            TownshipId = 55L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 23L,
+                            AccommodationUnitCategoryId = 3L,
+                            Address = "Brijesce bb",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.856299999999997,
+                            Longitude = 18.4131,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 1L,
+                            Price = 250.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Hercegovina",
+                            TownshipId = 65L,
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            Id = 24L,
+                            AccommodationUnitCategoryId = 1L,
+                            Address = "Trg Državnosti bb",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Latitude = 43.654499999999999,
+                            Longitude = 17.962700000000002,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            OwnerId = 3L,
+                            Price = 150.0,
+                            Status = 1,
+                            ThumbnailImage = "",
+                            Title = "Villa Konjic",
+                            TownshipId = 54L,
+                            ViewCount = 0
+                        });
                 });
 
             modelBuilder.Entity("eRezervisi.Core.Domain.Entities.AccommodationUnitCategory", b =>
@@ -309,6 +797,17 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             ModifiedBy = 0L,
                             ShortTitle = "PRI",
                             Title = "Privatne kuće"
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            ShortTitle = "BGL",
+                            Title = "Bungalovi"
                         });
                 });
 
@@ -388,6 +887,129 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasName("pk_cantons");
 
                     b.ToTable("cantons", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            ShortTitle = "USK",
+                            Title = "Unsko-sanski kanton"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            ShortTitle = "PK",
+                            Title = "Posavski kanton"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            ShortTitle = "TK",
+                            Title = "Tuzlanski kanton"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            ShortTitle = "ZDK",
+                            Title = "Zeničko-dobojski kanton"
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            ShortTitle = "BPK",
+                            Title = "Bosansko-podrinjski kanton"
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            ShortTitle = "SBK",
+                            Title = "Srednjobosanski kanton"
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            ShortTitle = "HNK",
+                            Title = "Herecegovačko-neretvanski kanton"
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            ShortTitle = "ZHK",
+                            Title = "Zapadnohercegovački kanton"
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            ShortTitle = "KS",
+                            Title = "Kanton Sarajevo"
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            ShortTitle = "K10",
+                            Title = "Kanton 10"
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            ShortTitle = "RS",
+                            Title = "Republika Srpksa"
+                        });
                 });
 
             modelBuilder.Entity("eRezervisi.Core.Domain.Entities.FavoriteAccommodationUnit", b =>
@@ -532,6 +1154,302 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasDatabaseName("ix_images_accommodation_unit_id");
 
                     b.ToTable("images", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            AccommodationUnitId = 1L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "0befdb86-650f-430d-814e-76d6a220a70e_VistaSarajevo1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            AccommodationUnitId = 1L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "3d768381-62a7-4cf7-bb2d-5d7a2cb9130f_VistaSarajevo2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            AccommodationUnitId = 1L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "4f458512-3235-4f25-9fc4-c31c3659869c_VistaSarajevo3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            AccommodationUnitId = 2L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "c0c1aeaa-adca-4ebe-aa23-1b6c04eeab86_OneLove1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            AccommodationUnitId = 2L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "c0c1aeaa-adca-4ebe-aa23-1b6c04eeab86_OneLove2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            AccommodationUnitId = 2L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "c0c1aeaa-adca-4ebe-aa23-1b6c04eeab86_OneLove3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            AccommodationUnitId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "f9d7eb2e-1ca3-42e4-8b0c-c901492d238e_Citta1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            AccommodationUnitId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "f9d7eb2e-1ca3-42e4-8b0c-c901492d238e_Citta2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            AccommodationUnitId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "f9d7eb2e-1ca3-42e4-8b0c-c901492d238e_Citta3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            AccommodationUnitId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "49f38bd6-1d31-4458-997d-b5739e5d7fda_Flumen1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            AccommodationUnitId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "49f38bd6-1d31-4458-997d-b5739e5d7fda_Flumen2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            AccommodationUnitId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "49f38bd6-1d31-4458-997d-b5739e5d7fda_Flumen3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 13L,
+                            AccommodationUnitId = 5L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "88af37ec-030c-45d4-9045-b941843e8c30_Mostar1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 14L,
+                            AccommodationUnitId = 5L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "88af37ec-030c-45d4-9045-b941843e8c30_Mostar2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 15L,
+                            AccommodationUnitId = 5L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "88af37ec-030c-45d4-9045-b941843e8c30_Mostar3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 16L,
+                            AccommodationUnitId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "74d8c129-57dd-42b9-8f7d-903f6aa04398_BungaloviSarajevo1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 17L,
+                            AccommodationUnitId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "74d8c129-57dd-42b9-8f7d-903f6aa04398_BungaloviSarajevo2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 18L,
+                            AccommodationUnitId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "74d8c129-57dd-42b9-8f7d-903f6aa04398_BungaloviSarajevo3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 19L,
+                            AccommodationUnitId = 7L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "bebefb25-41da-474b-8bcb-fdd291162409_Royal1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 20L,
+                            AccommodationUnitId = 7L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "bebefb25-41da-474b-8bcb-fdd291162409_Royal2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 21L,
+                            AccommodationUnitId = 7L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "bebefb25-41da-474b-8bcb-fdd291162409_Royal3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        });
+                });
+
+            modelBuilder.Entity("eRezervisi.Core.Domain.Entities.Maintenance", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("AccommodationUnitId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("accommodation_unit_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("created_by");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("deleted");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<long?>("DeletedBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("deleted_by");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("modified_at");
+
+                    b.Property<long>("ModifiedBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("modified_by");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("note");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int")
+                        .HasColumnName("priority");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id")
+                        .HasName("pk_maintenances");
+
+                    b.HasIndex("AccommodationUnitId")
+                        .HasDatabaseName("ix_maintenances_accommodation_unit_id");
+
+                    b.ToTable("maintenances", (string)null);
                 });
 
             modelBuilder.Entity("eRezervisi.Core.Domain.Entities.Message", b =>
@@ -688,6 +1606,71 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     b.ToTable("notifications", (string)null);
                 });
 
+            modelBuilder.Entity("eRezervisi.Core.Domain.Entities.Recommender", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("AccommodationUnitId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("accommodation_unit_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("created_by");
+
+                    b.Property<bool>("Deleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("deleted");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<long?>("DeletedBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("deleted_by");
+
+                    b.Property<long?>("FirstAccommodationUnitId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("first_accommodation_unit_id");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("modified_at")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<long>("ModifiedBy")
+                        .HasColumnType("bigint")
+                        .HasColumnName("modified_by");
+
+                    b.Property<long?>("SecondAccommodationUnitId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("second_accommodation_unit_id");
+
+                    b.Property<long?>("ThirdAccommodationUnitId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("third_accommodation_unit_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_recommenders");
+
+                    b.ToTable("recommenders", (string)null);
+                });
+
             modelBuilder.Entity("eRezervisi.Core.Domain.Entities.Reservation", b =>
                 {
                     b.Property<long>("Id")
@@ -700,14 +1683,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     b.Property<long>("AccommodationUnitId")
                         .HasColumnType("bigint")
                         .HasColumnName("accommodation_unit_id");
-
-                    b.Property<DateTime?>("CheckedInAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("checked_in_at");
-
-                    b.Property<DateTime?>("CheckedOutAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("checked_out_at");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -798,6 +1773,445 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasDatabaseName("ix_reservations_user_id");
 
                     b.ToTable("reservations", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            AccommodationUnitId = 1L,
+                            Code = "1/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 5, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 2,
+                            NumberOfChildren = 1,
+                            PaymentMethod = 2,
+                            Status = 6,
+                            To = new DateTime(2024, 5, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 750.0,
+                            UserId = 2L
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            AccommodationUnitId = 1L,
+                            Code = "2/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 4,
+                            NumberOfChildren = 2,
+                            PaymentMethod = 1,
+                            Status = 6,
+                            To = new DateTime(2024, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 2400.0,
+                            UserId = 5L
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            AccommodationUnitId = 1L,
+                            Code = "3/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 3,
+                            NumberOfChildren = 1,
+                            PaymentMethod = 1,
+                            Status = 6,
+                            To = new DateTime(2024, 4, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 2400.0,
+                            UserId = 11L
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            AccommodationUnitId = 1L,
+                            Code = "28/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 4, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 2,
+                            NumberOfChildren = 2,
+                            PaymentMethod = 1,
+                            Status = 6,
+                            To = new DateTime(2024, 4, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 600.0,
+                            UserId = 15L
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            AccommodationUnitId = 1L,
+                            Code = "29/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 2,
+                            NumberOfChildren = 0,
+                            PaymentMethod = 1,
+                            Status = 6,
+                            To = new DateTime(2024, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 300.0,
+                            UserId = 15L
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            AccommodationUnitId = 1L,
+                            Code = "24/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 2,
+                            NumberOfChildren = 0,
+                            PaymentMethod = 1,
+                            Status = 6,
+                            To = new DateTime(2024, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 300.0,
+                            UserId = 15L
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            AccommodationUnitId = 2L,
+                            Code = "7/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 2,
+                            NumberOfChildren = 1,
+                            PaymentMethod = 2,
+                            Status = 6,
+                            To = new DateTime(2024, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 500.0,
+                            UserId = 5L
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            AccommodationUnitId = 3L,
+                            Code = "8/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 1,
+                            NumberOfChildren = 2,
+                            PaymentMethod = 1,
+                            Status = 2,
+                            To = new DateTime(2024, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 450.0,
+                            UserId = 6L
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            AccommodationUnitId = 1L,
+                            Code = "9/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 3,
+                            NumberOfChildren = 1,
+                            PaymentMethod = 2,
+                            Status = 3,
+                            To = new DateTime(2024, 4, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 600.0,
+                            UserId = 7L
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            AccommodationUnitId = 4L,
+                            Code = "10/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 5, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 2,
+                            NumberOfChildren = 0,
+                            PaymentMethod = 1,
+                            Status = 6,
+                            To = new DateTime(2024, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 520.0,
+                            UserId = 8L
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            AccommodationUnitId = 5L,
+                            Code = "11/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 4,
+                            NumberOfChildren = 0,
+                            PaymentMethod = 2,
+                            Status = 2,
+                            To = new DateTime(2024, 6, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 700.0,
+                            UserId = 9L
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            AccommodationUnitId = 6L,
+                            Code = "12/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 7, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 2,
+                            NumberOfChildren = 1,
+                            PaymentMethod = 1,
+                            Status = 2,
+                            To = new DateTime(2024, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 480.0,
+                            UserId = 10L
+                        },
+                        new
+                        {
+                            Id = 13L,
+                            AccommodationUnitId = 7L,
+                            Code = "13/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 3,
+                            NumberOfChildren = 2,
+                            PaymentMethod = 2,
+                            Status = 6,
+                            To = new DateTime(2024, 8, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 620.0,
+                            UserId = 11L
+                        },
+                        new
+                        {
+                            Id = 14L,
+                            AccommodationUnitId = 1L,
+                            Code = "14/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 9, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 2,
+                            NumberOfChildren = 1,
+                            PaymentMethod = 1,
+                            Status = 2,
+                            To = new DateTime(2024, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 520.0,
+                            UserId = 12L
+                        },
+                        new
+                        {
+                            Id = 15L,
+                            AccommodationUnitId = 2L,
+                            Code = "15/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 4,
+                            NumberOfChildren = 0,
+                            PaymentMethod = 2,
+                            Status = 6,
+                            To = new DateTime(2024, 10, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 750.0,
+                            UserId = 13L
+                        },
+                        new
+                        {
+                            Id = 16L,
+                            AccommodationUnitId = 3L,
+                            Code = "16/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 2,
+                            NumberOfChildren = 1,
+                            PaymentMethod = 1,
+                            Status = 1,
+                            To = new DateTime(2024, 11, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 320.0,
+                            UserId = 14L
+                        },
+                        new
+                        {
+                            Id = 17L,
+                            AccommodationUnitId = 4L,
+                            Code = "17/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 11, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 1,
+                            NumberOfChildren = 0,
+                            PaymentMethod = 2,
+                            Status = 1,
+                            To = new DateTime(2024, 11, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 250.0,
+                            UserId = 5L
+                        },
+                        new
+                        {
+                            Id = 18L,
+                            AccommodationUnitId = 5L,
+                            Code = "18/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 2,
+                            NumberOfChildren = 1,
+                            PaymentMethod = 1,
+                            Status = 1,
+                            To = new DateTime(2024, 11, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 300.0,
+                            UserId = 6L
+                        },
+                        new
+                        {
+                            Id = 19L,
+                            AccommodationUnitId = 6L,
+                            Code = "19/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 11, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 3,
+                            NumberOfChildren = 1,
+                            PaymentMethod = 2,
+                            Status = 1,
+                            To = new DateTime(2024, 11, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 400.0,
+                            UserId = 7L
+                        },
+                        new
+                        {
+                            Id = 20L,
+                            AccommodationUnitId = 7L,
+                            Code = "20/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 2,
+                            NumberOfChildren = 0,
+                            PaymentMethod = 1,
+                            Status = 2,
+                            To = new DateTime(2024, 12, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 380.0,
+                            UserId = 8L
+                        },
+                        new
+                        {
+                            Id = 21L,
+                            AccommodationUnitId = 1L,
+                            Code = "21/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 3, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 2,
+                            NumberOfChildren = 1,
+                            PaymentMethod = 1,
+                            Status = 6,
+                            To = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 340.0,
+                            UserId = 9L
+                        },
+                        new
+                        {
+                            Id = 22L,
+                            AccommodationUnitId = 2L,
+                            Code = "22/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 4, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 1,
+                            NumberOfChildren = 2,
+                            PaymentMethod = 2,
+                            Status = 2,
+                            To = new DateTime(2024, 4, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 410.0,
+                            UserId = 10L
+                        },
+                        new
+                        {
+                            Id = 23L,
+                            AccommodationUnitId = 3L,
+                            Code = "23/2024",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            From = new DateTime(2024, 5, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            NumberOfAdults = 3,
+                            NumberOfChildren = 1,
+                            PaymentMethod = 1,
+                            Status = 3,
+                            To = new DateTime(2024, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TotalPrice = 530.0,
+                            UserId = 11L
+                        });
                 });
 
             modelBuilder.Entity("eRezervisi.Core.Domain.Entities.Review", b =>
@@ -900,14 +2314,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("deleted_by");
 
-                    b.Property<double>("Latitude")
-                        .HasColumnType("float")
-                        .HasColumnName("latitude");
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("float")
-                        .HasColumnName("longitude");
-
                     b.Property<DateTime>("ModifiedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -917,11 +2323,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     b.Property<long>("ModifiedBy")
                         .HasColumnType("bigint")
                         .HasColumnName("modified_by");
-
-                    b.Property<string>("PostCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("post_code");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -934,10 +2335,966 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     b.HasIndex("CantonId")
                         .HasDatabaseName("ix_townships_canton_id");
 
-                    b.HasIndex("PostCode")
-                        .HasDatabaseName("ix_townships_post_code");
-
                     b.ToTable("townships", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            CantonId = 1L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Bihać"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            CantonId = 1L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Bosanska Krupa"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            CantonId = 1L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Bosanski Petrovac"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            CantonId = 1L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Bužim"
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            CantonId = 1L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Cazin"
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            CantonId = 1L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Ključ"
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            CantonId = 1L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Sanski Most"
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            CantonId = 1L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Velika Kladuša"
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            CantonId = 2L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Domaljevac-Šamac"
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            CantonId = 2L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Odžak"
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            CantonId = 2L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Orašje"
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            CantonId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Banovići"
+                        },
+                        new
+                        {
+                            Id = 13L,
+                            CantonId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Čelić"
+                        },
+                        new
+                        {
+                            Id = 14L,
+                            CantonId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Doboj Istok"
+                        },
+                        new
+                        {
+                            Id = 15L,
+                            CantonId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Gračanica"
+                        },
+                        new
+                        {
+                            Id = 16L,
+                            CantonId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Gradačac"
+                        },
+                        new
+                        {
+                            Id = 17L,
+                            CantonId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Kalesija"
+                        },
+                        new
+                        {
+                            Id = 18L,
+                            CantonId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Kladanj"
+                        },
+                        new
+                        {
+                            Id = 19L,
+                            CantonId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Lukavac"
+                        },
+                        new
+                        {
+                            Id = 20L,
+                            CantonId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Sapna"
+                        },
+                        new
+                        {
+                            Id = 21L,
+                            CantonId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Srebrenik"
+                        },
+                        new
+                        {
+                            Id = 22L,
+                            CantonId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Teočak"
+                        },
+                        new
+                        {
+                            Id = 23L,
+                            CantonId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Tuzla"
+                        },
+                        new
+                        {
+                            Id = 24L,
+                            CantonId = 3L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Živinice"
+                        },
+                        new
+                        {
+                            Id = 25L,
+                            CantonId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Breza"
+                        },
+                        new
+                        {
+                            Id = 26L,
+                            CantonId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Doboj Jug"
+                        },
+                        new
+                        {
+                            Id = 27L,
+                            CantonId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Kakanj"
+                        },
+                        new
+                        {
+                            Id = 28L,
+                            CantonId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Maglaj"
+                        },
+                        new
+                        {
+                            Id = 29L,
+                            CantonId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Olovo"
+                        },
+                        new
+                        {
+                            Id = 30L,
+                            CantonId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Tešanj"
+                        },
+                        new
+                        {
+                            Id = 31L,
+                            CantonId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Usora"
+                        },
+                        new
+                        {
+                            Id = 32L,
+                            CantonId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Vareš"
+                        },
+                        new
+                        {
+                            Id = 33L,
+                            CantonId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Visoko"
+                        },
+                        new
+                        {
+                            Id = 34L,
+                            CantonId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Zavidovići"
+                        },
+                        new
+                        {
+                            Id = 35L,
+                            CantonId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Zenica"
+                        },
+                        new
+                        {
+                            Id = 36L,
+                            CantonId = 4L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Žepče"
+                        },
+                        new
+                        {
+                            Id = 37L,
+                            CantonId = 5L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Foča"
+                        },
+                        new
+                        {
+                            Id = 38L,
+                            CantonId = 5L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Goražde"
+                        },
+                        new
+                        {
+                            Id = 39L,
+                            CantonId = 5L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Pale"
+                        },
+                        new
+                        {
+                            Id = 40L,
+                            CantonId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Bugojno"
+                        },
+                        new
+                        {
+                            Id = 41L,
+                            CantonId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Busovača"
+                        },
+                        new
+                        {
+                            Id = 42L,
+                            CantonId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Dobretići"
+                        },
+                        new
+                        {
+                            Id = 43L,
+                            CantonId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Donji Vakuf"
+                        },
+                        new
+                        {
+                            Id = 44L,
+                            CantonId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Fojnica"
+                        },
+                        new
+                        {
+                            Id = 45L,
+                            CantonId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Gornji Vakuf-Uskoplje"
+                        },
+                        new
+                        {
+                            Id = 46L,
+                            CantonId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Jajce"
+                        },
+                        new
+                        {
+                            Id = 47L,
+                            CantonId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Kiseljak"
+                        },
+                        new
+                        {
+                            Id = 48L,
+                            CantonId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Kreševo"
+                        },
+                        new
+                        {
+                            Id = 49L,
+                            CantonId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Novi Travnik"
+                        },
+                        new
+                        {
+                            Id = 50L,
+                            CantonId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Travnik"
+                        },
+                        new
+                        {
+                            Id = 51L,
+                            CantonId = 6L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Vitez"
+                        },
+                        new
+                        {
+                            Id = 52L,
+                            CantonId = 7L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Čapljina"
+                        },
+                        new
+                        {
+                            Id = 53L,
+                            CantonId = 7L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Jablanica"
+                        },
+                        new
+                        {
+                            Id = 54L,
+                            CantonId = 7L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Konjic"
+                        },
+                        new
+                        {
+                            Id = 55L,
+                            CantonId = 7L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Mostar"
+                        },
+                        new
+                        {
+                            Id = 56L,
+                            CantonId = 7L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Neum"
+                        },
+                        new
+                        {
+                            Id = 57L,
+                            CantonId = 7L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Prozor-Rama"
+                        },
+                        new
+                        {
+                            Id = 58L,
+                            CantonId = 7L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Ravno"
+                        },
+                        new
+                        {
+                            Id = 59L,
+                            CantonId = 7L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Stolac"
+                        },
+                        new
+                        {
+                            Id = 60L,
+                            CantonId = 8L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Grude"
+                        },
+                        new
+                        {
+                            Id = 61L,
+                            CantonId = 8L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Ljubuški"
+                        },
+                        new
+                        {
+                            Id = 62L,
+                            CantonId = 8L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Posušje"
+                        },
+                        new
+                        {
+                            Id = 63L,
+                            CantonId = 8L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Široki Brijeg"
+                        },
+                        new
+                        {
+                            Id = 64L,
+                            CantonId = 9L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Centar"
+                        },
+                        new
+                        {
+                            Id = 65L,
+                            CantonId = 9L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Novi Grad"
+                        },
+                        new
+                        {
+                            Id = 66L,
+                            CantonId = 9L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Novo Sarajevo"
+                        },
+                        new
+                        {
+                            Id = 67L,
+                            CantonId = 9L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Stari Grad"
+                        },
+                        new
+                        {
+                            Id = 68L,
+                            CantonId = 9L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Sarajevo"
+                        },
+                        new
+                        {
+                            Id = 69L,
+                            CantonId = 9L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Hadžići"
+                        },
+                        new
+                        {
+                            Id = 70L,
+                            CantonId = 9L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Ilidža"
+                        },
+                        new
+                        {
+                            Id = 71L,
+                            CantonId = 9L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Ilijaš"
+                        },
+                        new
+                        {
+                            Id = 72L,
+                            CantonId = 9L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Trnovo"
+                        },
+                        new
+                        {
+                            Id = 73L,
+                            CantonId = 9L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Vogošća"
+                        },
+                        new
+                        {
+                            Id = 74L,
+                            CantonId = 10L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Bosansko Grahovo"
+                        },
+                        new
+                        {
+                            Id = 75L,
+                            CantonId = 10L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Drvar"
+                        },
+                        new
+                        {
+                            Id = 76L,
+                            CantonId = 10L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Glamoč"
+                        },
+                        new
+                        {
+                            Id = 77L,
+                            CantonId = 10L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Kupres"
+                        },
+                        new
+                        {
+                            Id = 78L,
+                            CantonId = 10L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Livno"
+                        },
+                        new
+                        {
+                            Id = 79L,
+                            CantonId = 10L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Tomislavgrad"
+                        },
+                        new
+                        {
+                            Id = 80L,
+                            CantonId = 11L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Banja Luka"
+                        },
+                        new
+                        {
+                            Id = 81L,
+                            CantonId = 11L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Trebinje"
+                        },
+                        new
+                        {
+                            Id = 82L,
+                            CantonId = 11L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Zvornik"
+                        },
+                        new
+                        {
+                            Id = 83L,
+                            CantonId = 11L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Prijedor"
+                        },
+                        new
+                        {
+                            Id = 84L,
+                            CantonId = 11L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Gradiška"
+                        },
+                        new
+                        {
+                            Id = 85L,
+                            CantonId = 11L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Derventa"
+                        },
+                        new
+                        {
+                            Id = 86L,
+                            CantonId = 11L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Bijeljina"
+                        },
+                        new
+                        {
+                            Id = 87L,
+                            CantonId = 11L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Title = "Doboj"
+                        });
                 });
 
             modelBuilder.Entity("eRezervisi.Core.Domain.Entities.User", b =>
@@ -1038,7 +3395,7 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         new
                         {
                             Id = 1L,
-                            Address = "0000",
+                            Address = "Opine b.b",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0L,
                             Deleted = false,
@@ -1048,7 +3405,7 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             LastName = "User",
                             ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ModifiedBy = 0L,
-                            Phone = "0000",
+                            Phone = "+387616161",
                             RoleId = 1L
                         },
                         new
@@ -1065,6 +3422,246 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ModifiedBy = 0L,
                             Phone = "0000",
+                            RoleId = 2L
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Address = "123 Main St",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "emma.watson@domain.com",
+                            FirstName = "Emma",
+                            IsActive = true,
+                            LastName = "Watson",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234501",
+                            RoleId = 1L
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Address = "456 Elm St",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "liam.johnson@domain.com",
+                            FirstName = "Liam",
+                            IsActive = true,
+                            LastName = "Johnson",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234502",
+                            RoleId = 1L
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Address = "789 Maple Ave",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "olivia.brown@domain.com",
+                            FirstName = "Olivia",
+                            IsActive = true,
+                            LastName = "Brown",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234503",
+                            RoleId = 2L
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            Address = "101 Oak Rd",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "noah.williams@domain.com",
+                            FirstName = "Noah",
+                            IsActive = true,
+                            LastName = "Williams",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234504",
+                            RoleId = 2L
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            Address = "202 Pine St",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "ava.jones@domain.com",
+                            FirstName = "Ava",
+                            IsActive = true,
+                            LastName = "Jones",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234505",
+                            RoleId = 2L
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            Address = "303 Cedar Ave",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "mason.garcia@domain.com",
+                            FirstName = "Mason",
+                            IsActive = true,
+                            LastName = "Garcia",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234506",
+                            RoleId = 2L
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            Address = "404 Birch Blvd",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "sophia.martinez@domain.com",
+                            FirstName = "Sophia",
+                            IsActive = true,
+                            LastName = "Martinez",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234507",
+                            RoleId = 2L
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            Address = "505 Willow Way",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "lucas.anderson@domain.com",
+                            FirstName = "Lucas",
+                            IsActive = true,
+                            LastName = "Anderson",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234508",
+                            RoleId = 2L
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            Address = "606 Chestnut St",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "amelia.thomas@domain.com",
+                            FirstName = "Amelia",
+                            IsActive = true,
+                            LastName = "Thomas",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234509",
+                            RoleId = 2L
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            Address = "707 Spruce Ave",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "ethan.lee@domain.com",
+                            FirstName = "Ethan",
+                            IsActive = true,
+                            LastName = "Lee",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234510",
+                            RoleId = 2L
+                        },
+                        new
+                        {
+                            Id = 13L,
+                            Address = "808 Redwood Rd",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "isabella.davis@domain.com",
+                            FirstName = "Isabella",
+                            IsActive = true,
+                            LastName = "Davis",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234511",
+                            RoleId = 2L
+                        },
+                        new
+                        {
+                            Id = 14L,
+                            Address = "909 Fir Ln",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "logan.wilson@domain.com",
+                            FirstName = "Logan",
+                            IsActive = true,
+                            LastName = "Wilson",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234512",
+                            RoleId = 2L
+                        },
+                        new
+                        {
+                            Id = 15L,
+                            Address = "1010 Palm St",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "mia.hernandez@domain.com",
+                            FirstName = "Mia",
+                            IsActive = true,
+                            LastName = "Hernandez",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234513",
+                            RoleId = 2L
+                        },
+                        new
+                        {
+                            Id = 16L,
+                            Address = "1111 Maplewood Dr",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "james.robinson@domain.com",
+                            FirstName = "James",
+                            IsActive = true,
+                            LastName = "Robinson",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234514",
+                            RoleId = 2L
+                        },
+                        new
+                        {
+                            Id = 17L,
+                            Address = "1212 Pinewood Ln",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            Email = "harper.clark@domain.com",
+                            FirstName = "Harper",
+                            IsActive = true,
+                            LastName = "Clark",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L,
+                            Phone = "+38761234515",
                             RoleId = 2L
                         });
                 });
@@ -1210,6 +3807,18 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_images_accommodation_units_accommodation_unit_id");
+
+                    b.Navigation("AccommodationUnit");
+                });
+
+            modelBuilder.Entity("eRezervisi.Core.Domain.Entities.Maintenance", b =>
+                {
+                    b.HasOne("eRezervisi.Core.Domain.Entities.AccommodationUnit", "AccommodationUnit")
+                        .WithMany()
+                        .HasForeignKey("AccommodationUnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_maintenances_accommodation_units_accommodation_unit_id");
 
                     b.Navigation("AccommodationUnit");
                 });
@@ -1364,6 +3973,141 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                                     PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
                                     ReminderSent = false,
                                     Username = "mobile"
+                                },
+                                new
+                                {
+                                    UserId = 3L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "emmawatson"
+                                },
+                                new
+                                {
+                                    UserId = 4L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "liamjohnson"
+                                },
+                                new
+                                {
+                                    UserId = 5L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "oliviabrown"
+                                },
+                                new
+                                {
+                                    UserId = 6L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "noahwilliams"
+                                },
+                                new
+                                {
+                                    UserId = 7L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "avajones"
+                                },
+                                new
+                                {
+                                    UserId = 8L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "masongarcia"
+                                },
+                                new
+                                {
+                                    UserId = 9L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "sophiamartinez"
+                                },
+                                new
+                                {
+                                    UserId = 10L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "lucasanderson"
+                                },
+                                new
+                                {
+                                    UserId = 11L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "ameliathomas"
+                                },
+                                new
+                                {
+                                    UserId = 12L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "ethanlee"
+                                },
+                                new
+                                {
+                                    UserId = 13L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "isabelladavis"
+                                },
+                                new
+                                {
+                                    UserId = 14L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "loganwilson"
+                                },
+                                new
+                                {
+                                    UserId = 15L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "miahernandez"
+                                },
+                                new
+                                {
+                                    UserId = 16L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "jamesrobinson"
+                                },
+                                new
+                                {
+                                    UserId = 17L,
+                                    LastPasswordChangeAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PasswordHash = "22b46813685cbb9ce130ee451b78c820222740d47150a04a925778474898a90a",
+                                    PasswordSalt = "d87fb28197dc4c88a790d5c31ff4d355",
+                                    ReminderSent = false,
+                                    Username = "harperclark"
                                 });
                         });
 
@@ -1372,6 +4116,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             b1.Property<long>("UserId")
                                 .HasColumnType("bigint")
                                 .HasColumnName("id");
+
+                            b1.Property<bool>("MarkObjectAsUncleanAfterReservation")
+                                .HasColumnType("bit")
+                                .HasColumnName("mark_object_as_unclean_after_reservation");
 
                             b1.Property<bool>("ReceiveEmails")
                                 .ValueGeneratedOnAdd()
@@ -1398,12 +4146,119 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                                 new
                                 {
                                     UserId = 1L,
+                                    MarkObjectAsUncleanAfterReservation = false,
                                     ReceiveEmails = true,
                                     ReceiveNotifications = true
                                 },
                                 new
                                 {
                                     UserId = 2L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 3L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 4L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 5L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 6L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 7L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 8L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 9L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 10L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 11L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 12L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 13L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 14L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 15L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 16L,
+                                    MarkObjectAsUncleanAfterReservation = false,
+                                    ReceiveEmails = true,
+                                    ReceiveNotifications = true
+                                },
+                                new
+                                {
+                                    UserId = 17L,
+                                    MarkObjectAsUncleanAfterReservation = false,
                                     ReceiveEmails = true,
                                     ReceiveNotifications = true
                                 });

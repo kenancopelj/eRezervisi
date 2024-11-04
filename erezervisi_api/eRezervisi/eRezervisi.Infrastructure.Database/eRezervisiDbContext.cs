@@ -30,6 +30,8 @@ namespace eRezervisi.Infrastructure.Database
         public DbSet<Message> Messages { get; set; }
         public DbSet<Township> Townships { get; set; }
         public DbSet<FavoriteAccommodationUnit> FavoriteAccommodationUnits { get; set; }
+        public DbSet<Maintenance> Maintenances { get; set; }
+        public DbSet<Recommender> Recommenders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,6 +48,7 @@ namespace eRezervisi.Infrastructure.Database
             modelBuilder.Entity<Township>().HasQueryFilter(x => !x.Deleted);
             modelBuilder.Entity<User>().HasQueryFilter(x => !x.Deleted);
             modelBuilder.Entity<FavoriteAccommodationUnit>().HasQueryFilter(x => !x.Deleted);
+            modelBuilder.Entity<Maintenance>().HasQueryFilter(x => !x.Deleted);
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(eRezervisiDbContext).Assembly);
 

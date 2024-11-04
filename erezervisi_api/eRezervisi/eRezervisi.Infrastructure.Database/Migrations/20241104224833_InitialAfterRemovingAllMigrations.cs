@@ -3,12 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace eRezervisi.Infrastructure.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialAfterRemovingAllMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,6 +51,29 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_cantons", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "recommenders",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    accommodation_unit_id = table.Column<long>(type: "bigint", nullable: true),
+                    first_accommodation_unit_id = table.Column<long>(type: "bigint", nullable: true),
+                    second_accommodation_unit_id = table.Column<long>(type: "bigint", nullable: true),
+                    third_accommodation_unit_id = table.Column<long>(type: "bigint", nullable: true),
+                    created_at = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    created_by = table.Column<long>(type: "bigint", nullable: false),
+                    modified_at = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    modified_by = table.Column<long>(type: "bigint", nullable: false),
+                    deleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    deleted_at = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    deleted_by = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_recommenders", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,7 +178,7 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         column: x => x.role_id,
                         principalTable: "roles",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -167,7 +188,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    short_title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     price = table.Column<double>(type: "float", nullable: false),
                     owner_id = table.Column<long>(type: "bigint", nullable: false),
                     note = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -177,7 +197,9 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     township_id = table.Column<long>(type: "bigint", nullable: false),
                     latitude = table.Column<double>(type: "float", nullable: false),
                     longitude = table.Column<double>(type: "float", nullable: false),
+                    address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     deactivate_at = table.Column<DateOnly>(type: "date", nullable: true),
+                    view_count = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     created_by = table.Column<long>(type: "bigint", nullable: false),
                     modified_at = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
@@ -246,7 +268,7 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     sender_id = table.Column<long>(type: "bigint", nullable: false),
-                    reciever_id = table.Column<long>(type: "bigint", nullable: false),
+                    receiver_id = table.Column<long>(type: "bigint", nullable: false),
                     content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     created_by = table.Column<long>(type: "bigint", nullable: false),
@@ -260,17 +282,17 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                 {
                     table.PrimaryKey("pk_messages", x => x.id);
                     table.ForeignKey(
-                        name: "fk_messages_users_reciever_id",
-                        column: x => x.reciever_id,
+                        name: "fk_messages_users_receiver_id",
+                        column: x => x.receiver_id,
                         principalTable: "users",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "fk_messages_users_sender_id",
                         column: x => x.sender_id,
                         principalTable: "users",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -283,7 +305,9 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     short_title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    accommodation_unit_id = table.Column<long>(type: "bigint", nullable: true),
                     status = table.Column<int>(type: "int", nullable: false, defaultValueSql: "1"),
+                    type = table.Column<int>(type: "int", nullable: false, defaultValueSql: "3"),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     created_by = table.Column<long>(type: "bigint", nullable: false),
                     modified_at = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
@@ -313,7 +337,8 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     password_salt = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     refresh_token = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     refresh_token_expires_at_utc = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    last_password_change_at = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    last_password_change_at = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    reminder_sent = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -331,8 +356,9 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false),
-                    send_reminder_at = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    recieve_emails = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                    receive_emails = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    receive_notifications = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    mark_object_as_unclean_after_reservation = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -372,8 +398,7 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                 columns: table => new
                 {
                     review_id = table.Column<long>(type: "bigint", nullable: false),
-                    accommodation_unit_id = table.Column<long>(type: "bigint", nullable: false),
-                    accommodation_unit_id1 = table.Column<long>(type: "bigint", nullable: true)
+                    accommodation_unit_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -384,11 +409,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         principalTable: "accommodation_units",
                         principalColumn: "id",
                         onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "fk_accommodation_unit_reviews_accommodation_units_accommodation_unit_id1",
-                        column: x => x.accommodation_unit_id1,
-                        principalTable: "accommodation_units",
-                        principalColumn: "id");
                     table.ForeignKey(
                         name: "fk_accommodation_unit_reviews_reviews_review_id",
                         column: x => x.review_id,
@@ -457,6 +477,35 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "maintenances",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    accommodation_unit_id = table.Column<long>(type: "bigint", nullable: false),
+                    priority = table.Column<int>(type: "int", nullable: false),
+                    status = table.Column<int>(type: "int", nullable: false),
+                    note = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    created_by = table.Column<long>(type: "bigint", nullable: false),
+                    modified_at = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    modified_by = table.Column<long>(type: "bigint", nullable: false),
+                    deleted = table.Column<bool>(type: "bit", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    deleted_by = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_maintenances", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_maintenances_accommodation_units_accommodation_unit_id",
+                        column: x => x.accommodation_unit_id,
+                        principalTable: "accommodation_units",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "reservations",
                 columns: table => new
                 {
@@ -467,8 +516,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     accommodation_unit_id = table.Column<long>(type: "bigint", nullable: false),
                     from = table.Column<DateTime>(type: "datetime2", nullable: false),
                     to = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    checked_in_at = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    checked_out_at = table.Column<DateTime>(type: "datetime2", nullable: true),
                     payment_method = table.Column<int>(type: "int", nullable: false),
                     note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     status = table.Column<int>(type: "int", nullable: false),
@@ -500,62 +547,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         onDelete: ReferentialAction.NoAction);
                 });
 
-            migrationBuilder.InsertData(
-                table: "accommodation_unit_categories",
-                columns: new[] { "id", "created_by", "deleted_at", "deleted_by", "modified_by", "short_title", "title" },
-                values: new object[,]
-                {
-                    { 1L, 0L, null, null, 0L, "APT", "Apartmani" },
-                    { 2L, 0L, null, null, 0L, "VIL", "Ville" },
-                    { 3L, 0L, null, null, 0L, "VIK", "Vikendice" },
-                    { 4L, 0L, null, null, 0L, "PRI", "Privatne kuće" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "roles",
-                columns: new[] { "id", "created_by", "deleted_at", "deleted_by", "modified_by", "name" },
-                values: new object[,]
-                {
-                    { 1L, 0L, null, null, 0L, "Owner" },
-                    { 2L, 0L, null, null, 0L, "MobileUser" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "users",
-                columns: new[] { "id", "address", "created_by", "deleted_at", "deleted_by", "email", "first_name", "image", "is_active", "last_name", "modified_by", "phone", "role_id" },
-                values: new object[,]
-                {
-                    { 1L, "0000", 0L, null, null, "kenan.copelj@edu.fit.ba", "Owner", null, true, "User", 0L, "0000", 1L },
-                    { 2L, "0000", 0L, null, null, "kenan.copelj@edu.fit.ba", "Regular", null, true, "User", 0L, "0000", 2L }
-                });
-
-            migrationBuilder.InsertData(
-                table: "user_credentials",
-                columns: new[] { "id", "last_password_change_at", "password_hash", "password_salt", "refresh_token", "refresh_token_expires_at_utc", "username" },
-                values: new object[,]
-                {
-                    { 1L, new DateTime(2024, 6, 1, 14, 21, 42, 673, DateTimeKind.Utc).AddTicks(2145), "ecb252044b5ea0f679ee78ec1a12904739e2904d", "960e802d-556e-459d-8b6f-f82f9862af2e", null, null, "desktop" },
-                    { 2L, new DateTime(2024, 6, 1, 14, 21, 42, 673, DateTimeKind.Utc).AddTicks(2151), "d5a46c7224810ce14a50ca129158f72ab583a4b0af3f3c577de3f96369f59c9b", "9c571753-452b-421d-ad07-174c95108262", null, null, "mobile" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "user_settings",
-                columns: new[] { "id", "recieve_emails", "send_reminder_at" },
-                values: new object[,]
-                {
-                    { 1L, true, null },
-                    { 2L, true, null }
-                });
-
             migrationBuilder.CreateIndex(
                 name: "ix_accommodation_unit_reviews_accommodation_unit_id",
                 table: "accommodation_unit_reviews",
                 column: "accommodation_unit_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_accommodation_unit_reviews_accommodation_unit_id1",
-                table: "accommodation_unit_reviews",
-                column: "accommodation_unit_id1");
 
             migrationBuilder.CreateIndex(
                 name: "ix_accommodation_units_accommodation_unit_category_id",
@@ -598,9 +593,14 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                 column: "accommodation_unit_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_messages_reciever_id",
+                name: "ix_maintenances_accommodation_unit_id",
+                table: "maintenances",
+                column: "accommodation_unit_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_messages_receiver_id",
                 table: "messages",
-                column: "reciever_id");
+                column: "receiver_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_messages_sender_id",
@@ -676,10 +676,16 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                 name: "images");
 
             migrationBuilder.DropTable(
+                name: "maintenances");
+
+            migrationBuilder.DropTable(
                 name: "messages");
 
             migrationBuilder.DropTable(
                 name: "notifications");
+
+            migrationBuilder.DropTable(
+                name: "recommenders");
 
             migrationBuilder.DropTable(
                 name: "reservations");

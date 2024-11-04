@@ -22,6 +22,8 @@ class Globals {
 
   static Notifications notifications = Notifications(notifications: []);
 
+  static Duration debounceTimeout = const Duration(milliseconds: 500);
+
   static JwtTokenResponse? loggedUser;
 
   static bool enableNotifications = true;

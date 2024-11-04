@@ -9,5 +9,6 @@ namespace eRezervisi.Core.Services.Interfaces
         Task NotifyUserAboutPasswordChange(long userId);
         Task NotifyAboutNewMessage(long messageId);
         Task NotifyAboutFirstTimeOwnership(long userId);
+        Task NotifyUserAboutUncleanObject(long accommodationUnitId);
     }
 }

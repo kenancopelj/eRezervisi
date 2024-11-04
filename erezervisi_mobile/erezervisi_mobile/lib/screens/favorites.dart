@@ -54,28 +54,28 @@ class _MyFavouritesState extends State<MyFavourites> {
                   "Omiljeni",
                   style: CustomTheme.largeTextStyle,
                 ),
-                const Spacer(),
-                const Icon(Icons.search)
               ],
             ),
             const SizedBox(
               height: 50,
             ),
-            Expanded(
-              child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: accommodationUnits.items.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: FavoriteCard(
-                      accommodationUnit: accommodationUnits
-                          .items[index].accommodationUnitGetDto,
+            accommodationUnits.items.isEmpty
+                ? Container(
+                    height: MediaQuery.of(context).size.height - 300,
+                    child: Center(child: Text("Vaša lista je prazna")),
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: accommodationUnits.items.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return FavoriteCard(
+                          accommodationUnit: accommodationUnits
+                              .items[index].accommodationUnitGetDto,
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
           ],
         ),
       ),

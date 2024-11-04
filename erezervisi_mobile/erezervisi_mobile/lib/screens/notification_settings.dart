@@ -13,7 +13,7 @@ class NotificationSettings extends StatefulWidget {
 }
 
 class _NotificationSettingsState extends State<NotificationSettings> {
-  bool receiveMails = true;
+  bool receiveEmails = true;
   bool receiveNotifications = true;
 
   late UserProvider userProvider;
@@ -31,7 +31,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
     var response = await userProvider.getById(Globals.loggedUser!.userId);
 
     setState(() {
-      receiveMails = response.settings.receiveMails;
+      receiveEmails = response.settings.receiveEmails;
       receiveNotifications = response.settings.receiveNotifications;
     });
   }
@@ -40,7 +40,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
     await userProvider.updateSettings(
         Globals.loggedUser!.userId,
         UpdateSettingsDto(
-            receiveMails: receiveMails,
+            receiveEmails: receiveEmails,
             receiveNotifications: receiveNotifications));
 
     setState(() {
@@ -128,10 +128,10 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                 ],
               ),
               Switch(
-                  value: receiveMails,
+                  value: receiveEmails,
                   onChanged: (value) {
                     setState(() {
-                      receiveMails = value;
+                      receiveEmails = value;
                     });
 
                     updateSettings();

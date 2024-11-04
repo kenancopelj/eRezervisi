@@ -29,7 +29,6 @@ class _MyNotificationsState extends State<MyNotifications> {
         .build();
 
     await connection.start();
-    print('SignalR connected');
 
     connection.on('${Topics.notification}#${Globals.loggedUser!.userId}',
         (arguments) {

@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:erezervisi_mobile/enums/toast_type.dart';
+import 'package:erezervisi_mobile/helpers/custom_theme.dart';
 import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/main.dart';
 import 'package:erezervisi_mobile/models/requests/image/image_create_dto.dart';
@@ -129,7 +130,7 @@ class _MasterWidgetState extends State<MasterWidget> {
     super.dispose();
   }
 
-  BarRoute selectedRoute = BarRoute.Home;
+  AppRoutes selectedRoute = AppRoutes.home;
 
   void navigate(BottomNavigationRoute route) {
     setState(() {
@@ -141,22 +142,22 @@ class _MasterWidgetState extends State<MasterWidget> {
 
   mapRoute(selectedRoute) {
     switch (selectedRoute) {
-      case BarRoute.Home:
+      case AppRoutes.home:
         Navigate.next(context, AppRoutes.home.routeName, const Home(), true);
         break;
-      case BarRoute.Favorites:
+      case AppRoutes.favorites:
         Navigate.next(
             context, AppRoutes.favorites.routeName, const MyFavourites(), true);
         break;
-      case BarRoute.Search:
+      case AppRoutes.search:
         Navigate.next(
             context, AppRoutes.search.routeName, const Search(), true);
         break;
-      case BarRoute.Notifications:
+      case AppRoutes.notifications:
         Navigate.next(context, AppRoutes.notifications.routeName,
             const MyNotifications(), true);
         break;
-      case BarRoute.Profile:
+      case AppRoutes.profile:
         Navigate.next(
             context, AppRoutes.profile.routeName, const MyProfile(), true);
         break;
@@ -165,9 +166,12 @@ class _MasterWidgetState extends State<MasterWidget> {
     }
   }
 
-  Color selectionColor(BarRoute route) {
-    if (route == selectedRoute) return Style.secondaryColor;
-    return Style.primaryColor100;
+  Color selectionColor(String routeName) {
+    var currentRoute = ModalRoute.of(context)?.settings.name;
+    if (currentRoute == routeName) {
+      return CustomTheme.bluePrimaryColor;
+    }
+    return Colors.black;
   }
 
   List<BottomNavigationRoute> routes = [
@@ -175,23 +179,23 @@ class _MasterWidgetState extends State<MasterWidget> {
         icon: const Icon(
           Icons.home,
         ),
-        route: BarRoute.Home,
+        route: AppRoutes.home,
         name: AppRoutes.home.routeName),
     BottomNavigationRoute(
         icon: const Icon(Icons.favorite),
-        route: BarRoute.Favorites,
+        route: AppRoutes.favorites,
         name: AppRoutes.favorites.routeName),
     BottomNavigationRoute(
         icon: const Icon(Icons.search),
-        route: BarRoute.Search,
+        route: AppRoutes.search,
         name: AppRoutes.search.routeName),
     BottomNavigationRoute(
         icon: const Icon(Icons.notifications),
-        route: BarRoute.Notifications,
+        route: AppRoutes.notifications,
         name: AppRoutes.notifications.routeName),
     BottomNavigationRoute(
         icon: const Icon(Icons.person),
-        route: BarRoute.Profile,
+        route: AppRoutes.profile,
         name: AppRoutes.profile.routeName),
   ];
 
@@ -230,21 +234,23 @@ class _MasterWidgetState extends State<MasterWidget> {
                   children: routes
                       .map(
                         (x) => IconButton(
-                          color: selectionColor(x.route),
-                          icon: x.route == BarRoute.Profile
+                          color: selectionColor(x.route.routeName),
+                          icon: x.route == AppRoutes.profile
                               ? Container(
-                                  height: 30,
+                                  alignment: Alignment.center,
                                   width: 30,
+                                  height: 30,
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                      image: DecorationImage(
-                                          fit: BoxFit.fitHeight,
-                                          image: Globals.image != null
-                                              ? NetworkImage(
-                                                  Globals.imageBasePath +
-                                                      Globals.image!)
-                                              : const AssetImage(
-                                                  "assets/images/user.png"))),
+                                    color: selectionColor(x.route.routeName),
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Text(
+                                    Globals.loggedUser!.initials,
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 )
                               : x.icon,
                           onPressed: () => navigate(x),
