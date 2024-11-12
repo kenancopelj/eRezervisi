@@ -256,9 +256,13 @@ class _ObjectDetailsState extends State<ObjectDetails> {
             body: SingleChildScrollView(
               child: SizedBox(
                 height: MediaQuery.of(context).size.height +
-                    reviews.length * 130 +
-                    800 +
-                    (reviewAllowed && accommodationUnit!.status == AccommodationUnitStatus.Active ? 250 : 0),
+                    reviews.length * 140 +
+                    900 +
+                    (reviewAllowed &&
+                            accommodationUnit!.status ==
+                                AccommodationUnitStatus.Active
+                        ? 250
+                        : 0),
                 child: Column(
                   children: [
                     CarouselSlider(
@@ -629,7 +633,9 @@ class _ObjectDetailsState extends State<ObjectDetails> {
                         style: CustomTheme.mediumTextStyle,
                       ),
                     ),
-                    if (reviewAllowed && accommodationUnit!.status == AccommodationUnitStatus.Active)
+                    if (reviewAllowed &&
+                        accommodationUnit!.status ==
+                            AccommodationUnitStatus.Active)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(

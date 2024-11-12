@@ -1,6 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:erezervisi_desktop/models/dropdown_item.dart';
-import 'package:erezervisi_desktop/models/dropdown_item.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable

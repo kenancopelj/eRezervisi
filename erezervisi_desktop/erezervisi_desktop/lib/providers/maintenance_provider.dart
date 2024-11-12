@@ -1,12 +1,7 @@
 import 'package:erezervisi_desktop/enums/toast_type.dart';
-import 'package:erezervisi_desktop/models/requests/category/get_all_categories_request.dart';
 import 'package:erezervisi_desktop/models/requests/maintenance/get_maintenances_request.dart';
-import 'package:erezervisi_desktop/models/requests/message/get_messages_request.dart';
-import 'package:erezervisi_desktop/models/requests/message/message_create_dto.dart';
 import 'package:erezervisi_desktop/models/responses/base/paged_response.dart';
 import 'package:erezervisi_desktop/models/responses/maintenance/maintenance_get_dto.dart';
-import 'package:erezervisi_desktop/models/responses/message/message_get_dto.dart';
-import 'package:erezervisi_desktop/models/responses/message/messages.dart';
 import 'package:erezervisi_desktop/providers/base_provider.dart';
 import 'package:erezervisi_desktop/shared/globals.dart';
 

@@ -99,11 +99,11 @@ namespace eRezervisi.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{accommodationUnitId}/check-availability")]
+        [HttpGet("{accommodationUnit}/check-availability")]
         [CustomAuthorize(Roles.MobileUser.Name)]
-        public async Task<IActionResult> CheckAvailabilityAsync([FromRoute] long accommodationUnitId, [FromBody] CheckAvailabilityDto request, CancellationToken cancellationToken)
+        public async Task<IActionResult> CheckAvailabilityAsync([FromRoute] long accommodationUnit, [FromBody] CheckAvailabilityDto request, CancellationToken cancellationToken)
         {
-            var result = await _reservationService.CheckAccommodationUnitAvailabilityAsync(accommodationUnitId, request, cancellationToken);
+            var result = await _reservationService.CheckAccommodationUnitAvailabilityAsync(accommodationUnit, request, cancellationToken);
 
             return Ok(result);
         }

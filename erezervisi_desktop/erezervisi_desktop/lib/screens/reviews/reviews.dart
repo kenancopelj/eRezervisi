@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:convert';
-
 import 'package:erezervisi_desktop/models/requests/reviews/get_reviews_request.dart';
 import 'package:erezervisi_desktop/models/responses/base/paged_response.dart';
 import 'package:erezervisi_desktop/models/responses/review/review_get_dto.dart';

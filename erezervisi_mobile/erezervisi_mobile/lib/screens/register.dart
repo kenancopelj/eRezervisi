@@ -83,6 +83,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 
+    RegExp numberRegex = RegExp(r'[0-9]');
+    RegExp uppercaseRegex = RegExp(r'[A-Z]');
+
     return Scaffold(
         body: Form(
       key: registerKey,
@@ -210,7 +213,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 Input(
                   controller: passwordController,
-                  validator: validator.required,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Obavezno polje\n';
+                    } else if (!numberRegex.hasMatch(value) ||
+                        !uppercaseRegex.hasMatch(value)) {
+                      return 'Lozinka mora sadržavati:\n- Minimalno jedan broj\n- Minimalno jedno veliko slovo\n';
+                    } else if (!uppercaseRegex.hasMatch(value)) {
+                      return 'Lozinka mora sadržavati barem jedno veliko slovo\n';
+                    } else if (value.length < 6) {
+                      return 'Lozinka mora sadržavati barem 6 karaktera\n';
+                    }
+                    return null;
+                  },
                   label: "Lozinka",
                   obscureText: true,
                   hintText: "Unesite Vašu lozinku",

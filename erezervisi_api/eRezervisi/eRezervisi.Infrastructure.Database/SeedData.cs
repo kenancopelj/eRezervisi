@@ -47,7 +47,7 @@ namespace eRezervisi.Infrastructure.Database
                     LastName = "User",
                     Phone = "0000",
                     Address = "0000",
-                    Email = "kenan.copelj@edu.fit.ba",
+                    Email = "kenancopelj@outlook.com",
                     IsActive = true,
                     RoleId = Roles.MobileUser.Id,
                 },

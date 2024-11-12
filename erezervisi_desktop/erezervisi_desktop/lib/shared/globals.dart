@@ -9,8 +9,8 @@ import 'package:image_picker/image_picker.dart';
 class Globals {
   Globals._();
   // Docker
-  // static String apiUrl = "http://localhost:5269/";
-  static String apiUrl = "https://localhost:7158/";
+  static String apiUrl = "http://localhost:5269/";
+  // static String apiUrl = "https://localhost:7158/";
 
   static String imageBasePath = "${apiUrl}Uploads/Images/";
 

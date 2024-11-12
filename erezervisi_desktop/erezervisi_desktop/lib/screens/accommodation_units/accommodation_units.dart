@@ -19,7 +19,6 @@ import 'package:erezervisi_desktop/widgets/master_widget.dart';
 import 'package:erezervisi_desktop/widgets/pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_debouncer/flutter_debouncer.dart';
 
 class AccommodationUnits extends StatefulWidget {
   const AccommodationUnits({super.key});

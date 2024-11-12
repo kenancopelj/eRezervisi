@@ -5,7 +5,6 @@ import 'package:erezervisi_desktop/screens/forgotten-password/check-code.dart';
 import 'package:erezervisi_desktop/shared/components/form/button.dart';
 import 'package:erezervisi_desktop/shared/navigator/navigate.dart';
 import 'package:erezervisi_desktop/shared/navigator/route_list.dart';
-import 'package:erezervisi_desktop/shared/validators/base_validator.dart';
 import 'package:erezervisi_desktop/shared/validators/forgotten-password/request.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:erezervisi_desktop/enums/toast_type.dart';
-import 'package:erezervisi_desktop/models/requests/reservation/get_reservations_by_status_request.dart';
 import 'package:erezervisi_desktop/models/requests/reservation/get_reservations_request.dart';
 import 'package:erezervisi_desktop/models/requests/reservation/reservation_create_dto.dart';
 import 'package:erezervisi_desktop/models/requests/reservation/reservation_update_dto.dart';

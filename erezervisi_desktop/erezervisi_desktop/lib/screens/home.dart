@@ -3,7 +3,6 @@
 import 'package:erezervisi_desktop/enums/accommodation_unit_filter.dart';
 import 'package:erezervisi_desktop/helpers/custom_theme.dart';
 import 'package:erezervisi_desktop/helpers/helpers.dart';
-import 'package:erezervisi_desktop/models/requests/dashboard/get_dashboard_data_request.dart';
 import 'package:erezervisi_desktop/models/responses/dashboard/dashboard_data_response.dart';
 import 'package:erezervisi_desktop/providers/dashboard_provider.dart';
 import 'package:erezervisi_desktop/screens/accommodation_units/accommodation_units.dart';

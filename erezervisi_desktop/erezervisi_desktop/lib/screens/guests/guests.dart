@@ -8,7 +8,6 @@ import 'package:erezervisi_desktop/providers/guest_provider.dart';
 import 'package:erezervisi_desktop/shared/components/form/input.dart';
 import 'package:erezervisi_desktop/shared/globals.dart';
 import 'package:erezervisi_desktop/widgets/action_button.dart';
-import 'package:erezervisi_desktop/widgets/confirmation_dialog.dart';
 import 'package:erezervisi_desktop/widgets/empty.dart';
 import 'package:erezervisi_desktop/widgets/guests/guest_item.dart';
 import 'package:erezervisi_desktop/widgets/master_widget.dart';
@@ -210,24 +209,6 @@ class _GuestsState extends State<Guests> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    width: 120,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.filter_list_outlined,
-                          color: CustomTheme.sortByColor,
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Filtriraj",
-                          style: CustomTheme.sortByTextStyle,
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -236,9 +217,7 @@ class _GuestsState extends State<Guests> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SizedBox(
-                    width: 20
-                  ),
+                  const SizedBox(width: 20),
                   SizedBox(
                     width: 120,
                     child: Row(

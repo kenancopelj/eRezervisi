@@ -1,10 +1,8 @@
 import 'package:erezervisi_desktop/enums/maintenance_priority.dart';
 import 'package:erezervisi_desktop/enums/maintenance_status.dart';
 import 'package:erezervisi_desktop/helpers/custom_theme.dart';
-import 'package:erezervisi_desktop/models/responses/accommodation_unit/accommodation_unit_get_dto.dart';
 import 'package:erezervisi_desktop/models/responses/maintenance/maintenance_get_dto.dart';
 import 'package:erezervisi_desktop/screens/maintenances/maintenances.dart';
-import 'package:erezervisi_desktop/shared/globals.dart';
 import 'package:flutter/material.dart';
 
 class MaintenanceItem extends StatefulWidget {

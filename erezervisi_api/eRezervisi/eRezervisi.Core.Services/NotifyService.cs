@@ -1,5 +1,6 @@
 ﻿using eRezervisi.Common.Dtos.Mail;
 using eRezervisi.Common.Dtos.Notification;
+using eRezervisi.Core.Domain.Entities;
 using eRezervisi.Core.Domain.Enums;
 using eRezervisi.Core.Domain.Exceptions;
 using eRezervisi.Core.Services.Interfaces;
@@ -109,7 +110,14 @@ namespace eRezervisi.Core.Services
                 return;
             }
 
-            var owner = accommodationUnit.Owner;
+            var owner = await _dbContext.Users.Include(x => x.UserSettings).FirstOrDefaultAsync(x => x.Id == accommodationUnit.OwnerId && x.IsActive);
+
+            if (owner == null)
+            {
+                _logger.LogError($"User Id: {reservationId} was not found while trying to notify guest about declined reservation.");
+
+                return;
+            }
 
             var notification = new NotificationCreateDto
             {
@@ -121,6 +129,19 @@ namespace eRezervisi.Core.Services
             };
 
             await _notificationService.SendAsync(notification, CancellationToken.None);
+
+            if (owner.UserSettings!.ReceiveEmails)
+            {
+                var mail = new MailCreateDto
+                {
+                    Subject = $"Nova rezervacija",
+                    Content = $"Kreirana je nova rezervacija nad Vašim objektom - {accommodationUnit.Title}",
+                    Recipient = owner.Email,
+                    Sender = _mailConfig.Username
+                };
+
+                _rabbitMQProducer.SendMessage(mail);
+            }
         }
 
         public async Task NotifyGuestAboutDeclinedReservation(long reservationId)

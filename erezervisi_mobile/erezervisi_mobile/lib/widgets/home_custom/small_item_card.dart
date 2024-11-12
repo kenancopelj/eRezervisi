@@ -43,7 +43,7 @@ class _SmallItemCardState extends State<SmallItemCard> {
                     const BorderRadius.vertical(top: Radius.circular(5)),
                 child: Image.network(
                   Globals.imageBasePath + widget.item.thumbnailImage,
-                  height: 150,
+                  height: 140,
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
@@ -52,7 +52,7 @@ class _SmallItemCardState extends State<SmallItemCard> {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: Text(
                   widget.item.title,
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
                   maxLines: 2,
                 ),
               ),

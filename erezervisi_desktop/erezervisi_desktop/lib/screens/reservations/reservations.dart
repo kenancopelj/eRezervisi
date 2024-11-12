@@ -1,4 +1,3 @@
-import 'package:erezervisi_desktop/enums/accommodation_unit_status.dart';
 import 'package:erezervisi_desktop/enums/reservation_status.dart';
 import 'package:erezervisi_desktop/helpers/custom_theme.dart';
 import 'package:erezervisi_desktop/models/dropdown_item.dart';

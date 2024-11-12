@@ -367,7 +367,7 @@ class _ReservationDetailsState extends State<ReservationDetails> {
                         height: 50,
                         child: Text(
                           accommodationUnit?.title ?? '',
-                          style: TextStyle(color: Colors.white, fontSize: 24),
+                          style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       )
                     ],

@@ -65,85 +65,87 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     RegExp numberRegex = RegExp(r'[0-9]');
     RegExp uppercaseRegex = RegExp(r'[A-Z]');
     return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back_ios_new_outlined)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 25),
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  Text(
-                    "Unesite novu lozinku",
-                    style: CustomTheme.mediumTextStyle,
-                  ),
-                  const SizedBox(
-                    height: 100,
-                  ),
-                  TextFormField(
-                    style: CustomTheme.smallTextStyle,
-                    obscureText: true,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Obavezno polje\n';
-                      } else if (!numberRegex.hasMatch(value) ||
-                          !uppercaseRegex.hasMatch(value)) {
-                        return 'Lozinka mora sadržavati:\n- Minimalno jedan broj\n- Minimalno jedno veliko slovo\n';
-                      } else if (!uppercaseRegex.hasMatch(value)) {
-                        return 'Lozinka mora sadržavati barem jedno veliko slovo\n';
-                      } else if (value.length < 6) {
-                        return 'Lozinka mora sadržavati barem 6 karaktera\n';
-                      }
-                      return null;
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
                     },
-                    decoration: const InputDecoration(
-                        label: Text("Lozinka"),
-                        border: OutlineInputBorder(),
-                        hintText: "Unesite Vašu novu lozinku"),
-                    controller: passwordController,
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  TextFormField(
-                    style: CustomTheme.smallTextStyle,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Obavezno polje\n';
-                      } else if (value != passwordController.text) {
-                        return 'Lozinke se ne poklapaju\n';
-                      }
-                      return null;
-                    },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                        label: Text("Ponovljena lozinka"),
-                        border: OutlineInputBorder(),
-                        hintText: "Unesite Vašu ponovljenu lozinku"),
-                    controller: newPasswordController,
-                  ),
-                  Button(
-                    label: "SPREMI",
-                    onClick: handleSubmit,
-                  ),
-                ],
+                    icon: const Icon(Icons.arrow_back_ios_new_outlined)),
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 25),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    Text(
+                      "Unesite novu lozinku",
+                      style: CustomTheme.mediumTextStyle,
+                    ),
+                    const SizedBox(
+                      height: 100,
+                    ),
+                    TextFormField(
+                      style: CustomTheme.smallTextStyle,
+                      obscureText: true,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Obavezno polje\n';
+                        } else if (!numberRegex.hasMatch(value) ||
+                            !uppercaseRegex.hasMatch(value)) {
+                          return 'Lozinka mora sadržavati:\n- Minimalno jedan broj\n- Minimalno jedno veliko slovo\n';
+                        } else if (!uppercaseRegex.hasMatch(value)) {
+                          return 'Lozinka mora sadržavati barem jedno veliko slovo\n';
+                        } else if (value.length < 6) {
+                          return 'Lozinka mora sadržavati barem 6 karaktera\n';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                          label: Text("Lozinka"),
+                          border: OutlineInputBorder(),
+                          hintText: "Unesite Vašu novu lozinku"),
+                      controller: passwordController,
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    TextFormField(
+                      style: CustomTheme.smallTextStyle,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Obavezno polje\n';
+                        } else if (value != passwordController.text) {
+                          return 'Lozinke se ne poklapaju\n';
+                        }
+                        return null;
+                      },
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                          label: Text("Ponovljena lozinka"),
+                          border: OutlineInputBorder(),
+                          hintText: "Unesite Vašu ponovljenu lozinku"),
+                      controller: newPasswordController,
+                    ),
+                    Button(
+                      label: "SPREMI",
+                      onClick: handleSubmit,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
