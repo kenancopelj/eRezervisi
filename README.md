@@ -36,7 +36,7 @@ Ukucajte sljedeće komande:
 flutter run
 
 **Backend** </br>
-docker-compose up -d --build
+docker-compose up --build
 
 ### Stripe Testna kartica
 - Broj kartice: 4242 4242 4242 4242
