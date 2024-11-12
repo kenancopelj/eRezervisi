@@ -57,8 +57,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
 
-  Stripe.publishableKey =
-      const String.fromEnvironment('STRIPE_PUBLISHABLE_KEY', defaultValue: "");
+  Stripe.publishableKey = const String.fromEnvironment('STRIPE_PUBLISHABLE_KEY',
+      defaultValue:
+          "pk_test_51QBzrSGGfjPDcVYDzcLTlLAj767Aqs2ISFfZ8S6WetGmNfSfA3pIXYNrWPMnjWJpmkAQU71eaGnZjbTk1bR04HeS00UZljPHG0");
 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
