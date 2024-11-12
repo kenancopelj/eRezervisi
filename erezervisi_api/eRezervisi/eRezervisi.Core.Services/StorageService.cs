@@ -1,6 +1,5 @@
 ﻿using eRezervisi.Common.Dtos.Storage;
 using eRezervisi.Core.Services.Interfaces;
-using Google.Apis.Logging;
 
 namespace eRezervisi.Core.Services
 {
@@ -25,7 +24,7 @@ namespace eRezervisi.Core.Services
             return new UploadedFileGetDto
             {
                 FileName = uniqueFileName,
-                FilePath = $"/Uploads/Images/{uniqueFileName}" 
+                FilePath = $"/Uploads/Images/{uniqueFileName}"
             };
         }
 
@@ -37,13 +36,7 @@ namespace eRezervisi.Core.Services
 
             if (File.Exists(filePath))
             {
-                try
-                {
-                    File.Delete(filePath);
-                }
-                catch (Exception ex)
-                {
-                }
+                File.Delete(filePath);
             }
 
             await Task.CompletedTask;

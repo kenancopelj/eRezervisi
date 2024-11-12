@@ -19,7 +19,7 @@ namespace RabbitMQConsumer
                 string password = Environment.GetEnvironmentVariable("SMTP_PASSWORD") ?? "zvjq jzmd bmmc lhxk";
 
                 var emailData = JsonConvert.DeserializeObject<MailDto>(message);
-                var senderEmail = emailData.Sender;
+                var senderEmail = emailData!.Sender;
                 var recipientEmail = emailData.Recipient;
                 var subject = emailData.Subject;
                 var content = emailData.Content;

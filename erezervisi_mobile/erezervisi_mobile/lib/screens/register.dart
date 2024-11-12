@@ -2,6 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:erezervisi_mobile/enums/toast_type.dart';
 import 'package:erezervisi_mobile/main.dart';
 import 'package:erezervisi_mobile/models/requests/user/user_create_dto.dart';
+import 'package:erezervisi_mobile/models/responses/user/check_email_dto.dart';
+import 'package:erezervisi_mobile/models/responses/user/check_phone_dto.dart';
+import 'package:erezervisi_mobile/models/responses/user/check_username_dto.dart';
 import 'package:erezervisi_mobile/models/responses/user/user_get_dto.dart';
 import 'package:erezervisi_mobile/providers/user_provider.dart';
 import 'package:erezervisi_mobile/shared/components/form/button.dart';
@@ -11,6 +14,7 @@ import 'package:erezervisi_mobile/shared/navigator/navigate.dart';
 import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:erezervisi_mobile/shared/validators/auth/register.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -32,15 +36,49 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final registerKey = GlobalKey<FormState>();
 
+  final Debouncer debouncer = Debouncer();
+
   late UserProvider userProvider;
 
   var validator = RegisterValidator();
+
+  bool duplicateUsername = false;
+  bool duplicateEmail = false;
+  bool duplicatePhoneNumber = false;
 
   @override
   void initState() {
     super.initState();
 
     userProvider = context.read<UserProvider>();
+  }
+
+  Future checkUsername(username) async {
+    var response =
+        await userProvider.checkUsername(CheckUsernameDto(username: username));
+
+    setState(() {
+      duplicateUsername = response;
+    });
+  }
+
+  Future checkPhoneNumber(phoneNumber) async {
+    var response = await userProvider
+        .checkPhoneNumber(CheckPhoneDto(phoneNumber: phoneNumber));
+
+    print(response);
+
+    setState(() {
+      duplicatePhoneNumber = response;
+    });
+  }
+
+  Future checkEmail(email) async {
+    var response = await userProvider.checkEmail(CheckEmailDto(email: email));
+
+    setState(() {
+      duplicateEmail = response;
+    });
   }
 
   @override
@@ -100,9 +138,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 Input(
                   controller: phoneController,
-                  validator: validator.required,
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Obavezno polje';
+                    }
+                    if (duplicatePhoneNumber) {
+                      return 'Broj telefona je već u upotrebi';
+                    }
+                    return null;
+                  },
                   label: "Broj telefona",
                   hintText: "e.g. +387616161",
+                  onChanged: (value) async {
+                    if (value.isNotEmpty) {
+                      debouncer.debounce(
+                          duration: Globals.debounceTimeout,
+                          onDebounce: () {
+                            checkPhoneNumber(value);
+                          });
+                    }
+                  },
                 ),
                 Input(
                   controller: addressController,
@@ -112,25 +167,68 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 Input(
                   controller: emailController,
-                  validator: validator.required,
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Obavezno polje';
+                    }
+                    if (duplicateEmail) {
+                      return 'Email je već u upotrebi';
+                    }
+                    return null;
+                  },
                   label: "Email",
                   hintText: "e.g. name@example.com",
+                  onChanged: (value) async {
+                    if (value.isNotEmpty) {
+                      debouncer.debounce(
+                          duration: Globals.debounceTimeout,
+                          onDebounce: () {
+                            checkEmail(value);
+                          });
+                    }
+                  },
                 ),
                 Input(
                   controller: usernameController,
-                  validator: validator.required,
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Obavezno polje';
+                    }
+                    if (duplicateUsername) {
+                      return 'Korisničko ime je već u upotrebi';
+                    }
+                    return null;
+                  },
                   label: "Korisničko ime",
                   hintText: "Unesite Vaše korisničko ime",
+                  onChanged: (value) async {
+                    if (value.isNotEmpty) {
+                      debouncer.debounce(
+                          duration: Globals.debounceTimeout,
+                          onDebounce: () {
+                            checkUsername(value);
+                          });
+                    }
+                  },
                 ),
                 Input(
                   controller: passwordController,
                   validator: validator.required,
                   label: "Lozinka",
+                  obscureText: true,
                   hintText: "Unesite Vašu lozinku",
                 ),
                 Input(
-                  controller: passwordController,
-                  validator: validator.required,
+                  controller: confirmPasswordController,
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Obavezno polje';
+                    }
+                    if (value != passwordController.text) {
+                      return 'Lozinke se ne poklapaju';
+                    }
+                  },
+                  obscureText: true,
                   label: "Ponovljena lozinka",
                   hintText: "Potvrdite Vašu lozinku",
                 ),
@@ -162,23 +260,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
         lastName: lastNameController.text,
         phone: phoneController.text,
         address: addressController.text,
-        email: addressController.text,
+        email: emailController.text,
         username: usernameController.text,
         password: passwordController.text);
 
-    UserGetDto? response;
-
     try {
-      response = await userProvider.create(payload);
+      await userProvider.create(payload);
     } catch (ex) {
       if (ex is DioException) {
         var error = ex.response?.data["Error"];
         Globals.notifier.setInfo(error, ToastType.Error);
       }
+      return;
     }
 
-    if (response != null && mounted) {
-      Navigate.next(context, AppRoutes.login.routeName, const LoginScreen(), true);
+    if (mounted) {
+      Navigate.next(
+          context, AppRoutes.login.routeName, const LoginScreen(), true);
     }
   }
 }

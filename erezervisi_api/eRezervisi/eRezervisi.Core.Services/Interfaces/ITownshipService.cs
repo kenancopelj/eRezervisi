@@ -1,5 +1,4 @@
 ﻿using eRezervisi.Common.Dtos.Township;
-using eRezervisi.Common.Shared;
 using eRezervisi.Common.Shared.Pagination;
 using eRezervisi.Common.Shared.Requests.Township;
 

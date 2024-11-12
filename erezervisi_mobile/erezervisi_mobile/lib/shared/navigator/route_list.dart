@@ -16,7 +16,12 @@ enum AppRoutes {
   reservations,
   reviews,
   search,
-  settings
+  settings,
+  searchResults,
+  filterResults,
+  requestCode,
+  checkCode,
+  resetPassword
 }
 
 extension AppRouteExtension on AppRoutes {
@@ -58,6 +63,16 @@ extension AppRouteExtension on AppRoutes {
         return 'search';
       case AppRoutes.settings:
         return 'settings';
+      case AppRoutes.searchResults:
+        return 'search-results';
+      case AppRoutes.filterResults:
+        return 'filter-results';
+      case AppRoutes.requestCode:
+        return 'request-code';
+      case AppRoutes.checkCode:
+        return 'check-code';
+      case AppRoutes.resetPassword:
+        return 'reset-password';
       default:
         return '/';
     }

@@ -90,6 +90,17 @@ namespace eRezervisi.Core.Services
             return guests;
         }
 
+        public async Task<bool> IsUserAllowedToMakeReviewAsync(long accommodationUnitId, CancellationToken cancellationToken)
+        {
+            var loggedUserId = _jwtTokenReader.GetUserIdFromToken();
+
+            var isAllowed = await _dbContext.Reservations
+                .AnyAsync(x => x.AccommodationUnitId == accommodationUnitId &&
+                          x.UserId == loggedUserId && x.Status == ReservationStatus.Completed, cancellationToken);
+
+            return isAllowed;
+        } 
+
         private Expression<Func<Reservation, object>> GetOrderByExpression(string orderBy)
         {
             switch (orderBy)

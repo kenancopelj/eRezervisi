@@ -165,7 +165,7 @@ class _MyProfileState extends State<MyProfile> {
                                     borderRadius: BorderRadius.circular(50),
                                   ),
                                   child: Text(
-                                    Globals.loggedUser!.initials,
+                                    Globals.loggedUser?.initials ?? "",
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 24,

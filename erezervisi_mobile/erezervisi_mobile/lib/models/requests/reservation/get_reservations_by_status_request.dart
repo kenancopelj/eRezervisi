@@ -1,15 +1,18 @@
 import 'package:erezervisi_mobile/enums/reservation_status.dart';
 
 class GetReservationsByStatusRequest {
-  late ReservationStatus status;
+  ReservationStatus? status;
 
   GetReservationsByStatusRequest({
-    required this.status,
+    this.status,
   });
+
+  GetReservationsByStatusRequest.def();
+
 
   Map<String, dynamic> toJson() {
     return {
-      'status': status.index,
+      'status': status?.index,
     };
   }
 }

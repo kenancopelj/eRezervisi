@@ -1,5 +1,8 @@
+import 'package:erezervisi_desktop/enums/maintenance_priority.dart';
+import 'package:erezervisi_desktop/enums/maintenance_status.dart';
 import 'package:erezervisi_desktop/enums/toast_type.dart';
 import 'package:erezervisi_desktop/helpers/custom_theme.dart';
+import 'package:erezervisi_desktop/models/dropdown_item.dart';
 import 'package:erezervisi_desktop/models/requests/accommodation_unit/get_accommodation_units_request.dart';
 import 'package:erezervisi_desktop/models/requests/maintenance/get_maintenances_request.dart';
 import 'package:erezervisi_desktop/models/responses/accommodation_unit/accommodation_unit_get_dto.dart';
@@ -10,6 +13,7 @@ import 'package:erezervisi_desktop/providers/maintenance_provider.dart';
 import 'package:erezervisi_desktop/screens/accommodation_units/create_accommodation_unit.dart';
 import 'package:erezervisi_desktop/screens/accommodation_units/edit_accommodation_unit.dart';
 import 'package:erezervisi_desktop/screens/maintenances/maintenance_item.dart';
+import 'package:erezervisi_desktop/shared/components/form/dropdown.dart';
 import 'package:erezervisi_desktop/shared/components/search_input.dart';
 import 'package:erezervisi_desktop/shared/globals.dart';
 import 'package:erezervisi_desktop/shared/navigator/navigate.dart';
@@ -24,6 +28,24 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 
+class MaintenancePriorityItem {
+  late String label;
+  late MaintenancePriority priority;
+  late Color color;
+
+  MaintenancePriorityItem(
+      {required this.label, required this.priority, required this.color});
+}
+
+class MaintenanceStatusItem {
+  late String label;
+  late MaintenanceStatus status;
+  late Color color;
+
+  MaintenanceStatusItem(
+      {required this.label, required this.status, required this.color});
+}
+
 class Maintenances extends StatefulWidget {
   const Maintenances({super.key});
 
@@ -35,20 +57,59 @@ class _AccommodationUnitsState extends State<Maintenances> {
   var maintenances = PagedResponse<MaintenanceGetDto>.empty();
   var request = GetMaintenancesRequest.def();
 
+  List<MaintenancePriorityItem> priorities = [
+    MaintenancePriorityItem(
+        label: "Svi",
+        priority: MaintenancePriority.Unknown,
+        color: Colors.yellow),
+    MaintenancePriorityItem(
+        label: "Nizak",
+        priority: MaintenancePriority.Low,
+        color: Colors.yellow),
+    MaintenancePriorityItem(
+        label: "Srednji",
+        priority: MaintenancePriority.Medium,
+        color: Colors.orange),
+    MaintenancePriorityItem(
+        label: "Visok", priority: MaintenancePriority.High, color: Colors.red),
+    MaintenancePriorityItem(
+        label: "Hitno",
+        priority: MaintenancePriority.Urgent,
+        color: Colors.purple),
+  ];
+
+  List<MaintenanceStatusItem> statuses = [
+    MaintenanceStatusItem(
+        label: "Svi",
+        status: MaintenanceStatus.Unknown,
+        color: CustomTheme.bluePrimaryColor),
+    MaintenanceStatusItem(
+        label: "Kreirano",
+        status: MaintenanceStatus.Created,
+        color: CustomTheme.bluePrimaryColor),
+    MaintenanceStatusItem(
+        label: "Završeno",
+        status: MaintenanceStatus.Completed,
+        color: Colors.green),
+  ];
+
+  num? status;
+  num? priority;
+
   late MaintenanceProvider maintenanceProvider;
 
   int currentPage = 1;
-  final int pageSize = 5;
+  final int pageSize = 6;
 
   List<num> selectedMaintenances = [];
-
-  bool selectAll = false;
 
   @override
   void initState() {
     super.initState();
 
     maintenanceProvider = context.read<MaintenanceProvider>();
+
+    request.pageSize = pageSize;
 
     loadMaintenances();
   }
@@ -74,6 +135,12 @@ class _AccommodationUnitsState extends State<Maintenances> {
         selectedMaintenances.remove(unitId);
       });
     }
+  }
+
+  Future markAsCompleted(num maintenanceId) async {
+    await maintenanceProvider.markAsCompleted(maintenanceId);
+
+    loadMaintenances();
   }
 
   @override
@@ -109,48 +176,120 @@ class _AccommodationUnitsState extends State<Maintenances> {
                 children: [
                   Row(
                     children: [
-                      ActionButton(
-                          icon: Icons.delete,
-                          text: 'Označi kao završeno',
-                          onClick: () {
-                            if (selectedMaintenances.isEmpty) {
-                              Globals.notifier.setInfo(
-                                  "Odaberite jedno održavanje", ToastType.Info);
-                              return;
-                            }
+                      if (selectedMaintenances.isNotEmpty &&
+                          selectedMaintenances.length == 1 &&
+                          maintenances.items
+                                  .where((item) =>
+                                      item.id == selectedMaintenances.first)
+                                  .first
+                                  .status !=
+                              MaintenanceStatus.Completed)
+                        ActionButton(
+                            icon: Icons.check_outlined,
+                            text: 'Označi kao završeno',
+                            onClick: () {
+                              if (selectedMaintenances.isEmpty) {
+                                Globals.notifier.setInfo(
+                                    "Odaberite jedno održavanje",
+                                    ToastType.Info);
+                                return;
+                              }
 
-                            if (selectedMaintenances.length > 1) {
-                              return;
-                            }
+                              if (selectedMaintenances.length > 1) {
+                                return;
+                              }
 
-                            var selectedUnitId = items
-                                .where(
-                                    (x) => x.id == selectedMaintenances.first)
-                                .first
-                                .id;
+                              var selectedId = items
+                                  .where(
+                                      (x) => x.id == selectedMaintenances.first)
+                                  .first
+                                  .id;
 
-                            // showDialog(
-                            //   context: context,
-                            //   builder: (BuildContext context) {
-                            //     return ConfirmationDialog(
-                            //         title: 'Obriši objekte',
-                            //         content:
-                            //             'Da li ste sigurni da želite obrisati odabrane objekte?',
-                            //         onConfirm: () {
-                            //           deleteAccommodationUnit(selectedUnitId);
-                            //         });
-                            //   },
-                            // );
-                          }),
+                              markAsCompleted(selectedId);
+                            }),
                     ],
                   ),
-                  SearchInput(onChanged: (value) {
-                    setState(() {
-                      request.searchTerm = value;
-                    });
-
-                    loadMaintenances();
-                  })
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 300,
+                        child: Dropdown(
+                            outline: true,
+                            padding: 10,
+                            withSearch: false,
+                            value: status,
+                            placeholder: 'Status',
+                            items: statuses
+                                .map((item) => DropdownItem(
+                                    key: item.status.index,
+                                    value: "${item.label} "))
+                                .toList(),
+                            controller: TextEditingController(),
+                            onChanged: (value) {
+                              setState(() {
+                                status = value != 0
+                                    ? MaintenanceStatus.values
+                                        .where((item) => item.index == value)
+                                        .first
+                                        .index
+                                    : null;
+                                if (status != null) {
+                                  setState(() {
+                                    request.status = MaintenanceStatus.values
+                                        .where((item) => item.index == value)
+                                        .first;
+                                  });
+                                } else {
+                                  setState(() {
+                                    request.status = null;
+                                  });
+                                }
+                              });
+                      
+                              loadMaintenances();
+                            }),
+                      ),
+                      SizedBox(
+                        width: 300,
+                        child: Dropdown(
+                            outline: true,
+                            padding: 10,
+                            withSearch: false,
+                            value: priority,
+                            placeholder: 'Prioritet',
+                            items: priorities
+                                .map((item) => DropdownItem(
+                                    key: item.priority.index,
+                                    value: "${item.label} "))
+                                .toList(),
+                            controller: TextEditingController(),
+                            onChanged: (value) {
+                              setState(() {
+                                priority = value != 0
+                                    ? MaintenancePriority.values
+                                        .where((item) => item.index == value)
+                                        .first
+                                        .index
+                                    : null;
+                      
+                                if (priority != null) {
+                                  setState(() {
+                                    request.priority = MaintenancePriority.values
+                                        .where((item) => item.index == value)
+                                        .first;
+                                  });
+                                } else {
+                                  setState(() {
+                                    request.priority = null;
+                                  });
+                                }
+                              });
+                      
+                              loadMaintenances();
+                            }),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -159,18 +298,11 @@ class _AccommodationUnitsState extends State<Maintenances> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    width: 20,
-                    child: Checkbox(
-                      value: selectAll,
-                      onChanged: (value) {},
-                    ),
-                  ),
                   const SizedBox(
-                    width: 60,
+                    width: 20,
                   ),
                   SizedBox(
-                    width: 120,
+                    width: 259,
                     child: Row(
                       children: [
                         Icon(
@@ -188,7 +320,7 @@ class _AccommodationUnitsState extends State<Maintenances> {
                     ),
                   ),
                   SizedBox(
-                    width: 120,
+                    width: 200,
                     child: Row(
                       children: [
                         Icon(
@@ -206,7 +338,7 @@ class _AccommodationUnitsState extends State<Maintenances> {
                     ),
                   ),
                   SizedBox(
-                    width: 120,
+                    width: 200,
                     child: Row(
                       children: [
                         Icon(

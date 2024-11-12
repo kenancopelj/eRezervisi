@@ -33,11 +33,7 @@ class _GuestsState extends State<Guests> {
   int currentPage = 1;
   final int pageSize = 5;
 
-  List<String> headers = ['Naziv', 'Cijena'];
-
   List<num> selectedGuests = [];
-
-  bool selectAll = false;
 
   var reviewNoteController = TextEditingController();
 
@@ -240,12 +236,8 @@ class _GuestsState extends State<Guests> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    width: 20,
-                    child: Checkbox(
-                      value: selectAll,
-                      onChanged: (value) {},
-                    ),
+                  const SizedBox(
+                    width: 20
                   ),
                   SizedBox(
                     width: 120,
@@ -266,7 +258,7 @@ class _GuestsState extends State<Guests> {
                     ),
                   ),
                   SizedBox(
-                    width: 120,
+                    width: 250,
                     child: Row(
                       children: [
                         Icon(
@@ -284,7 +276,7 @@ class _GuestsState extends State<Guests> {
                     ),
                   ),
                   SizedBox(
-                    width: 120,
+                    width: 200,
                     child: Row(
                       children: [
                         Icon(

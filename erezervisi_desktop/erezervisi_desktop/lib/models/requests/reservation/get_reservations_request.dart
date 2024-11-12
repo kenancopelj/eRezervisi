@@ -1,11 +1,10 @@
-import 'package:erezervisi_desktop/enums/reservation_status.dart';
 import 'package:erezervisi_desktop/models/requests/base/base_paged_request.dart';
 import 'package:erezervisi_desktop/shared/globals.dart';
 
 class GetReservationsRequest extends BasePagedRequest {
-  ReservationStatus? status;
-  DateTime? from;
-  DateTime? to;
+  num? status;
+  String? from;
+  String? to;
 
   GetReservationsRequest({
     required super.page,
@@ -26,7 +25,6 @@ class GetReservationsRequest extends BasePagedRequest {
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();
-
     data['status'] = status;
     data['from'] = from;
     data['to'] = to;

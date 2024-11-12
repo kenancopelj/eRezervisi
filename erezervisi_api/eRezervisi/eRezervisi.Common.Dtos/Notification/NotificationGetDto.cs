@@ -8,7 +8,6 @@ namespace eRezervisi.Common.Dtos.Notification
         public long UserId { get; set; }
         public UserGetShortDto User { get; set; } = null!;
         public string Title { get; set; } = null!;
-        public string ShortTitle { get; set; } = null!;
         public string? Description { get; set; }
         // If NotificationType is AccommodationUnit
         public long? AccommodationUnitId { get; set; }

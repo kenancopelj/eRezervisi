@@ -1172,7 +1172,7 @@ namespace eRezervisi.Infrastructure.Database
                    Address = "Mula Mustafe Bašeskije",
                    TownshipId = 66,
                    Latitude = 43.856430,
-                   Longitude= 18.413029,
+                   Longitude = 18.413029,
                    OwnerId = 1,
                    Price = 150,
                    Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
@@ -1191,6 +1191,7 @@ namespace eRezervisi.Infrastructure.Database
                    Price = 898,
                    Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
                    ThumbnailImage = "55899be7-94fe-40b8-84a0-b66b00b022c8_OneLoveThumb.jpg",
+                   ViewCount = 10
                },
                new AccommodationUnit
                {
@@ -1205,6 +1206,7 @@ namespace eRezervisi.Infrastructure.Database
                    Price = 369,
                    Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
                    ThumbnailImage = "f9d7eb2e-1ca3-42e4-8b0c-c901492d238e_CittaThumb.jpg",
+                   ViewCount = 4
                },
                new AccommodationUnit
                {
@@ -1219,6 +1221,7 @@ namespace eRezervisi.Infrastructure.Database
                    Price = 369,
                    Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
                    ThumbnailImage = "49f38bd6-1d31-4458-997d-b5739e5d7fda_FlumenThumb.jpg",
+                   ViewCount = 25
                },
                new AccommodationUnit
                {
@@ -1233,6 +1236,7 @@ namespace eRezervisi.Infrastructure.Database
                    Price = 450,
                    Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
                    ThumbnailImage = "88af37ec-030c-45d4-9045-b941843e8c30_MostarThumb.jpg",
+                   ViewCount = 3
                },
                new AccommodationUnit
                {
@@ -1247,6 +1251,7 @@ namespace eRezervisi.Infrastructure.Database
                    Price = 300,
                    Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
                    ThumbnailImage = "74d8c129-57dd-42b9-8f7d-903f6aa04398_BungaloviSarajevo.jpg",
+                   ViewCount = 9
                },
                new AccommodationUnit
                {
@@ -1261,6 +1266,7 @@ namespace eRezervisi.Infrastructure.Database
                    Price = 250,
                    Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
                    ThumbnailImage = "bebefb25-41da-474b-8bcb-fdd291162409_RoyalThumb.jpg",
+                   ViewCount = 15
                },
                new AccommodationUnit
                {
@@ -1274,7 +1280,8 @@ namespace eRezervisi.Infrastructure.Database
                    OwnerId = 4,
                    Price = 200,
                    Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                   ThumbnailImage = ""
+                   ThumbnailImage = "924B4AF0-91E3-4FDD-A248-77B9D9025F7C_VacationVibesThumb.jpg",
+                   ViewCount = 12
                },
                 new AccommodationUnit
                 {
@@ -1288,7 +1295,8 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 1,
                     Price = 230,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "FE0B968E-E508-49A5-9616-2E47C3C94B09_Malak.jpg",
+                   ViewCount = 13
                 },
                 new AccommodationUnit
                 {
@@ -1302,7 +1310,8 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 1,
                     Price = 180,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "7176BEE4-B05D-4097-A8B4-123EEFA50183_BungaloviMostar.jpg",
+                   ViewCount = 20
                 },
                 new AccommodationUnit
                 {
@@ -1316,7 +1325,8 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 1,
                     Price = 220,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "F64F818A-51D1-4554-997E-B912BFB642D4_Bristol.jpg",
+                   ViewCount = 19
                 },
                 new AccommodationUnit
                 {
@@ -1330,7 +1340,8 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 1,
                     Price = 250,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "AAD0545E-D5EA-41E8-AD27-692B07CEA75A_PinoNature.jpg",
+                   ViewCount = 30
                 },
                 new AccommodationUnit
                 {
@@ -1344,7 +1355,8 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 3,
                     Price = 160,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "27BDBCAC-CC92-45D4-A5E4-DA36AAF30C28_VillaParkDoboj.jpg",
+                   ViewCount = 1
                 },
                 new AccommodationUnit
                 {
@@ -1358,7 +1370,8 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 4,
                     Price = 280,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "391578c6-cccd-4622-bd1a-40cdbdab1217_Blanca.jpg",
+                   ViewCount = 10
                 },
                 new AccommodationUnit
                 {
@@ -1372,7 +1385,8 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 4,
                     Price = 140,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "5288e9c6-6263-4e3d-b6b0-be001bc7cb6f_Mogorjelo.jpg",
+                   ViewCount = 3
                 },
                 new AccommodationUnit
                 {
@@ -1386,7 +1400,8 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 1,
                     Price = 190,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "f860fff9-e427-4c4f-aade-871b1a7f684a_Platan.jpg",
+                   ViewCount = 19
                 },
                 new AccommodationUnit
                 {
@@ -1400,7 +1415,8 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 1,
                     Price = 150,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "bc18cea3-63e5-4d27-8609-2be0b40f5723_Nar.jpg",
+                    ViewCount = 21
                 },
                 new AccommodationUnit
                 {
@@ -1414,7 +1430,8 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 1,
                     Price = 170,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "dfca9935-bc56-4218-ae2e-d472d2227526_Park.jpg",
+                    ViewCount = 17
                 },
                 new AccommodationUnit
                 {
@@ -1428,7 +1445,8 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 3,
                     Price = 200,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "e6031584-3134-4580-9bd7-ead07fba6740_Kenan.jpg",
+                    ViewCount = 21
                 },
                 new AccommodationUnit
                 {
@@ -1442,12 +1460,13 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 3,
                     Price = 240,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "55250ffc-4450-4dc4-b5e3-a62ce5cb2bc3_Snjezna.jpg",
+                    ViewCount = 4
                 },
                 new AccommodationUnit
                 {
                     Id = 21,
-                    Title = "Medjugorje Hotel & Spa",
+                    Title = "Medjugorje Apartman",
                     AccommodationUnitCategoryId = 3,
                     Address = "Ulica fra Slavka Barbarića",
                     TownshipId = 48,
@@ -1456,7 +1475,8 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 4,
                     Price = 210,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "493a1834-1a18-4b5c-b683-13881006d05f_Medjugorje.jpg",
+                    ViewCount = 2
                 },
                 new AccommodationUnit
                 {
@@ -1470,7 +1490,8 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 4,
                     Price = 160,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "ec5b0ebb-1c31-4692-a049-45c606b1a410_Blagaj.jpg",
+                    ViewCount = 33
                 },
                 new AccommodationUnit
                 {
@@ -1484,7 +1505,8 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 1,
                     Price = 250,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "9e726f37-6721-418c-b7da-5a8e80e1651c_Hercegovina.jpg",
+                    ViewCount = 25
                 },
                 new AccommodationUnit
                 {
@@ -1498,232 +1520,233 @@ namespace eRezervisi.Infrastructure.Database
                     OwnerId = 3,
                     Price = 150,
                     Status = Core.Domain.Enums.AccommodationUnitStatus.Active,
-                    ThumbnailImage = ""
+                    ThumbnailImage = "e4df6297-a151-413a-8241-c480fb27e289_Konjic.jpg",
+                    ViewCount = 17
                 }
            );
 
             #endregion
 
-            //#region AccommodationUnitPolicies
-            //modelBuilder.Entity<AccommodationUnitPolicy>().HasData(
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 1,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 6,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 2,
-            //        AlcoholAllowed = true,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 5,
-            //        HasPool = true,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 3,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 4,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 5,
-            //        HasPool = true,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 5,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 6,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = false,
-            //        Capacity = 6,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 7,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = true,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 8,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 9,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = true,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 10,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = true,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 11,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 12,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 13,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 14,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 15,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 16,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 17,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 18,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 19,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 20,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 21,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 22,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 23,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    },
-            //    new AccommodationUnitPolicy
-            //    {
-            //        AccommodationUnitId = 24,
-            //        AlcoholAllowed = false,
-            //        BirthdayPartiesAllowed = true,
-            //        Capacity = 10,
-            //        HasPool = false,
-            //        OneNightOnly = false,
-            //    }
-            //    );
-            //#endregion
+            #region AccommodationUnitPolicies
+            modelBuilder.Entity<AccommodationUnit>().OwnsOne(x => x.AccommodationUnitPolicy).HasData(
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 1,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 6,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 2,
+                    AlcoholAllowed = true,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 5,
+                    HasPool = true,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 3,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 4,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 5,
+                    HasPool = true,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 5,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 6,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = false,
+                    Capacity = 6,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 7,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = true,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 8,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 9,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = true,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 10,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = true,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 11,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 12,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 13,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 14,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 15,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 16,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 17,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 18,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 19,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 20,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 21,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 22,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 23,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                },
+                new AccommodationUnitPolicy
+                {
+                    AccommodationUnitId = 24,
+                    AlcoholAllowed = false,
+                    BirthdayPartiesAllowed = true,
+                    Capacity = 10,
+                    HasPool = false,
+                    OneNightOnly = false,
+                }
+                );
+            #endregion
 
             #region Reservations
             modelBuilder.Entity<Reservation>().HasData(
@@ -2180,6 +2203,282 @@ namespace eRezervisi.Infrastructure.Database
                     Id = 21,
                     AccommodationUnitId = 7,
                     FileName = "bebefb25-41da-474b-8bcb-fdd291162409_Royal3.jpg"
+                },
+                new Image
+                {
+                    Id = 22,
+                    AccommodationUnitId = 8,
+                    FileName = "924B4AF0-91E3-4FDD-A248-77B9D9025F7C_VacationVibes1.jpg"
+                },
+                new Image
+                {
+                    Id = 23,
+                    AccommodationUnitId = 8,
+                    FileName = "924B4AF0-91E3-4FDD-A248-77B9D9025F7C_VacationVibes2.jpg"
+                },
+                new Image
+                {
+                    Id = 24,
+                    AccommodationUnitId = 9,
+                    FileName = "FE0B968E-E508-49A5-9616-2E47C3C94B09_Malak1.jpg"
+                },
+                new Image
+                {
+                    Id = 25,
+                    AccommodationUnitId = 9,
+                    FileName = "FE0B968E-E508-49A5-9616-2E47C3C94B09_Malak2.jpg"
+                },
+                new Image
+                {
+                    Id = 26,
+                    AccommodationUnitId = 9,
+                    FileName = "FE0B968E-E508-49A5-9616-2E47C3C94B09_Malak3.jpg"
+                },
+                new Image
+                {
+                    Id = 27,
+                    AccommodationUnitId = 10,
+                    FileName = "7176BEE4-B05D-4097-A8B4-123EEFA50183_BungaloviMostar1.jpg"
+                },
+                new Image
+                {
+                    Id = 28,
+                    AccommodationUnitId = 10,
+                    FileName = "7176BEE4-B05D-4097-A8B4-123EEFA50183_BungaloviMostar2.jpg"
+                },
+                new Image
+                {
+                    Id = 29,
+                    AccommodationUnitId = 10,
+                    FileName = "7176BEE4-B05D-4097-A8B4-123EEFA50183_BungaloviMostar3.jpg"
+                },
+                new Image
+                {
+                    Id = 30,
+                    AccommodationUnitId = 11,
+                    FileName = "F64F818A-51D1-4554-997E-B912BFB642D4_Bristol1.jpg"
+                },
+                new Image
+                {
+                    Id = 31,
+                    AccommodationUnitId = 11,
+                    FileName = "F64F818A-51D1-4554-997E-B912BFB642D4_Bristol2.jpg"
+                },
+                new Image
+                {
+                    Id = 32,
+                    AccommodationUnitId = 12,
+                    FileName = "AAD0545E-D5EA-41E8-AD27-692B07CEA75A_PinoNature1.jpg"
+                },
+                new Image
+                {
+                    Id = 33,
+                    AccommodationUnitId = 12,
+                    FileName = "AAD0545E-D5EA-41E8-AD27-692B07CEA75A_PinoNature2.jpg"
+                },
+                new Image
+                {
+                    Id = 34,
+                    AccommodationUnitId = 13,
+                    FileName = "27BDBCAC-CC92-45D4-A5E4-DA36AAF30C28_VillaParkDoboj1.jpg"
+                },
+                new Image
+                {
+                    Id = 35,
+                    AccommodationUnitId = 13,
+                    FileName = "27BDBCAC-CC92-45D4-A5E4-DA36AAF30C28_VillaParkDoboj2.jpg"
+                },
+                new Image
+                {
+                    Id = 36,
+                    AccommodationUnitId = 13,
+                    FileName = "27BDBCAC-CC92-45D4-A5E4-DA36AAF30C28_VillaParkDoboj3.jpg"
+                },
+                new Image
+                {
+                    Id = 37,
+                    AccommodationUnitId = 14,
+                    FileName = "391578c6-cccd-4622-bd1a-40cdbdab1217_Blanca1.jpg"
+                },
+                new Image
+                {
+                    Id = 38,
+                    AccommodationUnitId = 14,
+                    FileName = "391578c6-cccd-4622-bd1a-40cdbdab1217_Blanca2.jpg"
+                },
+                new Image
+                {
+                    Id = 68,
+                    AccommodationUnitId = 14,
+                    FileName = "391578c6-cccd-4622-bd1a-40cdbdab1217_Blanca3.jpg"
+                },
+                new Image
+                {
+                    Id = 39,
+                    AccommodationUnitId = 15,
+                    FileName = "5288e9c6-6263-4e3d-b6b0-be001bc7cb6f_Mogorjelo1.jpg"
+                },
+                new Image
+                {
+                    Id = 40,
+                    AccommodationUnitId = 15,
+                    FileName = "5288e9c6-6263-4e3d-b6b0-be001bc7cb6f_Mogorjelo2.jpg"
+                },
+                new Image
+                {
+                    Id = 41,
+                    AccommodationUnitId = 15,
+                    FileName = "5288e9c6-6263-4e3d-b6b0-be001bc7cb6f_Mogorjelo3.jpg"
+                },
+                new Image
+                {
+                    Id = 42,
+                    AccommodationUnitId = 16,
+                    FileName = "f860fff9-e427-4c4f-aade-871b1a7f684a_Platan1.jpg"
+                },
+                new Image
+                {
+                    Id = 43,
+                    AccommodationUnitId = 16,
+                    FileName = "f860fff9-e427-4c4f-aade-871b1a7f684a_Platan2.jpg"
+                },
+                new Image
+                {
+                    Id = 44,
+                    AccommodationUnitId = 17,
+                    FileName = "bc18cea3-63e5-4d27-8609-2be0b40f5723_Nar1.jpg"
+                },
+                new Image
+                {
+                    Id = 45,
+                    AccommodationUnitId = 17,
+                    FileName = "bc18cea3-63e5-4d27-8609-2be0b40f5723_Nar2.jpg"
+                },
+                new Image
+                {
+                    Id = 47,
+                    AccommodationUnitId = 17,
+                    FileName = "bc18cea3-63e5-4d27-8609-2be0b40f5723_Nar3.jpg"
+                },
+                new Image
+                {
+                    Id = 48,
+                    AccommodationUnitId = 18,
+                    FileName = "dfca9935-bc56-4218-ae2e-d472d2227526_Park1.jpg"
+                },
+                new Image
+                {
+                    Id = 49,
+                    AccommodationUnitId = 18,
+                    FileName = "dfca9935-bc56-4218-ae2e-d472d2227526_Park2.jpg"
+                },
+                new Image
+                {
+                    Id = 50,
+                    AccommodationUnitId = 19,
+                    FileName = "e6031584-3134-4580-9bd7-ead07fba6740_Kenan1.jpg"
+                },
+                new Image
+                {
+                    Id = 51,
+                    AccommodationUnitId = 19,
+                    FileName = "e6031584-3134-4580-9bd7-ead07fba6740_Kenan2.jpg"
+                },
+                new Image
+                {
+                    Id = 52,
+                    AccommodationUnitId = 19,
+                    FileName = "e6031584-3134-4580-9bd7-ead07fba6740_Kenan3.jpg"
+                },
+                new Image
+                {
+                    Id = 53,
+                    AccommodationUnitId = 20,
+                    FileName = "55250ffc-4450-4dc4-b5e3-a62ce5cb2bc3_Snjezna1.jpg"
+                },
+                new Image
+                {
+                    Id = 54,
+                    AccommodationUnitId = 20,
+                    FileName = "55250ffc-4450-4dc4-b5e3-a62ce5cb2bc3_Snjezna2.jpg"
+                },
+                new Image
+                {
+                    Id = 55,
+                    AccommodationUnitId = 21,
+                    FileName = "493a1834-1a18-4b5c-b683-13881006d05f_Medjugorje1.jpg"
+                },
+                new Image
+                {
+                    Id = 56,
+                    AccommodationUnitId = 21,
+                    FileName = "493a1834-1a18-4b5c-b683-13881006d05f_Medjugorje2.jpg"
+                },
+                new Image
+                {
+                    Id = 57,
+                    AccommodationUnitId = 21,
+                    FileName = "493a1834-1a18-4b5c-b683-13881006d05f_Medjugorje3.jpg"
+                },
+                new Image
+                {
+                    Id = 58,
+                    AccommodationUnitId = 21,
+                    FileName = "493a1834-1a18-4b5c-b683-13881006d05f_Medjugorje4.jpg"
+                },
+                new Image
+                {
+                    Id = 59,
+                    AccommodationUnitId = 22,
+                    FileName = "ec5b0ebb-1c31-4692-a049-45c606b1a410_Blagaj1.jpg"
+                },
+                new Image
+                {
+                    Id = 60,
+                    AccommodationUnitId = 22,
+                    FileName = "ec5b0ebb-1c31-4692-a049-45c606b1a410_Blagaj2.jpg"
+                },
+                new Image
+                {
+                    Id = 61,
+                    AccommodationUnitId = 22,
+                    FileName = "ec5b0ebb-1c31-4692-a049-45c606b1a410_Blagaj3.jpg"
+                },
+                new Image
+                {
+                    Id = 62,
+                    AccommodationUnitId = 23,
+                    FileName = "9e726f37-6721-418c-b7da-5a8e80e1651c_Hercegovina1.jpg"
+                },
+                new Image
+                {
+                    Id = 63,
+                    AccommodationUnitId = 23,
+                    FileName = "9e726f37-6721-418c-b7da-5a8e80e1651c_Hercegovina2.jpg"
+                },
+                new Image
+                {
+                    Id = 64,
+                    AccommodationUnitId = 24,
+                    FileName = "e4df6297-a151-413a-8241-c480fb27e289_Konjic1.jpg"
+                },
+                new Image
+                {
+                    Id = 65,
+                    AccommodationUnitId = 24,
+                    FileName = "e4df6297-a151-413a-8241-c480fb27e289_Konjic2.jpg"
+                },
+                new Image
+                {
+                    Id = 66,
+                    AccommodationUnitId = 24,
+                    FileName = "e4df6297-a151-413a-8241-c480fb27e289_Konjic3.jpg"
+                },
+                new Image
+                {
+                    Id = 67,
+                    AccommodationUnitId = 24,
+                    FileName = "e4df6297-a151-413a-8241-c480fb27e289_Konjic4.jpg"
                 }
                 );
 

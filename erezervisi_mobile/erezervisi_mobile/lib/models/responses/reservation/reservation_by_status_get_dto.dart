@@ -1,3 +1,5 @@
+import 'package:erezervisi_mobile/enums/reservation_status.dart';
+
 class ReservationByStatusGetDto {
   late num id;
   late String code;
@@ -8,6 +10,7 @@ class ReservationByStatusGetDto {
   late num totalDays;
   late num totalPrice;
   late DateTime createdAt;
+  late ReservationStatus status;
 
   ReservationByStatusGetDto({
     required this.id,
@@ -19,6 +22,7 @@ class ReservationByStatusGetDto {
     required this.totalDays,
     required this.totalPrice,
     required this.createdAt,
+    required this.status
   });
 
   factory ReservationByStatusGetDto.fromJson(Map<String, dynamic> json) {
@@ -31,6 +35,7 @@ class ReservationByStatusGetDto {
       totalPeople: json['totalPeople'] as num,
       totalDays: json['totalDays'] as num,
       totalPrice: json['totalPrice'] as num,
+      status: ReservationStatus.values.where((item) => item.index == json['status']).first,
       createdAt: DateTime.parse(json['createdAt']),
     );
   }

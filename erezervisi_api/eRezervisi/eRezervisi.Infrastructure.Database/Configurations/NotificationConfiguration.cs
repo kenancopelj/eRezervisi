@@ -17,8 +17,6 @@ namespace eRezervisi.Infrastructure.Database.Configurations
 
             builder.Property(x => x.Title);
 
-            builder.Property(x => x.ShortTitle);
-
             builder.Property(x => x.Description).IsRequired(false);
 
             builder.Property(x => x.Status).HasDefaultValueSql("1");

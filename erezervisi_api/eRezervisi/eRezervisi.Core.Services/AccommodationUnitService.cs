@@ -18,10 +18,6 @@ using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using Microsoft.ML;
-using Microsoft.ML.Trainers;
-
-using Microsoft.ML.Data;
-using Google.Api;
 
 namespace eRezervisi.Core.Services
 {
@@ -32,9 +28,6 @@ namespace eRezervisi.Core.Services
         private readonly IJwtTokenReader _jwtTokenReader;
         private readonly IStorageService _storageService;
         private readonly IBackgroundJobClient _backgroundJobClient;
-        private static MLContext? _mlContext;
-        private static object isLocked = new();
-        private static ITransformer? _model;
 
         public AccommodationUnitService(eRezervisiDbContext dbContext,
             IMapper mapper,
@@ -80,7 +73,14 @@ namespace eRezervisi.Core.Services
                     (request.Scope == Domain.Authorization.ScopeType.Mobile, x => x.OwnerId != userId),
                     (request.OwnerId.HasValue, x => x.OwnerId == request.OwnerId!.Value),
                     (request.CategoryId.HasValue, x => x.AccommodationUnitCategoryId == request.CategoryId!.Value),
-                    (request.Status.HasValue, x => x.Status == request.Status)
+                    (request.Status.HasValue, x => x.Status == request.Status),
+                    (request.CantonId.HasValue, x => x.Township.CantonId == request.CantonId),
+                    (request.TownshipId.HasValue, x => x.TownshipId == request.TownshipId),
+                    (request.OneNightOnly.HasValue && request.OneNightOnly != false, x => x.AccommodationUnitPolicy.OneNightOnly),
+                    (request.WithPool.HasValue && request.WithPool != false, x => x.AccommodationUnitPolicy.HasPool),
+                    (request.BirthdayPartiesAllowed.HasValue && request.BirthdayPartiesAllowed != false, x => x.AccommodationUnitPolicy.BirthdayPartiesAllowed),
+                    (request.AlcoholAllowed.HasValue && request.AlcoholAllowed != false, x => x.AccommodationUnitPolicy.AlcoholAllowed),
+                    (request.Capacity.HasValue, x => x.AccommodationUnitPolicy.Capacity >= request.Capacity),
                 },
                 GetOrderByExpression(pagingRequest.OrderByColumn),
                 x => new AccommodationUnitGetDto
@@ -125,6 +125,7 @@ namespace eRezervisi.Core.Services
                         Id = i.Id,
                         FileName = i.FileName,
                     }).ToList(),
+                    Status = x.Status
                 }, cancellationToken);
 
             return accommodationUnits;
@@ -151,6 +152,7 @@ namespace eRezervisi.Core.Services
                 new List<(bool shouldFilter, Expression<Func<AccommodationUnit, bool>> FilterExpression)>()
                 {
                     (request.Scope == Domain.Authorization.ScopeType.Mobile, x => x.OwnerId != userId),
+                    (request.CategoryId.HasValue, x => x.AccommodationUnitCategoryId == request.CategoryId),
                     (true, x => x.Status == AccommodationUnitStatus.Active),
                 },
                 GetOrderByExpression(pagingRequest.OrderByColumn),
@@ -216,6 +218,7 @@ namespace eRezervisi.Core.Services
                 new List<(bool shouldFilter, Expression<Func<AccommodationUnit, bool>> FilterExpression)>()
                 {
                     (request.Scope == Domain.Authorization.ScopeType.Mobile, x => x.OwnerId != userId),
+                    (request.CategoryId.HasValue, x => x.AccommodationUnitCategoryId == request.CategoryId),
                     (true, x => x.Status == AccommodationUnitStatus.Active),
                 },
                 GetOrderByExpression(pagingRequest.OrderByColumn),
@@ -267,180 +270,6 @@ namespace eRezervisi.Core.Services
 
         }
 
-        public async Task<Recommender?> GetRecommendationsByAccommodationUnitId(long accommodationUnitId, CancellationToken cancellationToken)
-        {
-            var entity = await _dbContext.Recommenders.FirstOrDefaultAsync(x => x.AccommodationUnitId == accommodationUnitId, cancellationToken);
-
-            if (entity is null)
-            {
-                return null;
-            }
-
-            return _mapper.Map<Recommender>(entity);
-        }
-
-        private List<AccommodationUnit> Recommend(long accommodationUnitId)
-        {
-            lock (isLocked)
-            {
-                if (_mlContext == null)
-                {
-                    _mlContext = new MLContext();
-
-                    var tmpData = _dbContext.Reservations.Include(x => x.AccommodationUnit).ToList();
-
-                    var data = new List<AccommodationUnitRecommendation>();
-
-                    foreach (var x in tmpData)
-                    {
-                        if (x.AccommodationUnit.ViewCount > 1)
-                        {
-                            var distinctItemId = tmpData.Select(y => y.AccommodationUnitId).ToList();
-
-                            distinctItemId?.ForEach(y =>
-                            {
-                                var relatedItems = tmpData.Select(z => z.AccommodationUnitId).Where(z => z != y);
-
-                                foreach (var z in relatedItems)
-                                {
-                                    data.Add(new AccommodationUnitRecommendation
-                                    {
-                                        AccommodationUnitId = (uint)y,
-                                        CoAccommodationUnitId = (uint)z,
-                                    });
-                                }
-                            });
-                        }
-                    }
-
-                    var trainData = _mlContext.Data.LoadFromEnumerable(data);
-
-                    MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
-                    options.MatrixColumnIndexColumnName = nameof(AccommodationUnitRecommendation.AccommodationUnitId);
-                    options.MatrixRowIndexColumnName = nameof(AccommodationUnitRecommendation.CoAccommodationUnitId);
-                    options.LabelColumnName = "Label";
-
-                    options.LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass;
-                    options.Alpha = 0.01;
-                    options.Lambda = 0.025;
-
-                    options.NumberOfIterations = 100;
-                    options.C = 0.00001;
-
-                    var est = _mlContext.Recommendation().Trainers.MatrixFactorization(options);
-
-                    _model = est.Fit(trainData);
-                }
-            }
-
-            var accommodationUnits = _dbContext.AccommodationUnits.Where(x => x.Id != accommodationUnitId).ToList();
-
-            var predictionResult = new List<Tuple<AccommodationUnit, float>>();
-
-            foreach (var accommodationUnit in accommodationUnits)
-            {
-                var predictionEngine = _mlContext.Model.CreatePredictionEngine<AccommodationUnitRecommendation, CoAccommodationUnitPrediction>(_model);
-
-                var prediction = predictionEngine.Predict(new AccommodationUnitRecommendation
-                {
-                    AccommodationUnitId = (uint)accommodationUnitId,
-                    CoAccommodationUnitId = (uint)accommodationUnit.Id,
-                });
-
-                predictionResult.Add(new Tuple<AccommodationUnit, float>(accommodationUnit, prediction.Score));
-            }
-
-            var finalResult = predictionResult.OrderByDescending(x => x.Item2).Select(x => x.Item1).Take(3).ToList();
-
-            return _mapper.Map<List<AccommodationUnit>>(finalResult);
-        }
-
-        public async Task<PagedResponse<Recommender>> TrainModelAsync(CancellationToken cancellationToken)
-        {
-            var accommodationUnits = await _dbContext.AccommodationUnits.ToListAsync(cancellationToken);
-            var numberOfRecords = await _dbContext.Reservations.CountAsync(cancellationToken);
-
-            if (accommodationUnits.Count > 4 && numberOfRecords > 8)
-            {
-                var recommendList = new List<Recommender>();
-
-                foreach (var accommodationUnit in accommodationUnits)
-                {
-                    var recommendedAccommodationUnits = Recommend(accommodationUnit.Id);
-
-                    var result = new Recommender
-                    {
-                        AccommodationUnitId = accommodationUnit.Id,
-                        FirstAccommodationUnitId = recommendedAccommodationUnits[0].Id,
-                        SecondAccommodationUnitId = recommendedAccommodationUnits[1].Id,
-                        ThirdAccommodationUnitId = recommendedAccommodationUnits[2].Id,
-                    };
-
-                    recommendList.Add(result);
-                }
-
-                await CreateNewRecommendation(recommendList, cancellationToken);
-                await _dbContext.SaveChangesAsync(cancellationToken);
-
-                return _mapper.Map<PagedResponse<Recommender>>(recommendList);
-            }
-            else
-            {
-                throw new Exception("Not enough data to generate recommendations.");
-            }
-        }
-
-        private async Task CreateNewRecommendation(List<Recommender> results, CancellationToken cancellationToken)
-        {
-            var existingRecommendations = await _dbContext.Recommenders.ToListAsync(cancellationToken);
-            var accommodationUnitsCount = await _dbContext.AccommodationUnits.CountAsync(cancellationToken);
-            var recommendationCount = await _dbContext.Recommenders.CountAsync(cancellationToken);
-
-            if (recommendationCount != 0)
-            {
-                if (recommendationCount > accommodationUnitsCount)
-                {
-                    for (int i = 0; i < accommodationUnitsCount; i++)
-                    {
-                        existingRecommendations[i].AccommodationUnitId = results[i].AccommodationUnitId;
-                        existingRecommendations[i].FirstAccommodationUnitId = results[i].FirstAccommodationUnitId;
-                        existingRecommendations[i].SecondAccommodationUnitId = results[i].SecondAccommodationUnitId;
-                        existingRecommendations[i].ThirdAccommodationUnitId = results[i].ThirdAccommodationUnitId;
-                    }
-
-                    for (int i = 0; i < recommendationCount; i++)
-                    {
-                        _dbContext.Recommenders.Remove(existingRecommendations[i]);
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < recommendationCount; i++)
-                    {
-                        existingRecommendations[i].AccommodationUnitId = results[i].AccommodationUnitId;
-                        existingRecommendations[i].FirstAccommodationUnitId = results[i].FirstAccommodationUnitId;
-                        existingRecommendations[i].SecondAccommodationUnitId = results[i].SecondAccommodationUnitId;
-                        existingRecommendations[i].ThirdAccommodationUnitId = results[i].ThirdAccommodationUnitId;
-                    }
-
-                    var num = results.Count - recommendationCount;
-
-                    if (num > 0)
-                    {
-                        for (int i = results.Count - num; i < results.Count; i++)
-                        {
-                            await _dbContext.Recommenders.AddAsync(results[i], cancellationToken);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                await _dbContext.Recommenders.AddRangeAsync(results, cancellationToken);
-            }
-        }
-
-
         public async Task<AccommodationUnitGetDto> CreateAccommodationUnitAsync(AccommodationUnitCreateDto request, CancellationToken cancellationToken)
         {
             DuplicateException.ThrowIf(await _dbContext.AccommodationUnits.AnyAsync(x => x.Title == request.Title, cancellationToken));
@@ -457,7 +286,7 @@ namespace eRezervisi.Core.Services
             {
                 user.ChangeRole(Roles.Owner.Id);
 
-                firstTimeOwner = true;
+                firstTimeOwner = await _dbContext.AccommodationUnits.AnyAsync(x => x.OwnerId == ownerId, cancellationToken);
             }
 
             var accommodationUnit = _mapper.Map<AccommodationUnit>(request);
@@ -580,51 +409,73 @@ namespace eRezervisi.Core.Services
                 {
                     Id = x.Review.Id,
                     Note = x.Review.Note,
-                    Title = x.Review.Title,
                     Rating = x.Review.Rating,
+                    Reviewer = _dbContext.Users.First(u => u.Id == x.Review.CreatedBy).GetFullName(),
+                    ReviewerImage = _dbContext.Users.FirstOrDefault(u => u.Id == x.Review.CreatedBy) != null ? _dbContext.Users.First(u => u.Id == x.Review.CreatedBy).Image : null,
+                    MinutesAgo = Math.Floor((DateTime.UtcNow - x.Review.CreatedAt).TotalMinutes),
+                    HoursAgo = Math.Floor((DateTime.UtcNow - x.Review.CreatedAt).TotalHours),
+                    DaysAgo = Math.Floor((DateTime.UtcNow - x.Review.CreatedAt).TotalDays)
                 }, cancellationToken);
 
             return reviews;
         }
 
+        public async Task<GetReviewsResponse> GetAllAccommodationUnitReviewsAsync(long accommodationUnitId, CancellationToken cancellationToken)
+        {
+            var reviews = await _dbContext.AccommodationUnitReviews
+                .Include(x => x.Review)
+                .Where(x => x.AccommodationUnitId == accommodationUnitId)
+                .Select(x => new ReviewGetDto
+                {
+                    Id = x.ReviewId,
+                    ReviewerId = x.Review.CreatedBy,
+                    Note = x.Review.Note,
+                    Rating = x.Review.Rating,
+                    Reviewer = _dbContext.Users.First(u => u.Id == x.Review.CreatedBy).GetFullName(),
+                    ReviewerImage = _dbContext.Users.FirstOrDefault(u => u.Id == x.Review.CreatedBy) != null ? _dbContext.Users.First(u => u.Id == x.Review.CreatedBy).Image : null,
+                    MinutesAgo = Math.Floor((DateTime.UtcNow - x.Review.CreatedAt).TotalMinutes),
+                    HoursAgo = Math.Floor((DateTime.UtcNow - x.Review.CreatedAt).TotalHours),
+                    DaysAgo = Math.Floor((DateTime.UtcNow - x.Review.CreatedAt).TotalDays)
+                })
+                .ToListAsync(cancellationToken);
+
+            return new GetReviewsResponse
+            {
+                Reviews = reviews,
+                Average = reviews.Count > 0 ? reviews.Average(x => x.Rating) : 0
+            };
+        }
+
         public async Task<AccommodationUnitGetDto> UpdateAccommodationUnitAsync(long id, AccommodationUnitUpdateDto request, CancellationToken cancellationToken)
         {
-            try
+            var accommodationUnit = await _dbContext.AccommodationUnits.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+            NotFoundException.ThrowIfNull(accommodationUnit);
+
+            DuplicateException.ThrowIf(await _dbContext.AccommodationUnits.AnyAsync(x => x.Title == request.Title && x.Id != id, cancellationToken));
+
+            _mapper.Map<AccommodationUnit>(request);
+
+            accommodationUnit.AccommodationUnitPolicy = _mapper.Map<AccommodationUnitPolicy>(request.Policy);
+
+            _mapper.Map(request, accommodationUnit);
+
+            var imagesToUpload = request.Files.Where(x => x.ImageBase64 != null).ToList();
+
+            await AddImagesAsync(id, imagesToUpload, cancellationToken);
+
+            if (request.Files.Any(x => x.Id != null && x.Delete))
             {
+                var imagesToRemove = request.Files.Where(x => x.Delete).Select(x => x.Id ?? 0).ToList();
 
-
-                var accommodationUnit = await _dbContext.AccommodationUnits.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-
-                NotFoundException.ThrowIfNull(accommodationUnit);
-
-                DuplicateException.ThrowIf(await _dbContext.AccommodationUnits.AnyAsync(x => x.Title == request.Title && x.Id != id, cancellationToken));
-
-                _mapper.Map<AccommodationUnit>(request);
-
-                accommodationUnit.AccommodationUnitPolicy = _mapper.Map<AccommodationUnitPolicy>(request.Policy);
-
-                _mapper.Map(request, accommodationUnit);
-
-                var imagesToUpload = request.Files.Where(x => x.ImageBase64 != null).ToList();
-
-                await AddImagesAsync(id, imagesToUpload, cancellationToken);
-
-                if (request.Files.Any(x => x.Id != null && x.Delete))
-                {
-                    var imagesToRemove = request.Files.Where(x => x.Delete).Select(x => x.Id ?? 0).ToList();
-
-                    await RemoveImagesAsync(id, imagesToRemove, cancellationToken);
-                }
-
-                await _dbContext.SaveChangesAsync(cancellationToken);
-
-                return _mapper.Map<AccommodationUnitGetDto>(accommodationUnit);
+                await RemoveImagesAsync(id, imagesToRemove, cancellationToken);
             }
-            catch (Exception ex)
-            {
 
-                throw;
-            }
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            _backgroundJobClient.Enqueue<INotifyService>(x => x.NotifyUsersAboutAccommodationUnitUpdate(id));
+
+            return _mapper.Map<AccommodationUnitGetDto>(accommodationUnit);
         }
 
         public async Task<ReviewGetDto> CreateAccommodationUnitReviewAsync(long id, ReviewCreateDto request, CancellationToken cancellationToken)
@@ -643,7 +494,7 @@ namespace eRezervisi.Core.Services
             var hasPreviousReservation = await _dbContext.Reservations
                                          .AsNoTracking()
                                          .AnyAsync(x => x.AccommodationUnitId == id && x.UserId == userId
-                                         && x.Status == ReservationStatus.Confirmed, cancellationToken);
+                                         && x.Status == ReservationStatus.Completed, cancellationToken);
 
             if (!hasPreviousReservation)
             {
@@ -697,35 +548,25 @@ namespace eRezervisi.Core.Services
 
         private async Task AddImagesAsync(long id, List<ImageUpdateDto> request, CancellationToken cancellationToken)
         {
-            try
+            var accommodationUnit = await _dbContext.AccommodationUnits.Include(x => x.Images).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+            NotFoundException.ThrowIfNull(accommodationUnit);
+
+            var uploadedImages = new List<Image>();
+
+            foreach (var item in request)
             {
-
-
-                var accommodationUnit = await _dbContext.AccommodationUnits.Include(x => x.Images).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-
-                NotFoundException.ThrowIfNull(accommodationUnit);
-
-                var uploadedImages = new List<Image>();
-
-                foreach (var item in request)
+                if (item.ImageFileName != null && accommodationUnit.Images.FirstOrDefault(x => x.AccommodationUnitId == id && x.FileName == item.ImageFileName) is null)
                 {
-                    if (item.ImageFileName != null && accommodationUnit.Images.FirstOrDefault(x => x.AccommodationUnitId == id && x.FileName == item.ImageFileName) is null)
-                    {
-                        var uploadedFile = await _storageService.UploadFileAsync(item.ImageFileName!, item.ImageBase64!, cancellationToken);
+                    var uploadedFile = await _storageService.UploadFileAsync(item.ImageFileName!, item.ImageBase64!, cancellationToken);
 
-                        accommodationUnit.Images.Add(_mapper.Map<Image>(uploadedFile));
-                    }
+                    accommodationUnit.Images.Add(_mapper.Map<Image>(uploadedFile));
                 }
-
-                _dbContext.Update(accommodationUnit);
-
-                await _dbContext.SaveChangesAsync(cancellationToken);
             }
-            catch (Exception ex)
-            {
 
-                throw;
-            }
+            _dbContext.Update(accommodationUnit);
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         private async Task RemoveImagesAsync(long id, List<long> imageIds, CancellationToken cancellationToken)
@@ -761,8 +602,6 @@ namespace eRezervisi.Core.Services
         {
             switch (orderBy)
             {
-                case "title":
-                    return x => x.Review.Title;
                 default:
                     return x => x.Review.Id;
             }
@@ -776,6 +615,8 @@ namespace eRezervisi.Core.Services
                     return x => x.Title;
                 case "township":
                     return x => x.Township.Title;
+                case "createdAt":
+                    return x => x.CreatedAt;
                 default:
                     return x => x.Id;
             }

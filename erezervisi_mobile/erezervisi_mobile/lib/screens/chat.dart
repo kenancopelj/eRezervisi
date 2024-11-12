@@ -1,4 +1,5 @@
 import 'package:erezervisi_mobile/helpers/custom_theme.dart';
+import 'package:erezervisi_mobile/helpers/helpers.dart';
 import 'package:erezervisi_mobile/models/requests/message/get_messages_request.dart';
 import 'package:erezervisi_mobile/models/responses/base/paged_response.dart';
 import 'package:erezervisi_mobile/models/responses/message/message_get_dto.dart';
@@ -45,67 +46,78 @@ class _MyChatState extends State<MyChat> {
   Widget build(BuildContext context) {
     return MasterWidget(
       child: Scaffold(
-        body: Column(
-          children: [
-            const SizedBox(height: 30),
-            Row(
-              children: [
-                const SizedBox(width: 20),
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new,
-                    size: 12,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              Row(
+                children: [
+                  Text(
+                    "Chat",
+                    style: CustomTheme.mediumTextStyle,
                   ),
-                ),
-                Text(
-                  "Razgovori",
-                  style: TextStyle(fontSize: 18),
-                ),
-              ],
-            ),
-            messages.items.isEmpty
-                ? Expanded(child: Center(child: Text("Nemate novih razgovora")))
-                : Expanded(
-                    child: ListView.builder(
-                      itemCount: messages.items.length,
-                      itemBuilder: (context, index) {
-                        var message = messages.items[index];
+                ],
+              ),
+              messages.items.isEmpty
+                  ? const Expanded(
+                      child: Center(child: Text("Nemate novih razgovora")))
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: messages.items.length,
+                        itemBuilder: (context, index) {
+                          var message = messages.items[index];
 
-                        return GestureDetector(
-                          onTap: () {
-                            Navigate.next(
-                                context,
-                                AppRoutes.chatDetails.routeName,
-                                ChatDetails(userId: message.senderId), true);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: ListTile(
-                              title: Text(
-                                message.sender.fullName,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
+                          return GestureDetector(
+                            onTap: () {
+                              Navigate.next(
+                                  context,
+                                  AppRoutes.chatDetails.routeName,
+                                  ChatDetails(userId: message.senderId),
+                                  true);
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: ListTile(
+                                title: Text(
+                                  message.sender.fullName,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Text(
+                                  message.content,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                                leading: Container(
+                                  alignment: Alignment.center,
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Text(
+                                    Helpers.getInitials(message.sender.fullName),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                trailing: const Icon(Icons.arrow_forward_ios,
+                                    size: 16),
                               ),
-                              subtitle: Text(
-                                message.content,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                              leading: const CircleAvatar(
-                                backgroundColor: Colors.blue,
-                              ),
-                              trailing:
-                                  const Icon(Icons.arrow_forward_ios, size: 16),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
-                  ),
-          ],
+            ],
+          ),
         ),
       ),
     );

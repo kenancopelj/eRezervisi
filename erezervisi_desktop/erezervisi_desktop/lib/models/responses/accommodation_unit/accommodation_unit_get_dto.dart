@@ -1,3 +1,4 @@
+import 'package:erezervisi_desktop/enums/accommodation_unit_status.dart';
 import 'package:erezervisi_desktop/models/responses/category/category_get_dto.dart';
 import 'package:erezervisi_desktop/models/responses/image/image_get_dto.dart';
 import 'package:erezervisi_desktop/models/responses/policy/policy_get_dto.dart';
@@ -21,6 +22,7 @@ class AccommodationUnitGetDto {
   late List<ImageGetDto> images;
   late bool favorite;
   late num ownerId;
+  late AccommodationUnitStatus status;
 
   AccommodationUnitGetDto(
       {required this.id,
@@ -39,7 +41,8 @@ class AccommodationUnitGetDto {
       required this.thumbnailImage,
       required this.images,
       required this.favorite,
-      required this.ownerId});
+      required this.ownerId,
+      required this.status});
 
   factory AccommodationUnitGetDto.fromJson(Map<String, dynamic> json) {
     return AccommodationUnitGetDto(
@@ -64,6 +67,7 @@ class AccommodationUnitGetDto {
         ownerId: json['ownerId'] as num,
         images: (json['images'] as List<dynamic>)
             .map((imageJson) => ImageGetDto.fromJson(imageJson))
-            .toList());
+            .toList(),
+        status: AccommodationUnitStatus.values.where((item) => item.index == json['status']).first);
   }
 }

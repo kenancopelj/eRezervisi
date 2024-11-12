@@ -145,9 +145,16 @@ namespace eRezervisi.Core.Services
 
             await _dbContext.SaveChangesAsync();
 
-            _backgroundJobClient.Enqueue<INotifyService>(x => x.NotifyAboutNewMessage(message.Id));
+            var receiver = await _dbContext.Users.Include(x => x.UserSettings).FirstOrDefaultAsync(x => x.Id == request.ReceiverId && x.IsActive, cancellationToken);
+
+            if (receiver != null && receiver.UserSettings!.ReceiveNotifications)
+            {
+                _backgroundJobClient.Enqueue<INotifyService>(x => x.NotifyAboutNewMessage(message.Id));
+            }
 
             await _hubContext.Clients.All.SendAsync($"{SignalRTopics.Message}#{senderId}#{request.ReceiverId}", request, cancellationToken);
+
+            await _hubContext.Clients.All.SendAsync($"{SignalRTopics.Conversation}#{request.ReceiverId}", request, cancellationToken);
 
             return _mapper.Map<MessageGetDto>(message);
         }

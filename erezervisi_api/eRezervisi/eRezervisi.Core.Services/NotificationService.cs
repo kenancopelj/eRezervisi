@@ -43,7 +43,6 @@ namespace eRezervisi.Core.Services
                 {
                     UserId = userId,
                     Description = x.Description,
-                    ShortTitle = x.ShortTitle,
                     Title = x.Title,
                     Status = x.Status,
                     Type = x.Type,

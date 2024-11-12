@@ -113,14 +113,16 @@ class _StatisticsState extends State<Statistics> {
                               key: item ?? -1, value: "${item ?? 'Svi'} "))
                           .toList(),
                       controller: TextEditingController(),
-                      onChanged: (value) => {
-                            setState(() {
-                              reservationsRequest.month =
-                                  value == -1 ? null : value;
-                              guestsRequest.month = value == -1 ? null : value;
-                              loadReservationsMonthly();
-                            })
-                          }),
+                      onChanged: (value) {
+                        setState(() {
+                          reservationsRequest.month =
+                              value == -1 ? null : value;
+                          guestsRequest.month = value == -1 ? null : value;
+                        });
+
+                        loadReservationsMonthly();
+                        loadGuestsMonthly();
+                      }),
                 ),
                 const SizedBox(
                   width: 20,
@@ -136,13 +138,14 @@ class _StatisticsState extends State<Statistics> {
                               (item) => DropdownItem(key: item, value: "$item"))
                           .toList(),
                       controller: TextEditingController(),
-                      onChanged: (value) => {
-                            setState(() {
-                              reservationsRequest.year = value;
-                              guestsRequest.year = value;
-                              loadReservationsMonthly();
-                            })
-                          }),
+                      onChanged: (value) {
+                        setState(() {
+                          reservationsRequest.year = value;
+                          guestsRequest.year = value;
+                        });
+                        loadReservationsMonthly();
+                        loadGuestsMonthly();
+                      }),
                 )
               ],
             ),

@@ -4,6 +4,6 @@ namespace eRezervisi.Common.Shared.Requests.Reservation
 {
     public class GetReservationsByStatusRequest
     {
-        public ReservationStatus Status { get; set; }
+        public ReservationStatus? Status { get; set; }
     }
 }

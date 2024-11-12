@@ -1,12 +1,8 @@
 // ignore_for_file: must_be_immutable
 
-import 'dart:io';
-
 import 'package:erezervisi_mobile/enums/toast_type.dart';
 import 'package:erezervisi_mobile/helpers/custom_theme.dart';
-import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/main.dart';
-import 'package:erezervisi_mobile/models/requests/image/image_create_dto.dart';
 import 'package:erezervisi_mobile/screens/favorites.dart';
 import 'package:erezervisi_mobile/screens/home.dart';
 import 'package:erezervisi_mobile/screens/notifications.dart';
@@ -17,10 +13,8 @@ import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:erezervisi_mobile/shared/navigator/navigate.dart';
 import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:erezervisi_mobile/shared/navigator/routes.dart';
-import 'package:erezervisi_mobile/shared/style.dart';
 import 'package:erezervisi_mobile/widgets/drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class MasterWidget extends StatefulWidget {
   final Widget child;
@@ -245,7 +239,7 @@ class _MasterWidgetState extends State<MasterWidget> {
                                     borderRadius: BorderRadius.circular(50),
                                   ),
                                   child: Text(
-                                    Globals.loggedUser!.initials,
+                                    Globals.loggedUser?.initials ?? "",
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,

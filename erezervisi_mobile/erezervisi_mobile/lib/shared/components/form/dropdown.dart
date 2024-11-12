@@ -13,6 +13,9 @@ class Dropdown extends StatefulWidget {
   final void Function(dynamic)? onChanged;
   Icon? labelIcon;
   final String? Function(num?)? validator;
+  bool? withSearch;
+  double? padding;
+  bool? outline;
 
   Dropdown(
       {super.key,
@@ -24,7 +27,10 @@ class Dropdown extends StatefulWidget {
       this.label,
       this.hintText,
       this.labelIcon,
-      this.validator});
+      this.validator,
+      this.withSearch = true,
+      this.padding,
+      this.outline = false});
 
   @override
   State<Dropdown> createState() => _DropdownState();
@@ -36,7 +42,7 @@ class _DropdownState extends State<Dropdown> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50.0),
+          padding: EdgeInsets.symmetric(horizontal: widget.padding ?? 50.0),
           child: Column(
             children: [
               Align(
@@ -58,10 +64,14 @@ class _DropdownState extends State<Dropdown> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10),
+          padding: EdgeInsets.symmetric(
+              horizontal: widget.padding ?? 50.0, vertical: 10),
           child: DropdownButtonFormField2<num>(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: widget.validator,
+            decoration: widget.outline != null && widget.outline! ? const InputDecoration(
+              border: OutlineInputBorder() 
+            ) : null,
             isExpanded: true,
             hint: Text(
               widget.placeholder,
@@ -93,7 +103,7 @@ class _DropdownState extends State<Dropdown> {
               height: 40,
             ),
             dropdownSearchData: DropdownSearchData(
-               searchMatchFn: (item, searchValue) {
+              searchMatchFn: (item, searchValue) {
                 // Cast the item to DropdownMenuItem<num> to access its child (which contains the text).
                 final dropdownMenuItem = item;
                 // Find the corresponding DropdownItem by matching the key.
@@ -107,33 +117,36 @@ class _DropdownState extends State<Dropdown> {
               },
               searchController: widget.controller,
               searchInnerWidgetHeight: 50,
-              searchInnerWidget: Container(
-                height: 50,
-                padding: const EdgeInsets.only(
-                  top: 8,
-                  bottom: 4,
-                  right: 8,
-                  left: 8,
-                ),
-                child: TextFormField(
-                  expands: true,
-                  maxLines: null,
-                  controller: widget.controller,
-                  style: const TextStyle(fontSize: 11),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 8,
-                    ),
-                    hintText: widget.hintText,
-                    hintStyle: const TextStyle(fontSize: 11),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
+              searchInnerWidget:
+                  widget.withSearch != null && !widget.withSearch!
+                      ? SizedBox.shrink()
+                      : Container(
+                          height: 50,
+                          padding: const EdgeInsets.only(
+                            top: 8,
+                            bottom: 4,
+                            right: 8,
+                            left: 8,
+                          ),
+                          child: TextFormField(
+                            expands: true,
+                            maxLines: null,
+                            controller: widget.controller,
+                            style: const TextStyle(fontSize: 11),
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 8,
+                              ),
+                              hintText: widget.hintText,
+                              hintStyle: const TextStyle(fontSize: 11),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ),
             ),
           ),
         ),

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using eRezervisi.Common.Dtos.AccommodationUnit;
 using eRezervisi.Common.Dtos.AccommodationUnitCategories;
+using eRezervisi.Common.Dtos.AccommodationUnitPolicy;
 using eRezervisi.Common.Dtos.Canton;
 using eRezervisi.Common.Dtos.FavoriteAccommodationUnit;
+using eRezervisi.Common.Dtos.Image;
 using eRezervisi.Common.Dtos.Township;
 using eRezervisi.Common.Shared;
 using eRezervisi.Common.Shared.Pagination;
@@ -80,11 +82,28 @@ namespace eRezervisi.Core.Services
                         Price = x.AccommodationUnit.Price,
                         Note = x.AccommodationUnit.Note,
                         OwnerId = x.AccommodationUnit.OwnerId,
+                        AverageRating = x.AccommodationUnit.AverageRating,
+                        AccommodationUnitPolicy = new PolicyGetDto
+                        {
+                            AlcoholAllowed = x.AccommodationUnit.AccommodationUnitPolicy.AlcoholAllowed,
+                            BirthdayPartiesAllowed = x.AccommodationUnit.AccommodationUnitPolicy.BirthdayPartiesAllowed,
+                            Capacity = x.AccommodationUnit.AccommodationUnitPolicy.Capacity,
+                            HasPool= x.AccommodationUnit.AccommodationUnitPolicy.HasPool,
+                            OneNightOnly= x.AccommodationUnit.AccommodationUnitPolicy.OneNightOnly,
+                        },
                         AccommodationUnitCategory = new CategoryGetDto
                         {
                             Id = x.AccommodationUnit.AccommodationUnitCategory.Id,
                             Title = x.AccommodationUnit.AccommodationUnitCategory.Title,
                         },
+                        TownshipId = x.AccommodationUnit.TownshipId,
+                        AccommodationUnitCategoryId = x.AccommodationUnit.AccommodationUnitCategoryId,
+                        Address = x.AccommodationUnit.Address,
+                        Images = x.AccommodationUnit.Images.Select(y => new ImageGetDto
+                        {
+                            Id = y.Id,
+                            FileName = y.FileName,
+                        }).ToList(),
                         Township = new TownshipGetDto
                         {
                             Id = x.AccommodationUnit.Township.Id,

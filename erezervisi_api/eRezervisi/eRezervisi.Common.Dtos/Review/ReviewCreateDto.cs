@@ -2,8 +2,7 @@
 {
     public class ReviewCreateDto
     {
-        public string Title { get; set; } = null!;
-        public string Note { get; set; } = null!;
         public double Rating { get; set; }
+        public string? Note { get; set; }
     }
 }

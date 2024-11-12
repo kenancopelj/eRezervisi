@@ -1,3 +1,4 @@
+import 'package:erezervisi_desktop/enums/accommodation_unit_status.dart';
 import 'package:erezervisi_desktop/enums/toast_type.dart';
 import 'package:erezervisi_desktop/helpers/custom_theme.dart';
 import 'package:erezervisi_desktop/models/requests/accommodation_unit/get_accommodation_units_request.dart';
@@ -38,8 +39,6 @@ class _AccommodationUnitsState extends State<AccommodationUnits> {
 
   List<num> selectedUnits = [];
 
-  bool selectAll = false;
-
   @override
   void initState() {
     super.initState();
@@ -65,6 +64,16 @@ class _AccommodationUnitsState extends State<AccommodationUnits> {
 
   Future deleteAccommodationUnit(num id) async {
     await accommodationUnitProvider.delete(id);
+    loadAccommodationUnits();
+  }
+
+  Future activateAccommodationUnit(num id) async {
+    await accommodationUnitProvider.activate(id);
+    loadAccommodationUnits();
+  }
+
+  Future deactivateAccommodationUnit(num id) async {
+    await accommodationUnitProvider.deactivate(id);
     loadAccommodationUnits();
   }
 
@@ -157,6 +166,89 @@ class _AccommodationUnitsState extends State<AccommodationUnits> {
                       const SizedBox(
                         width: 10,
                       ),
+                      if (selectedUnits.isNotEmpty &&
+                          selectedUnits.length == 1 &&
+                          items
+                                  .where((x) => x.id == selectedUnits.first)
+                                  .first
+                                  .status ==
+                              AccommodationUnitStatus.Active)
+                        ActionButton(
+                            icon: Icons.remove,
+                            text: 'Deaktiviraj',
+                            onClick: () {
+                              if (selectedUnits.isEmpty) {
+                                Globals.notifier.setInfo(
+                                    "Odaberite jedan objekt", ToastType.Info);
+                                return;
+                              }
+
+                              if (selectedUnits.length > 1) {
+                                return;
+                              }
+
+                              var selectedUnitId = items
+                                  .where((x) => x.id == selectedUnits.first)
+                                  .first
+                                  .id;
+
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return ConfirmationDialog(
+                                      title: 'Deaktiviraj objekat',
+                                      content:
+                                          'Da li ste sigurni da želite deaktivirati odabrani objekat?',
+                                      onConfirm: () {
+                                        deactivateAccommodationUnit(
+                                            selectedUnitId);
+                                      });
+                                },
+                              );
+                            }),
+                      if (selectedUnits.isNotEmpty &&
+                          selectedUnits.length == 1 &&
+                          items
+                                  .where((x) => x.id == selectedUnits.first)
+                                  .first
+                                  .status !=
+                              AccommodationUnitStatus.Active)
+                        ActionButton(
+                            icon: Icons.check,
+                            text: 'Aktiviraj',
+                            onClick: () {
+                              if (selectedUnits.isEmpty) {
+                                Globals.notifier.setInfo(
+                                    "Odaberite jedan objekt", ToastType.Info);
+                                return;
+                              }
+
+                              if (selectedUnits.length > 1) {
+                                return;
+                              }
+
+                              var selectedUnitId = items
+                                  .where((x) => x.id == selectedUnits.first)
+                                  .first
+                                  .id;
+
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return ConfirmationDialog(
+                                      title: 'Aktiviraj objekat',
+                                      content:
+                                          'Da li ste sigurni da želite aktivirati odabrani objekat?',
+                                      onConfirm: () {
+                                        activateAccommodationUnit(
+                                            selectedUnitId);
+                                      });
+                                },
+                              );
+                            }),
+                      const SizedBox(
+                        width: 10,
+                      ),
                       ActionButton(
                           icon: Icons.delete,
                           text: 'Ukloni',
@@ -193,6 +285,7 @@ class _AccommodationUnitsState extends State<AccommodationUnits> {
                   ),
                   SearchInput(onChanged: (value) {
                     setState(() {
+                      currentPage = 1;
                       request.searchTerm = value;
                     });
 
@@ -206,12 +299,8 @@ class _AccommodationUnitsState extends State<AccommodationUnits> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
-                    child: Checkbox(
-                      value: selectAll,
-                      onChanged: (value) {},
-                    ),
                   ),
                   const SizedBox(
                     width: 60,

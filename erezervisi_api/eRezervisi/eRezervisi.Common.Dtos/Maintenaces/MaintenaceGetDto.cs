@@ -8,7 +8,7 @@ namespace eRezervisi.Common.Dtos.Maintenaces
         public long Id { get; set; }
         public string Note { get; set; } = null!;
         public long AccommodationUnitId { get; set; }
-        public AccommodationUnitGetDto AccommodationUnit { get; set; } = null!;
+        public string AccommodationUnitTitle { get; set; } = null!;
         public MaintenacePriority Priority { get; set; }
         public MaintenanceStatus Status { get; set; }
     }

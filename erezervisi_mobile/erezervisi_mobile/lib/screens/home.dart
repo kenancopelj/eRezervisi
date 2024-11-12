@@ -30,7 +30,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var categories = Categories(categories: []);
-  var accommodationUnits = PagedResponse<AccommodationUnitGetDto>.empty();
+
   var latestAccommodationUnits = PagedResponse<AccommodationUnitGetDto>.empty();
   var popularAccommodationUnits =
       PagedResponse<AccommodationUnitGetDto>.empty();
@@ -38,7 +38,6 @@ class _HomeState extends State<Home> {
   late CategoryProvider categoryProvider;
   late AccommodationUnitProvider accommodationUnitProvider;
 
-  var request = GetAccommodationUnitsRequest.def();
   var latestRequest = GetAccommodationUnitsRequest.def();
   var popularRequest = GetAccommodationUnitsRequest.def();
 
@@ -49,7 +48,6 @@ class _HomeState extends State<Home> {
     accommodationUnitProvider = context.read<AccommodationUnitProvider>();
 
     loadCategories();
-    loadAccommodationUnits();
     loadLatestAccommodationUnits();
     loadPopularAccommodationUnits();
   }
@@ -65,18 +63,10 @@ class _HomeState extends State<Home> {
     }
   }
 
-  Future loadAccommodationUnits() async {
-    var response = await accommodationUnitProvider.getPaged(request);
-
-    if (mounted) {
-      setState(() {
-        accommodationUnits = response;
-      });
-    }
-  }
-
   Future loadLatestAccommodationUnits() async {
     latestRequest.pageSize = 5;
+    latestRequest.orderByColumn = "createdAt";
+    latestRequest.orderBy = "desc";
 
     var response =
         await accommodationUnitProvider.getLatestPaged(latestRequest);
@@ -147,49 +137,16 @@ class _HomeState extends State<Home> {
                     categories: categories,
                     onClick: (num? value) {
                       setState(() {
-                        request.categoryId = value;
-                        accommodationUnits =
+                        latestRequest.categoryId = value;
+                        popularRequest.categoryId = value;
+                        latestAccommodationUnits =
+                            PagedResponse<AccommodationUnitGetDto>.empty();
+                        popularAccommodationUnits =
                             PagedResponse<AccommodationUnitGetDto>.empty();
                       });
-                      loadAccommodationUnits();
+                      loadLatestAccommodationUnits();
+                      loadPopularAccommodationUnits();
                     },
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Preporučeno',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                      Spacer(),
-                      TextButton(
-                        onPressed: () {
-                          navigateToList(AccommodationUnitFilter.Recommended);
-                        },
-                        child: Text(
-                          "Pogledaj sve",
-                          style: TextStyle(
-                              color: CustomTheme.bluePrimaryColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  ItemCardList(
-                    items: accommodationUnits.items,
                   ),
                   const SizedBox(
                     height: 50,

@@ -94,9 +94,11 @@ class _MasterWidgetState extends State<MasterWidget> {
 
     notificationProvider = context.read<NotificationProvider>();
 
-    runSignalR();
+    if (Globals.loggedUser != null) {
+      runSignalR();
 
-    loadNotifications();
+      loadNotifications();
+    }
 
     globalNotifierListener = () {
       if (mounted) {
@@ -140,10 +142,12 @@ class _MasterWidgetState extends State<MasterWidget> {
 
     await connection.start();
 
-    connection.on('${Topics.notification}#${Globals.loggedUser!.userId}',
-        (arguments) {
-      loadNotifications();
-    });
+    if (Globals.loggedUser != null) {
+      connection.on('${Topics.notification}#${Globals.loggedUser!.userId}',
+          (arguments) {
+        loadNotifications();
+      });
+    }
   }
 
   Future loadNotifications() async {
@@ -365,7 +369,7 @@ class _MasterWidgetState extends State<MasterWidget> {
                                               BorderRadius.circular(50),
                                         ),
                                         child: Text(
-                                          Globals.loggedUser!.initials,
+                                          Globals.loggedUser?.initials ?? "",
                                           style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 24,
@@ -375,6 +379,7 @@ class _MasterWidgetState extends State<MasterWidget> {
                                 const SizedBox(
                                   height: 10,
                                 ),
+                                if (Globals.loggedUser != null)
                                 Text(
                                   '${Globals.loggedUser!.firstName} ${Globals.loggedUser!.lastName}',
                                   style: const TextStyle(

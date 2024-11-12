@@ -25,6 +25,7 @@ using eRezervisi.Common.Shared.Requests.Maintenance;
 using eRezervisi.Common.Shared.Requests.Message;
 using eRezervisi.Common.Shared.Requests.Reservation;
 using eRezervisi.Common.Shared.Requests.Township;
+using eRezervisi.Common.Shared.Requests.User;
 using eRezervisi.Core.Domain.Authorization;
 using eRezervisi.Core.Domain.Entities;
 
@@ -81,6 +82,7 @@ namespace eRezervisi.Core.Services.Mapper
             CreateMap<GetMessagesRequest, PagedRequest<Message>>();
             CreateMap<User, UserGetShortDto>();
             CreateMap<GetAccommodationUnitReviewsRequest, PagedRequest<AccommodationUnitReview>>();
+            CreateMap<GetUserReviewsRequest, PagedRequest<GuestReview>>();
             CreateMap<GetMaintenancesRequest, PagedRequest<Maintenance>>();
             CreateMap<Maintenance, MaintenanceGetDto>();
             CreateMap<MaintenanceGetDto, MaintenanceGetDto>();

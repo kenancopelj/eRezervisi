@@ -4,6 +4,8 @@ using eRezervisi.Common.Dtos.Review;
 using eRezervisi.Common.Dtos.Role;
 using eRezervisi.Common.Dtos.User;
 using eRezervisi.Common.Dtos.UserSettings;
+using eRezervisi.Common.Shared.Pagination;
+using eRezervisi.Common.Shared;
 using eRezervisi.Core.Domain.Entities;
 using eRezervisi.Core.Domain.Enums;
 using eRezervisi.Core.Domain.Exceptions;
@@ -14,6 +16,9 @@ using eRezervisi.Infrastructure.Database;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Linq.Expressions;
+using System.Security.Cryptography;
+using eRezervisi.Common.Shared.Requests.User;
 
 namespace eRezervisi.Core.Services
 {
@@ -27,6 +32,7 @@ namespace eRezervisi.Core.Services
         private readonly IJwtTokenReader _jwtTokenReader;
         private readonly IRabbitMQProducer _rabbitMQProducer;
         private readonly MailConfig _mailConfig;
+        private readonly ICacheService _cacheService;
 
         public UserService(eRezervisiDbContext dbContext,
             IHashService hashService,
@@ -35,7 +41,8 @@ namespace eRezervisi.Core.Services
             IStorageService storageService,
             IJwtTokenReader jwtTokenReader,
             IRabbitMQProducer rabbitMQProducer,
-            IOptionsSnapshot<MailConfig> mailConfig)
+            IOptionsSnapshot<MailConfig> mailConfig,
+            ICacheService cacheService)
         {
             _dbContext = dbContext;
             _hashService = hashService;
@@ -45,6 +52,8 @@ namespace eRezervisi.Core.Services
             _jwtTokenReader = jwtTokenReader;
             _rabbitMQProducer = rabbitMQProducer;
             _mailConfig = mailConfig.Value;
+            _cacheService = cacheService;
+
         }
 
         public async Task<UserGetDto> CreateUserAsync(UserCreateDto request, CancellationToken cancellationToken)
@@ -111,7 +120,7 @@ namespace eRezervisi.Core.Services
             return response;
         }
 
-        public async Task<UserGetDto> ChangePasswordAsync(long id, ChangePasswordDto request, CancellationToken cancellationToken)
+        public async Task ChangePasswordAsync(long id, ChangePasswordDto request, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -144,30 +153,36 @@ namespace eRezervisi.Core.Services
             }
 
             await _dbContext.SaveChangesAsync();
-
-            return _mapper.Map<UserGetDto>(user);
         }
 
-        public async Task<GetReviewsResponse> GetUserReviewsAsync(long id, CancellationToken cancellationToken)
+        public async Task<PagedResponse<ReviewGetDto>> GetUsersReviewsPagedAsync(GetUserReviewsRequest request, CancellationToken cancellationToken)
         {
-            var reviews = await _dbContext.GuestReviews
-                .Include(x => x.Guest)
-                .Include(x => x.Review)
-                .Where(x => x.GuestId == id)
-                .Select(x => new ReviewGetDto
-                {
-                    Id = x.ReviewId,
-                    Reviewer = x.Guest.GetFullName(),
-                    Note = x.Review.Note,
-                    Title = x.Review.Title,
-                    Rating = x.Review.Rating,
-                })
-                .ToListAsync(cancellationToken);
+            var loggedUserId = _jwtTokenReader.GetUserIdFromToken();
 
-            return new GetReviewsResponse
-            {
-                Reviews = reviews
-            };
+            var queryable = _dbContext.GuestReviews.AsQueryable();
+
+            var pagingRequest = _mapper.Map<PagedRequest<GuestReview>>(request);
+            var searchTerm = pagingRequest.SearchTermLower;
+
+            var reviews = await queryable.GetPagedAsync(pagingRequest,
+                new List<(bool shouldFilter, Expression<Func<GuestReview, bool>> FilterExpression)>()
+                {
+                    (true, x => x.GuestId == loggedUserId)
+                },
+                GetUsersReviewOrderByExpression(pagingRequest.OrderByColumn),
+                x => new ReviewGetDto
+                {
+                    Id = x.Review.Id,
+                    Note = x.Review.Note,
+                    Rating = x.Review.Rating,
+                    Reviewer = _dbContext.Users.First(u => u.Id == x.Review.CreatedBy).GetFullName(),
+                    ReviewerImage = _dbContext.Users.FirstOrDefault(u => u.Id == x.Review.CreatedBy) != null ? _dbContext.Users.First(u => u.Id == x.Review.CreatedBy).Image : null,
+                    MinutesAgo = Math.Floor((DateTime.UtcNow - x.Review.CreatedAt).TotalMinutes),
+                    HoursAgo = Math.Floor((DateTime.UtcNow - x.Review.CreatedAt).TotalHours),
+                    DaysAgo = Math.Floor((DateTime.UtcNow - x.Review.CreatedAt).TotalDays)
+                }, cancellationToken);
+
+            return reviews;
         }
 
         public async Task<UserGetDto> UpdateUserAsync(long id, UserUpdateDto request, CancellationToken cancellationToken)
@@ -212,7 +227,7 @@ namespace eRezervisi.Core.Services
 
         public async Task<ReviewGetDto> CreateReviewAsync(long id, ReviewCreateDto request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            var user = await _dbContext.Users.Include(x => x.UserSettings).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
             NotFoundException.ThrowIfNull(user);
 
@@ -245,6 +260,11 @@ namespace eRezervisi.Core.Services
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
+            if (user.UserSettings!.ReceiveNotifications) {
+
+                _backgroundJobClient.Enqueue<INotifyService>(x => x.NotifyUserAboutNewReview(user.Id));
+            }
+
             return _mapper.Map<ReviewGetDto>(review);
         }
 
@@ -263,48 +283,93 @@ namespace eRezervisi.Core.Services
             return _mapper.Map<UserSettingsGetDto>(user.UserSettings);
         }
 
-        public async Task<GetReviewsResponse> GetReviewsByUserAsync(CancellationToken cancellationToken)
+        public async Task RequestForgottenPasswordCodeAsync(RequestResetPasswordCodeDto request, CancellationToken cancellationToken)
         {
-            var userId = _jwtTokenReader.GetUserIdFromToken();
+            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == request.Email, cancellationToken);
 
-            var user = await _dbContext.Users.FirstAsync(x => x.Id == userId);
+            NotFoundException.ThrowIfNull(user, "Korisnik sa navedenim e-mailom nije pronađen!");
 
-            var accommodationUnitReviews = await _dbContext.AccommodationUnitReviews
-               .Include(x => x.Review)
-               .AsNoTracking()
-               .Where(x => x.Review.CreatedBy == userId)
-               .Select(x => new ReviewGetDto
-               {
-                   Id = x.Review.Id,
-                   Title = x.Review.Title,
-                   Note = x.Review.Note,
-                   Rating = x.Review.Rating,
-                   ReviewerId = userId,
-                   Reviewer = user.GetFullName()
-               })
-               .ToListAsync(cancellationToken);
+            var code = GenerateCode();
 
-            var guestReviews = await _dbContext.GuestReviews
-               .Include(x => x.Review)
-               .AsNoTracking()
-               .Where(x => x.Review.CreatedBy == userId)
-               .Select(x => new ReviewGetDto
-               {
-                   Id = x.Review.Id,
-                   Title = x.Review.Title,
-                   Note = x.Review.Note,
-                   Rating = x.Review.Rating,
-               })
-               .ToListAsync(cancellationToken);
-
-            accommodationUnitReviews.AddRange(guestReviews);
-
-            accommodationUnitReviews = accommodationUnitReviews.OrderBy(_ => Guid.NewGuid()).ToList();
-
-            return new GetReviewsResponse
+            var mail = new MailCreateDto
             {
-                Reviews = accommodationUnitReviews
+                Subject = "Zaboravljena lozinka",
+                Content = $"Poštovani {user.GetFullName()}, primljen je zahtjev za promjenom Vaše lozinke. Ovdje je kod koji Vam omogućava reset lozinke: {code}" +
+                $"Molimo Vas da unesete ovaj kod u aplikaciju kako biste započeli proces reseta lozinke. " +
+                $"Imajte na umu da je kod aktivan narednih 5 minuta. Hvala na strpljenju i razumijevanju." +
+                $"S poštovanjem, eRezerviši administracija",
+                Sender = _mailConfig.Username,
+                Recipient = request.Email,
             };
+
+            _rabbitMQProducer.SendMessage(mail);
+
+            _cacheService.SetData($"forgotten-password-{request.Email}", code, TimeSpan.FromMinutes(5));
+        }
+
+        public async Task CheckForgottenPasswordCodeAsync(CheckForgottenPasswordCodeDto request, CancellationToken cancellationToken)
+        {
+            var validationCode = _cacheService.GetData($"forgotten-password-{request.Email}");
+
+            NotFoundException.ThrowIfNull(validationCode, "Kod je istekao!");
+
+            if ((long)validationCode != request.Code)
+            {
+                throw new DomainException("IncorrectCode", "Kod koji ste unijeli nije validan!");
+            }
+
+            await Task.CompletedTask;
+        }
+
+        public async Task ResetPasswordAsync(ResetPasswordDto request, CancellationToken cancellationToken)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == request.Email, cancellationToken);
+
+            NotFoundException.ThrowIfNull(user);
+
+            var passwordSalt = Guid.NewGuid().ToString("N");
+
+            var passwordHash = _hashService.GenerateHash(request.NewPassword, passwordSalt);
+
+            user.UserCredentials!.LastPasswordChangeAt = DateTime.Now;
+            user.UserCredentials.PasswordHash = passwordHash;
+            user.UserCredentials.PasswordSalt = passwordSalt;
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<bool> CheckUsernameAsync(CheckUsernameDto request, CancellationToken cancellationToken)
+        {
+            var usernameExists = await _dbContext.Users
+                .Include(x => x.UserCredentials)
+                .AnyAsync(x => (!request.UserId.HasValue || x.Id == request.UserId) && x.UserCredentials!.Username == request.Username, cancellationToken);
+
+            return usernameExists;
+        }
+
+        public async Task<bool> CheckEmailAsync(CheckEmailDto request, CancellationToken cancellationToken)
+        {
+            var emailExists = await _dbContext.Users
+                .AnyAsync(x => (!request.UserId.HasValue || x.Id == request.UserId) && x.Email == request.Email, cancellationToken);
+
+            return emailExists;
+        }
+
+        public async Task<bool> CheckPhoneNumberAsync(CheckPhoneNumberDto request, CancellationToken cancellationToken)
+        {
+            var phoneNumberExists = await _dbContext.Users
+                .AnyAsync(x => (!request.UserId.HasValue || x.Id == request.UserId) && x.Phone == request.PhoneNumber, cancellationToken);
+
+            return phoneNumberExists;
+        }
+
+        private long GenerateCode()
+        {
+            using var generator = RandomNumberGenerator.Create();
+            var bytes = new byte[8];
+            generator.GetBytes(bytes);
+
+            return (BitConverter.ToInt64(bytes, 0) & long.MaxValue) % 900000 + 100000;
         }
 
         private void SendWelcomeMail(User user)
@@ -318,6 +383,17 @@ namespace eRezervisi.Core.Services
             };
 
             _rabbitMQProducer.SendMessage(mail);
+        }
+
+        private Expression<Func<GuestReview, object>> GetUsersReviewOrderByExpression(string orderBy)
+        {
+            switch (orderBy)
+            {
+                case "createdAt":
+                    return x => x.Review.CreatedAt;
+                default:
+                    return x => x.ReviewId;
+            }
         }
     }
 }

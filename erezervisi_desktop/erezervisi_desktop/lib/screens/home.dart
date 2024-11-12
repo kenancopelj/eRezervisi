@@ -5,7 +5,6 @@ import 'package:erezervisi_desktop/helpers/custom_theme.dart';
 import 'package:erezervisi_desktop/helpers/helpers.dart';
 import 'package:erezervisi_desktop/models/requests/dashboard/get_dashboard_data_request.dart';
 import 'package:erezervisi_desktop/models/responses/dashboard/dashboard_data_response.dart';
-import 'package:erezervisi_desktop/models/responses/review/review_get_dto.dart';
 import 'package:erezervisi_desktop/providers/dashboard_provider.dart';
 import 'package:erezervisi_desktop/screens/accommodation_units/accommodation_units.dart';
 import 'package:erezervisi_desktop/screens/accommodation_units/create_accommodation_unit.dart';
@@ -14,7 +13,6 @@ import 'package:erezervisi_desktop/shared/navigator/navigate.dart';
 import 'package:erezervisi_desktop/shared/navigator/route_list.dart';
 import 'package:erezervisi_desktop/widgets/home_custom/dashboard_card.dart';
 import 'package:erezervisi_desktop/widgets/master_widget.dart';
-import 'package:erezervisi_desktop/screens/reservations/reservation.dart';
 import 'package:erezervisi_desktop/screens/reviews/review_item.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -29,8 +27,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late DashboardProvider dashboardProvider;
-
-  var request = GetDashboardDataRequest(month: 10, year: 2024);
 
   var dashboardData = DashboardDataResponse(
       availableAccommodationUnits: 0,
@@ -49,8 +45,7 @@ class _HomeState extends State<Home> {
   }
 
   Future loadDashboardData() async {
-    var response = await dashboardProvider.get(request);
-    print(response.latestReservations);
+    var response = await dashboardProvider.get();
 
     if (mounted) {
       setState(() {
@@ -100,7 +95,7 @@ class _HomeState extends State<Home> {
                     value: dashboardData.availableAccommodationUnits),
                 DashboardCard(
                     title: "Broj gostiju",
-                    subtitle: "Ukupan broj gostiju u tekućem mjesecu",
+                    subtitle: "Ukupan broj gostiju sa tekućom rezervacijom",
                     icon: Icons.people_outline,
                     value: dashboardData.expectedArrivals),
               ],
@@ -119,7 +114,7 @@ class _HomeState extends State<Home> {
                             title: "Broj recenzija",
                             subtitle: "Broj recenzija za aktivne objekte",
                             icon: Icons.favorite_outline,
-                            value: dashboardData.numberOfGuests),
+                            value: dashboardData.numberOfReviews),
                         SizedBox(
                           height: 30,
                         ),
@@ -130,7 +125,7 @@ class _HomeState extends State<Home> {
                             icon: Icons.favorite_outline,
                             content: Column(
                               children: dashboardData.latestReviews
-                                  .map((element) => ReviewItem(item: element))
+                                  .map((element) => ReviewItem(review: element))
                                   .toList(),
                             )),
                       ],
@@ -171,50 +166,82 @@ class _HomeState extends State<Home> {
                                         width: 15,
                                       ),
                                       if (element.guestImage != null)
-                                        Container(
+                                        SizedBox(
                                           width: 50,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: NetworkImage(Globals
-                                                          .imageBasePath +
-                                                      element.guestImage!))),
+                                          child: Container(
+                                            width: 50,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: NetworkImage(Globals
+                                                            .imageBasePath +
+                                                        element.guestImage!))),
+                                          ),
                                         ),
                                       if (element.guestImage == null)
-                                        Container(
+                                        SizedBox(
                                           width: 50,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                              color: Colors.black),
-                                          child: Text("Nema slike"),
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            margin: const EdgeInsets.symmetric(
+                                                vertical: 10),
+                                            width: 50,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                            ),
+                                            child: Text(
+                                              Helpers.getInitials(
+                                                  element.guest),
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
                                         ),
                                       SizedBox(
                                         width: 15,
                                       ),
-                                      Text(
-                                        element.guest,
-                                        style: TextStyle(color: Colors.black),
+                                      SizedBox(
+                                        width: 100,
+                                        child: Text(
+                                          element.guest,
+                                          style: TextStyle(color: Colors.black),
+                                        ),
                                       ),
                                       SizedBox(
                                         width: 15,
                                       ),
-                                      Text(
-                                        element.accommodationUnit,
-                                        style: TextStyle(color: Colors.black),
+                                      SizedBox(
+                                        width: 250,
+                                        child: Text(
+                                          element.accommodationUnit,
+                                          style: TextStyle(color: Colors.black),
+                                        ),
                                       ),
                                       SizedBox(
                                         width: 15,
                                       ),
-                                      Text(
-                                        "${DateFormat(Globals.dateFormat).format(element.from)} - ${DateFormat(Globals.dateFormat).format(element.to)}",
-                                        style: TextStyle(color: Colors.black),
+                                      SizedBox(
+                                        width: 290,
+                                        child: Text(
+                                          "${DateFormat(Globals.dateFormat).format(element.from)} - ${DateFormat(Globals.dateFormat).format(element.to)}",
+                                          style: TextStyle(color: Colors.black),
+                                        ),
                                       ),
                                       SizedBox(
                                         width: 15,
                                       ),
-                                      Text(
-                                        Helpers.formatPrice(element.totalPrice),
-                                        style: TextStyle(color: Colors.black),
+                                      SizedBox(
+                                        width: 80,
+                                        child: Text(
+                                          Helpers.formatPrice(
+                                              element.totalPrice),
+                                          style: TextStyle(color: Colors.black),
+                                        ),
                                       ),
                                       SizedBox(
                                         width: 15,

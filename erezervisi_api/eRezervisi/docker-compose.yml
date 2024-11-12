@@ -37,7 +37,7 @@ services:
     build:
       context: .
     environment:
-      - ConnectionStrings:DefaultConnection=Server=erezervisi_sql,1433;Database=IB200054;User=sa;Password=Test12345!;ConnectRetryCount=0;TrustServerCertificate=True
+      - ConnectionStrings:DefaultConnection=Server=erezervisi_sql,1433;Database=200054;User=sa;Password=Test12345!;ConnectRetryCount=0;TrustServerCertificate=True
       - ASPNETCORE_ENVIRONMENT=Docker
       - RABBITMQ_HOST=rabbitMQ
       - RABBITMQ_PORT=5672
@@ -53,8 +53,8 @@ services:
     depends_on:
       - erezervisi_sql
       - rabbitMQ
-    # volumes:
-    #   - ./SeedImages:/app/SeedImages
+    volumes:
+      - ./eRezervisi.Api/Uploads/Images:/app/Uploads/Images
 
   rabbitmq-consumer:
     restart: unless-stopped

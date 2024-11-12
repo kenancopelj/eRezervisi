@@ -11,6 +11,7 @@ class Input extends StatefulWidget {
   final InputType? type;
   final bool? rounded;
   final Icon? suffixIcon;
+  final void Function(String)? onChanged;
 
   const Input(
       {super.key,
@@ -21,7 +22,8 @@ class Input extends StatefulWidget {
       this.obscureText,
       this.hintText,
       this.rounded,
-      this.suffixIcon});
+      this.suffixIcon,
+      this.onChanged});
 
   @override
   State<Input> createState() => _InputState();
@@ -61,6 +63,7 @@ class _InputState extends State<Input> {
         child: Column(
           children: [
             TextFormField(
+              onChanged: widget.onChanged,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               keyboardType: keyboardType(),
               validator: widget.validator,

@@ -22,12 +22,12 @@ class MaintenanceGetDto {
         id: json['id'] as num,
         note: json['note'],
         accommodationUnitId: json['accommodationUnitId'],
-        accommodationUnitTitle: json['accommodationUnit']['title'],
+        accommodationUnitTitle: json['accommodationUnitTitle'],
         status: MaintenanceStatus.values
-            .where((item) => item == json['status'])
+            .where((item) => item.index == json['status'])
             .first,
         priority: MaintenancePriority.values
-            .where((item) => item == json['priority'])
+            .where((item) => item.index == json['priority'])
             .first);
   }
 }

@@ -2,6 +2,7 @@
 using eRezervisi.Common.Dtos.AccommodationUnitPolicy;
 using eRezervisi.Common.Dtos.Image;
 using eRezervisi.Common.Dtos.Township;
+using eRezervisi.Core.Domain.Enums;
 
 namespace eRezervisi.Common.Dtos.AccommodationUnit
 {
@@ -24,5 +25,7 @@ namespace eRezervisi.Common.Dtos.AccommodationUnit
         public string ThumbnailImage { get; set; } = null!;
         public List<ImageGetDto> Images { get; set; } = new();
         public bool Favorite { get; set; }
+        public double? AverageRating { get; set; }
+        public AccommodationUnitStatus Status { get; set; }
     }
 }

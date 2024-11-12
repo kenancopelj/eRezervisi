@@ -9,12 +9,12 @@ import 'package:dio/dio.dart';
 import 'package:erezervisi_mobile/enums/button_type.dart';
 import 'package:erezervisi_mobile/enums/toast_type.dart';
 import 'package:erezervisi_mobile/helpers/custom_theme.dart';
-import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/models/requests/auth/auth_dto.dart';
 import 'package:erezervisi_mobile/models/responses/auth/jwt_token_response.dart';
 import 'package:erezervisi_mobile/providers/accommodation_unit_provider.dart';
 import 'package:erezervisi_mobile/providers/auth_provider.dart';
 import 'package:erezervisi_mobile/providers/base_provider.dart';
+import 'package:erezervisi_mobile/providers/canton_provider.dart';
 import 'package:erezervisi_mobile/providers/category_provider.dart';
 import 'package:erezervisi_mobile/providers/favorites_provider.dart';
 import 'package:erezervisi_mobile/providers/message_provider.dart';
@@ -26,6 +26,7 @@ import 'package:erezervisi_mobile/providers/township_provider.dart';
 import 'package:erezervisi_mobile/providers/user_provider.dart';
 import 'package:erezervisi_mobile/screens/home.dart';
 import 'package:erezervisi_mobile/screens/register.dart';
+import 'package:erezervisi_mobile/screens/request-code.dart';
 import 'package:erezervisi_mobile/shared/components/form/button.dart';
 import 'package:erezervisi_mobile/shared/components/form/checkbox.dart';
 import 'package:erezervisi_mobile/shared/components/form/input.dart';
@@ -38,7 +39,6 @@ import 'package:erezervisi_mobile/shared/validators/auth/login.dart';
 import 'package:erezervisi_mobile/widgets/master_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -121,6 +121,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(
             create: (_) => SearchProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => CantonProvider(),
           ),
         ],
         child: MaterialApp(
@@ -312,7 +315,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       label: "Nemate nalog? Registrujte se",
                       type: ButtonType.Link,
                       onClick: navigateToRegisterScreen,
-                    )
+                    ),
+                    Button(
+                      label: "Zaboravljena lozinka?",
+                      type: ButtonType.Link,
+                      onClick: navigateToForgottenPasswordScreen,
+                    ),
                   ],
                 )
               ],
@@ -339,6 +347,11 @@ class _LoginScreenState extends State<LoginScreen> {
   navigateToRegisterScreen() {
     Navigate.next(
         context, AppRoutes.register.routeName, const RegisterScreen(), true);
+  }
+
+  navigateToForgottenPasswordScreen() {
+    Navigate.next(context, AppRoutes.requestCode.routeName,
+        const RequestCodeScreen(), true);
   }
 
   Future handleSubmit() async {

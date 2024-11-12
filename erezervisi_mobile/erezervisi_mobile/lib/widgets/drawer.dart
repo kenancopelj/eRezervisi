@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors, camel_case_types
 
-import 'dart:io';
-
 import 'package:erezervisi_mobile/enums/accommodation_unit_filter.dart';
 import 'package:erezervisi_mobile/helpers/custom_theme.dart';
 import 'package:erezervisi_mobile/screens/accommodation_units.dart';
@@ -124,21 +122,6 @@ class _eRezervisiDrawerState extends State<eRezervisiDrawer> {
                         style: CustomTheme.menuItemTextStyle),
                   ),
                 ),
-                ListTile(
-                  onTap: () {
-                    Navigate.next(
-                        context,
-                        AppRoutes.accommodationUnits.routeName,
-                        AccommodationUnits(
-                            filter: AccommodationUnitFilter.Recommended),
-                        true);
-                  },
-                  title: Padding(
-                    padding: EdgeInsets.only(left: 50),
-                    child: Text('Preporučeno',
-                        style: CustomTheme.menuItemTextStyle),
-                  ),
-                ),
               ],
             ),
           ),
@@ -181,7 +164,7 @@ class _eRezervisiDrawerState extends State<eRezervisiDrawer> {
                     context, AppRoutes.myReviews.routeName, MyReviews(), true);
               },
               leading: Icon(
-                Icons.thumb_up_alt_outlined,
+                Icons.star_outline,
                 color: Colors.white,
               ),
               title: Text(
@@ -190,6 +173,7 @@ class _eRezervisiDrawerState extends State<eRezervisiDrawer> {
               ),
             ),
           ),
+
           Spacer(), // Spacer to push the last two options to the bottom
           Padding(
             padding: EdgeInsets.only(left: 15, top: 5),

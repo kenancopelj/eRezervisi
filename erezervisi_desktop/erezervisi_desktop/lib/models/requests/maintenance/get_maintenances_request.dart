@@ -30,8 +30,8 @@ class GetMaintenancesRequest extends BasePagedRequest {
     final Map<String, dynamic> data = super.toJson();
     return {
       ...data,
-      'status': status,
-      'priority': priority
+      'status': status?.index,
+      'priority': priority?.index
     };
   }
 }

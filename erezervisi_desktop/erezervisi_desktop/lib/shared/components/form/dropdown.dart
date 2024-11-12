@@ -1,10 +1,11 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:erezervisi_desktop/models/dropdown_item.dart';
+import 'package:erezervisi_desktop/models/dropdown_item.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class Dropdown extends StatefulWidget {
-  final num? value; // Using num to match the DropdownItem key type
+  final num? value;
   final String placeholder;
   final String? label;
   final List<DropdownItem> items;
@@ -14,6 +15,8 @@ class Dropdown extends StatefulWidget {
   Icon? labelIcon;
   final String? Function(num?)? validator;
   bool? withSearch;
+  double? padding;
+  bool? outline;
 
   Dropdown(
       {super.key,
@@ -26,7 +29,9 @@ class Dropdown extends StatefulWidget {
       this.hintText,
       this.labelIcon,
       this.validator,
-      this.withSearch = true});
+      this.withSearch = true,
+      this.padding,
+      this.outline = false});
 
   @override
   State<Dropdown> createState() => _DropdownState();
@@ -38,7 +43,7 @@ class _DropdownState extends State<Dropdown> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50.0),
+          padding: EdgeInsets.symmetric(horizontal: widget.padding ?? 50.0),
           child: Column(
             children: [
               Align(
@@ -60,10 +65,14 @@ class _DropdownState extends State<Dropdown> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 10),
+          padding: EdgeInsets.symmetric(
+              horizontal: widget.padding ?? 50.0, vertical: 10),
           child: DropdownButtonFormField2<num>(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: widget.validator,
+            decoration: widget.outline != null && widget.outline! ? const InputDecoration(
+              border: OutlineInputBorder() 
+            ) : null,
             isExpanded: true,
             hint: Text(
               widget.placeholder,

@@ -251,7 +251,7 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             ThumbnailImage = "55899be7-94fe-40b8-84a0-b66b00b022c8_OneLoveThumb.jpg",
                             Title = "One Love",
                             TownshipId = 68L,
-                            ViewCount = 0
+                            ViewCount = 10
                         },
                         new
                         {
@@ -271,7 +271,7 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             ThumbnailImage = "f9d7eb2e-1ca3-42e4-8b0c-c901492d238e_CittaThumb.jpg",
                             Title = "Apartment Citta Vecchia",
                             TownshipId = 55L,
-                            ViewCount = 0
+                            ViewCount = 4
                         },
                         new
                         {
@@ -291,7 +291,7 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             ThumbnailImage = "49f38bd6-1d31-4458-997d-b5739e5d7fda_FlumenThumb.jpg",
                             Title = "Villa Flumen",
                             TownshipId = 55L,
-                            ViewCount = 0
+                            ViewCount = 25
                         },
                         new
                         {
@@ -311,7 +311,7 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             ThumbnailImage = "88af37ec-030c-45d4-9045-b941843e8c30_MostarThumb.jpg",
                             Title = "Villa Mostar",
                             TownshipId = 55L,
-                            ViewCount = 0
+                            ViewCount = 3
                         },
                         new
                         {
@@ -331,7 +331,7 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             ThumbnailImage = "74d8c129-57dd-42b9-8f7d-903f6aa04398_BungaloviSarajevo.jpg",
                             Title = "Bungalovi Sarajevo",
                             TownshipId = 68L,
-                            ViewCount = 0
+                            ViewCount = 9
                         },
                         new
                         {
@@ -351,7 +351,7 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             ThumbnailImage = "bebefb25-41da-474b-8bcb-fdd291162409_RoyalThumb.jpg",
                             Title = "Apartman ROYAL Bulvear",
                             TownshipId = 35L,
-                            ViewCount = 0
+                            ViewCount = 15
                         },
                         new
                         {
@@ -368,10 +368,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 4L,
                             Price = 200.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "924B4AF0-91E3-4FDD-A248-77B9D9025F7C_VacationVibesThumb.jpg",
                             Title = "Apartment Europe Sarajevo",
                             TownshipId = 68L,
-                            ViewCount = 0
+                            ViewCount = 12
                         },
                         new
                         {
@@ -388,10 +388,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 1L,
                             Price = 230.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "FE0B968E-E508-49A5-9616-2E47C3C94B09_Malak.jpg",
                             Title = "Malak Regency Apartment",
                             TownshipId = 67L,
-                            ViewCount = 0
+                            ViewCount = 13
                         },
                         new
                         {
@@ -408,10 +408,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 1L,
                             Price = 180.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "7176BEE4-B05D-4097-A8B4-123EEFA50183_BungaloviMostar.jpg",
                             Title = "Bungalovi Mostar",
                             TownshipId = 65L,
-                            ViewCount = 0
+                            ViewCount = 20
                         },
                         new
                         {
@@ -428,10 +428,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 1L,
                             Price = 220.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "F64F818A-51D1-4554-997E-B912BFB642D4_Bristol.jpg",
                             Title = "Bristol",
                             TownshipId = 55L,
-                            ViewCount = 0
+                            ViewCount = 19
                         },
                         new
                         {
@@ -448,10 +448,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 1L,
                             Price = 250.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "AAD0545E-D5EA-41E8-AD27-692B07CEA75A_PinoNature.jpg",
                             Title = "Pino Nature",
                             TownshipId = 55L,
-                            ViewCount = 0
+                            ViewCount = 30
                         },
                         new
                         {
@@ -468,10 +468,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 3L,
                             Price = 160.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "27BDBCAC-CC92-45D4-A5E4-DA36AAF30C28_VillaParkDoboj.jpg",
                             Title = "Villa Park Doboj",
                             TownshipId = 87L,
-                            ViewCount = 0
+                            ViewCount = 1
                         },
                         new
                         {
@@ -488,10 +488,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 4L,
                             Price = 280.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "391578c6-cccd-4622-bd1a-40cdbdab1217_Blanca.jpg",
                             Title = "Blanca Resort & Spa",
                             TownshipId = 55L,
-                            ViewCount = 0
+                            ViewCount = 10
                         },
                         new
                         {
@@ -508,10 +508,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 4L,
                             Price = 140.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "5288e9c6-6263-4e3d-b6b0-be001bc7cb6f_Mogorjelo.jpg",
                             Title = "Villa Mogorjelo",
                             TownshipId = 52L,
-                            ViewCount = 0
+                            ViewCount = 3
                         },
                         new
                         {
@@ -528,10 +528,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 1L,
                             Price = 190.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "f860fff9-e427-4c4f-aade-871b1a7f684a_Platan.jpg",
                             Title = "Apartman Platani",
                             TownshipId = 81L,
-                            ViewCount = 0
+                            ViewCount = 19
                         },
                         new
                         {
@@ -548,10 +548,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 1L,
                             Price = 150.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "bc18cea3-63e5-4d27-8609-2be0b40f5723_Nar.jpg",
                             Title = "Nar Mostar",
                             TownshipId = 55L,
-                            ViewCount = 0
+                            ViewCount = 21
                         },
                         new
                         {
@@ -568,10 +568,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 1L,
                             Price = 170.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "dfca9935-bc56-4218-ae2e-d472d2227526_Park.jpg",
                             Title = "Villa Park",
                             TownshipId = 71L,
-                            ViewCount = 0
+                            ViewCount = 17
                         },
                         new
                         {
@@ -588,10 +588,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 3L,
                             Price = 200.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "e6031584-3134-4580-9bd7-ead07fba6740_Kenan.jpg",
                             Title = "Apartman Kenan",
                             TownshipId = 12L,
-                            ViewCount = 0
+                            ViewCount = 21
                         },
                         new
                         {
@@ -608,10 +608,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 3L,
                             Price = 240.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "55250ffc-4450-4dc4-b5e3-a62ce5cb2bc3_Snjezna.jpg",
                             Title = "Hotel Snježna Kuća",
                             TownshipId = 40L,
-                            ViewCount = 0
+                            ViewCount = 4
                         },
                         new
                         {
@@ -628,10 +628,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 4L,
                             Price = 210.0,
                             Status = 1,
-                            ThumbnailImage = "",
-                            Title = "Medjugorje Hotel & Spa",
+                            ThumbnailImage = "493a1834-1a18-4b5c-b683-13881006d05f_Medjugorje.jpg",
+                            Title = "Medjugorje Apartman",
                             TownshipId = 48L,
-                            ViewCount = 0
+                            ViewCount = 2
                         },
                         new
                         {
@@ -648,10 +648,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 4L,
                             Price = 160.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "ec5b0ebb-1c31-4692-a049-45c606b1a410_Blagaj.jpg",
                             Title = "Villa Blagaj",
                             TownshipId = 55L,
-                            ViewCount = 0
+                            ViewCount = 33
                         },
                         new
                         {
@@ -668,10 +668,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 1L,
                             Price = 250.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "9e726f37-6721-418c-b7da-5a8e80e1651c_Hercegovina.jpg",
                             Title = "Hercegovina",
                             TownshipId = 65L,
-                            ViewCount = 0
+                            ViewCount = 25
                         },
                         new
                         {
@@ -688,10 +688,10 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             OwnerId = 3L,
                             Price = 150.0,
                             Status = 1,
-                            ThumbnailImage = "",
+                            ThumbnailImage = "e4df6297-a151-413a-8241-c480fb27e289_Konjic.jpg",
                             Title = "Villa Konjic",
                             TownshipId = 54L,
-                            ViewCount = 0
+                            ViewCount = 17
                         });
                 });
 
@@ -1386,6 +1386,512 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             FileName = "bebefb25-41da-474b-8bcb-fdd291162409_Royal3.jpg",
                             ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 22L,
+                            AccommodationUnitId = 8L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "924B4AF0-91E3-4FDD-A248-77B9D9025F7C_VacationVibes1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 23L,
+                            AccommodationUnitId = 8L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "924B4AF0-91E3-4FDD-A248-77B9D9025F7C_VacationVibes2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 24L,
+                            AccommodationUnitId = 9L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "FE0B968E-E508-49A5-9616-2E47C3C94B09_Malak1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 25L,
+                            AccommodationUnitId = 9L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "FE0B968E-E508-49A5-9616-2E47C3C94B09_Malak2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 26L,
+                            AccommodationUnitId = 9L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "FE0B968E-E508-49A5-9616-2E47C3C94B09_Malak3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 27L,
+                            AccommodationUnitId = 10L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "7176BEE4-B05D-4097-A8B4-123EEFA50183_BungaloviMostar1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 28L,
+                            AccommodationUnitId = 10L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "7176BEE4-B05D-4097-A8B4-123EEFA50183_BungaloviMostar2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 29L,
+                            AccommodationUnitId = 10L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "7176BEE4-B05D-4097-A8B4-123EEFA50183_BungaloviMostar3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 30L,
+                            AccommodationUnitId = 11L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "F64F818A-51D1-4554-997E-B912BFB642D4_Bristol1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 31L,
+                            AccommodationUnitId = 11L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "F64F818A-51D1-4554-997E-B912BFB642D4_Bristol2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 32L,
+                            AccommodationUnitId = 12L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "AAD0545E-D5EA-41E8-AD27-692B07CEA75A_PinoNature1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 33L,
+                            AccommodationUnitId = 12L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "AAD0545E-D5EA-41E8-AD27-692B07CEA75A_PinoNature2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 34L,
+                            AccommodationUnitId = 13L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "27BDBCAC-CC92-45D4-A5E4-DA36AAF30C28_VillaParkDoboj1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 35L,
+                            AccommodationUnitId = 13L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "27BDBCAC-CC92-45D4-A5E4-DA36AAF30C28_VillaParkDoboj2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 36L,
+                            AccommodationUnitId = 13L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "27BDBCAC-CC92-45D4-A5E4-DA36AAF30C28_VillaParkDoboj3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 37L,
+                            AccommodationUnitId = 14L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "391578c6-cccd-4622-bd1a-40cdbdab1217_Blanca1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 38L,
+                            AccommodationUnitId = 14L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "391578c6-cccd-4622-bd1a-40cdbdab1217_Blanca2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 68L,
+                            AccommodationUnitId = 14L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "391578c6-cccd-4622-bd1a-40cdbdab1217_Blanca3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 39L,
+                            AccommodationUnitId = 15L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "5288e9c6-6263-4e3d-b6b0-be001bc7cb6f_Mogorjelo1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 40L,
+                            AccommodationUnitId = 15L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "5288e9c6-6263-4e3d-b6b0-be001bc7cb6f_Mogorjelo2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 41L,
+                            AccommodationUnitId = 15L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "5288e9c6-6263-4e3d-b6b0-be001bc7cb6f_Mogorjelo3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 42L,
+                            AccommodationUnitId = 16L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "f860fff9-e427-4c4f-aade-871b1a7f684a_Platan1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 43L,
+                            AccommodationUnitId = 16L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "f860fff9-e427-4c4f-aade-871b1a7f684a_Platan2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 44L,
+                            AccommodationUnitId = 17L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "bc18cea3-63e5-4d27-8609-2be0b40f5723_Nar1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 45L,
+                            AccommodationUnitId = 17L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "bc18cea3-63e5-4d27-8609-2be0b40f5723_Nar2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 47L,
+                            AccommodationUnitId = 17L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "bc18cea3-63e5-4d27-8609-2be0b40f5723_Nar3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 48L,
+                            AccommodationUnitId = 18L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "dfca9935-bc56-4218-ae2e-d472d2227526_Park1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 49L,
+                            AccommodationUnitId = 18L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "dfca9935-bc56-4218-ae2e-d472d2227526_Park2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 50L,
+                            AccommodationUnitId = 19L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "e6031584-3134-4580-9bd7-ead07fba6740_Kenan1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 51L,
+                            AccommodationUnitId = 19L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "e6031584-3134-4580-9bd7-ead07fba6740_Kenan2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 52L,
+                            AccommodationUnitId = 19L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "e6031584-3134-4580-9bd7-ead07fba6740_Kenan3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 53L,
+                            AccommodationUnitId = 20L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "55250ffc-4450-4dc4-b5e3-a62ce5cb2bc3_Snjezna1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 54L,
+                            AccommodationUnitId = 20L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "55250ffc-4450-4dc4-b5e3-a62ce5cb2bc3_Snjezna2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 55L,
+                            AccommodationUnitId = 21L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "493a1834-1a18-4b5c-b683-13881006d05f_Medjugorje1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 56L,
+                            AccommodationUnitId = 21L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "493a1834-1a18-4b5c-b683-13881006d05f_Medjugorje2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 57L,
+                            AccommodationUnitId = 21L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "493a1834-1a18-4b5c-b683-13881006d05f_Medjugorje3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 58L,
+                            AccommodationUnitId = 21L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "493a1834-1a18-4b5c-b683-13881006d05f_Medjugorje4.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 59L,
+                            AccommodationUnitId = 22L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "ec5b0ebb-1c31-4692-a049-45c606b1a410_Blagaj1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 60L,
+                            AccommodationUnitId = 22L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "ec5b0ebb-1c31-4692-a049-45c606b1a410_Blagaj2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 61L,
+                            AccommodationUnitId = 22L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "ec5b0ebb-1c31-4692-a049-45c606b1a410_Blagaj3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 62L,
+                            AccommodationUnitId = 23L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "9e726f37-6721-418c-b7da-5a8e80e1651c_Hercegovina1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 63L,
+                            AccommodationUnitId = 23L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "9e726f37-6721-418c-b7da-5a8e80e1651c_Hercegovina2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 64L,
+                            AccommodationUnitId = 24L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "e4df6297-a151-413a-8241-c480fb27e289_Konjic1.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 65L,
+                            AccommodationUnitId = 24L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "e4df6297-a151-413a-8241-c480fb27e289_Konjic2.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 66L,
+                            AccommodationUnitId = 24L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "e4df6297-a151-413a-8241-c480fb27e289_Konjic3.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
+                        },
+                        new
+                        {
+                            Id = 67L,
+                            AccommodationUnitId = 24L,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedBy = 0L,
+                            Deleted = false,
+                            FileName = "e4df6297-a151-413a-8241-c480fb27e289_Konjic4.jpg",
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0L
                         });
                 });
 
@@ -1570,11 +2076,6 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                     b.Property<long>("ModifiedBy")
                         .HasColumnType("bigint")
                         .HasColumnName("modified_by");
-
-                    b.Property<string>("ShortTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("short_title");
 
                     b.Property<int>("Status")
                         .ValueGeneratedOnAdd()
@@ -2258,18 +2759,12 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                         .HasColumnName("modified_by");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("note");
 
                     b.Property<double>("Rating")
                         .HasColumnType("float")
                         .HasColumnName("rating");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("title");
 
                     b.HasKey("Id")
                         .HasName("pk_reviews");
@@ -3723,6 +4218,224 @@ namespace eRezervisi.Infrastructure.Database.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("AccommodationUnitId")
                                 .HasConstraintName("fk_accommodation_unit_policies_accommodation_units_id");
+
+                            b1.HasData(
+                                new
+                                {
+                                    AccommodationUnitId = 1L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 6,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 2L,
+                                    AlcoholAllowed = true,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 5,
+                                    HasPool = true,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 3L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 4L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 5,
+                                    HasPool = true,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 5L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 6L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = false,
+                                    Capacity = 6,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 7L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = true,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 8L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 9L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = true,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 10L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = true,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 11L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 12L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 13L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 14L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 15L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 16L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 17L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 18L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 19L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 20L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 21L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 22L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 23L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                },
+                                new
+                                {
+                                    AccommodationUnitId = 24L,
+                                    AlcoholAllowed = false,
+                                    BirthdayPartiesAllowed = true,
+                                    Capacity = 10,
+                                    HasPool = false,
+                                    OneNightOnly = false
+                                });
                         });
 
                     b.Navigation("AccommodationUnitCategory");

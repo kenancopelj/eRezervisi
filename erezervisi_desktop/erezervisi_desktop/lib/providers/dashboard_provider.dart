@@ -6,11 +6,11 @@ import 'package:erezervisi_desktop/shared/globals.dart';
 class DashboardProvider extends BaseProvider {
   DashboardProvider() : super();
 
-  Future<DashboardDataResponse> get(GetDashboardDataRequest request) async {
+  Future<DashboardDataResponse> get() async {
     String endpoint = "dashboard";
     var url = Globals.apiUrl + endpoint;
 
-    var response = await dio.post(url, data: request.toJson());
+    var response = await dio.get(url);
 
     if (response.statusCode == 200) {
       return DashboardDataResponse.fromJson(response.data);

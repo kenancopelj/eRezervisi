@@ -13,10 +13,13 @@ namespace eRezervisi.Api.Controllers
     public class AccommodationUnitController : BaseController<AccommodationUnitController>
     {
         private readonly IAccommodationUnitService _service;
+        private readonly IRecommenderService _recommenderService;
 
-        public AccommodationUnitController(IAccommodationUnitService service)
+        public AccommodationUnitController(IAccommodationUnitService service, IRecommenderService recommenderService)
         {
             _service = service;
+            _recommenderService = recommenderService;
+
         }
 
         [HttpPost]
@@ -110,7 +113,16 @@ namespace eRezervisi.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost("{id}/reviews")]
+        [HttpGet("{accommodationUnit}/all-reviews")]
+        [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
+        public async Task<IActionResult> GetAllReviewsAsync(long accommodationUnit, CancellationToken cancellationToken)
+        {
+            var result = await _service.GetAllAccommodationUnitReviewsAsync(accommodationUnit, cancellationToken);
+
+            return Ok(result);
+        }
+
+        [HttpPost("{id}/review")]
         [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
         public async Task<IActionResult> CreateReviewAsync([FromRoute] long id, [FromBody] ReviewCreateDto request, CancellationToken cancellationToken)
         {
@@ -119,13 +131,22 @@ namespace eRezervisi.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("recommend/{accommodationUnitId}")]
+        [HttpGet("recommend/{accommodationUnit}")]
         [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
-        public async Task<IActionResult> Recommend(long accommodationUnitId, CancellationToken cancellationToken)
+        public async Task<IActionResult> Recommend(long accommodationUnit, CancellationToken cancellationToken)
         {
-            var result = await _service.GetRecommendationsByAccommodationUnitId(accommodationUnitId, cancellationToken);
+            var result = await _recommenderService.GetRecommendationsByAccommodationUnitId(accommodationUnit, cancellationToken);
 
             return Ok(result);
+        }
+
+        [HttpPost("{accommodationUnit}/view")]
+        [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
+        public async Task<IActionResult> ViewAsync([FromRoute] long accommodationUnit, CancellationToken cancellationToken)
+        {
+            await _service.ViewAccommodationUnitAsync(accommodationUnit, cancellationToken);
+
+            return Ok();
         }
     }
 }

@@ -13,5 +13,6 @@ RUN dotnet publish "eRezervisi.Api/eRezervisi.Api.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
+COPY ./eRezervisi.Api/Uploads/Images ./Uploads/Images
 
 ENTRYPOINT ["dotnet", "eRezervisi.Api.dll"]

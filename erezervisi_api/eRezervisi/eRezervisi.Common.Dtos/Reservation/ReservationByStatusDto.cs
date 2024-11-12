@@ -1,4 +1,6 @@
-﻿namespace eRezervisi.Common.Dtos.Reservation
+﻿using eRezervisi.Core.Domain.Enums;
+
+namespace eRezervisi.Common.Dtos.Reservation
 {
     public class ReservationByStatusDto
     {
@@ -11,5 +13,6 @@
         public int TotalDays { get; set; }
         public double TotalPrice { get; set; }
         public DateTime CreatedAt { get; set; }
+        public ReservationStatus Status { get; set; }
     }
 }

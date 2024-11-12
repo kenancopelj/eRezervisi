@@ -1,15 +1,10 @@
-import 'dart:io';
-
 import 'package:erezervisi_mobile/helpers/custom_theme.dart';
-import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/models/responses/accommodation_unit/accommodation_unit_get_dto.dart';
 import 'package:erezervisi_mobile/screens/accommodation_unit_details.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:erezervisi_mobile/shared/navigator/navigate.dart';
 import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class ItemCard extends StatefulWidget {
   final AccommodationUnitGetDto item;
@@ -32,7 +27,7 @@ class _ItemCardState extends State<ItemCard> {
         elevation: 2.0,
         child: Container(
           width: 250,
-          height: 300,
+          height: 350,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -52,17 +47,22 @@ class _ItemCardState extends State<ItemCard> {
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Text(
-                    widget.item.title,
-                    style: CustomTheme.largeTextStyle,
-                  ),
-                ],
+              SizedBox(
+                height: 70,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Flexible(
+                      child: Text(
+                        widget.item.title,
+                        style: CustomTheme.mediumTextStyle,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Row(
                 children: [
@@ -100,7 +100,6 @@ class _ItemCardState extends State<ItemCard> {
                     style: const TextStyle(color: Colors.black),
                   ),
                   const Spacer(),
-                  const Icon(Icons.favorite_outline),
                   const SizedBox(
                     width: 15,
                   )

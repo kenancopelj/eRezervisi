@@ -35,7 +35,6 @@ class _NewNotificationState extends State<NewNotification> {
         decoration: BoxDecoration(
             border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(10)),
-        height: 75,
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Row(
           children: [
@@ -70,7 +69,10 @@ class _NewNotificationState extends State<NewNotification> {
                     Text(
                       widget.notification.description ?? '',
                       style: const TextStyle(color: Colors.black, fontSize: 12),
-                    )
+                    ),
+                    const SizedBox(
+                      height: 14,
+                    ),
                   ],
                 )),
           ],

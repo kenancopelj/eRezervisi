@@ -1,12 +1,19 @@
+import 'dart:convert';
+
+import 'package:erezervisi_desktop/constants/topics.dart';
+import 'package:erezervisi_desktop/helpers/helpers.dart';
 import 'package:erezervisi_desktop/models/requests/message/get_messages_request.dart';
 import 'package:erezervisi_desktop/models/responses/base/paged_response.dart';
 import 'package:erezervisi_desktop/models/responses/message/message_get_dto.dart';
 import 'package:erezervisi_desktop/providers/message_provider.dart';
+import 'package:erezervisi_desktop/shared/globals.dart';
 import 'package:erezervisi_desktop/shared/navigator/navigate.dart';
 import 'package:erezervisi_desktop/shared/navigator/route_list.dart';
 import 'package:erezervisi_desktop/widgets/master_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:signalr_netcore/http_connection_options.dart';
+import 'package:signalr_netcore/hub_connection_builder.dart';
 import 'chat_details.dart';
 
 class MyChat extends StatefulWidget {
@@ -27,9 +34,30 @@ class _MyChatState extends State<MyChat> {
     super.initState();
     messageProvider = context.read<MessageProvider>();
     loadConversations();
+
+    runSignalR();
+  }
+
+  Future runSignalR() async {
+    final connection = HubConnectionBuilder()
+        .withUrl("${Globals.apiUrl}message-hub",
+            options: HttpConnectionOptions(
+              accessTokenFactory: () async => Globals.loggedUser!.token,
+            ))
+        .build();
+
+    await connection.start();
+
+    connection.on('${Topics.conversation}#${Globals.loggedUser!.userId}',
+        (arguments) {
+      loadConversations();
+    });
   }
 
   Future loadConversations() async {
+    request.orderByColumn = "createdAt";
+    request.orderBy = "desc";
+
     var response = await messageProvider.getPaged(request);
 
     if (mounted) {
@@ -81,6 +109,7 @@ class _MyChatState extends State<MyChat> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: ListTile(
+                              minTileHeight: 60,
                               title: Text(
                                 message.sender.fullName,
                                 style: const TextStyle(
@@ -91,9 +120,42 @@ class _MyChatState extends State<MyChat> {
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ),
-                              leading: const CircleAvatar(
-                                backgroundColor: Colors.blue,
-                              ),
+                              leading: message.receiver.image != null
+                                  ? SizedBox(
+                                      width: 50,
+                                      child: Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: NetworkImage(Globals
+                                                        .imageBasePath +
+                                                    message.receiver.image!))),
+                                      ),
+                                    )
+                                  : SizedBox(
+                                      width: 50,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 10),
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black,
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                        ),
+                                        child: Text(
+                                          Helpers.getInitials(
+                                              message.sender.fullName),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
                               trailing:
                                   const Icon(Icons.arrow_forward_ios, size: 16),
                             ),

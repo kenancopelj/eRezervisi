@@ -6,9 +6,8 @@ import 'package:erezervisi_desktop/models/requests/reservation/get_reservations_
 import 'package:erezervisi_desktop/models/requests/reservation/reservation_create_dto.dart';
 import 'package:erezervisi_desktop/models/requests/reservation/reservation_update_dto.dart';
 import 'package:erezervisi_desktop/models/responses/base/paged_response.dart';
-import 'package:erezervisi_desktop/models/responses/reservation/reservation_by_status_get_dto.dart';
-import 'package:erezervisi_desktop/models/responses/reservation/reservation_by_statuses_response.dart';
 import 'package:erezervisi_desktop/models/responses/reservation/reservation_get_dto.dart';
+import 'package:erezervisi_desktop/models/responses/reservation/reservations_response.dart';
 import 'package:erezervisi_desktop/providers/base_provider.dart';
 import 'package:erezervisi_desktop/shared/globals.dart';
 
@@ -35,6 +34,24 @@ class ReservationProvider extends BaseProvider {
           totalPages: pagedResponse.totalPages,
           pageSize: pagedResponse.pageSize,
           items: data);
+    }
+    throw response;
+  }
+
+  Future<ReservationsResponse> getCalendar(
+      GetReservationsRequest request) async {
+    String endpoint = "reservations/calendar";
+    var url = Globals.apiUrl + endpoint;
+
+    var response = await dio.post(url, data: jsonEncode(request.toJson()));
+
+    if (response.statusCode == 200) {
+      var data = response.data['reservations']
+          .map((x) => ReservationGetDto.fromJson(x))
+          .cast<ReservationGetDto>()
+          .toList();
+
+      return ReservationsResponse(reservations: data);
     }
     throw response;
   }
@@ -81,62 +98,15 @@ class ReservationProvider extends BaseProvider {
     throw response;
   }
 
-  Future<ReservationGetDto> cancel(num reservationId) async {
-    String endpoint = "reservations/$reservationId/cancel";
+  Future decline(num reservationId) async {
+    String endpoint = "reservations/$reservationId/decline";
     var url = Globals.apiUrl + endpoint;
 
     var response = await dio.put(url);
 
     if (response.statusCode == 200) {
-      Globals.notifier.setInfo("Uspješno otkazano!", ToastType.Success);
-      var reservation = ReservationGetDto.fromJson(response.data);
-      return reservation;
-    }
-    throw response;
-  }
-
-  Future<ReservationGetDto> confirm(num reservationId) async {
-    String endpoint = "reservations/$reservationId/confirm";
-    var url = Globals.apiUrl + endpoint;
-
-    var response = await dio.put(url);
-
-    if (response.statusCode == 200) {
-      Globals.notifier.setInfo("Uspješno potvrđeno!", ToastType.Success);
-      var reservation = ReservationGetDto.fromJson(response.data);
-      return reservation;
-    }
-    throw response;
-  }
-
-  Future<ReservationGetDto> delete(num reservationId) async {
-    String endpoint = "reservations/$reservationId";
-    var url = Globals.apiUrl + endpoint;
-
-    var response = await dio.delete(url);
-
-    if (response.statusCode == 200) {
-      Globals.notifier.setInfo("Uspješno obrisano!", ToastType.Success);
-      var reservation = ReservationGetDto.fromJson(response.data);
-      return reservation;
-    }
-    throw response;
-  }
-
-  Future<ReservationByStatusesResponse> getByStatus(
-      GetReservationsByStatusRequest request) async {
-    String endpoint = "reservations/status";
-    var url = Globals.apiUrl + endpoint;
-
-    var response = await dio.post(url, data: request.toJson());
-
-    if (response.statusCode == 200) {
-      var data = response.data['reservations']
-          .map((x) => ReservationByStatusGetDto.fromJson(x))
-          .cast<ReservationByStatusGetDto>()
-          .toList();
-
-      return ReservationByStatusesResponse(reservations: data);
+      Globals.notifier.setInfo("Uspješno odbijeno!", ToastType.Success);
+      return;
     }
     throw response;
   }

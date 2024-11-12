@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:erezervisi_mobile/enums/toast_type.dart';
+import 'package:erezervisi_mobile/models/requests/reservation/check_availability.dart';
 import 'package:erezervisi_mobile/models/requests/reservation/get_reservations_by_status_request.dart';
 import 'package:erezervisi_mobile/models/requests/reservation/get_reservations_request.dart';
 import 'package:erezervisi_mobile/models/requests/reservation/reservation_create_dto.dart';
@@ -53,7 +54,7 @@ class ReservationProvider extends BaseProvider {
     throw response;
   }
 
-  Future<ReservationGetDto> create(ReservationCreateDto request) async {
+  Future create(ReservationCreateDto request) async {
     String endpoint = "reservations";
     var url = Globals.apiUrl + endpoint;
 
@@ -61,8 +62,7 @@ class ReservationProvider extends BaseProvider {
 
     if (response.statusCode == 200) {
       Globals.notifier.setInfo("Rezervacija uspješno kreirana", ToastType.Success);
-      var reservation = ReservationGetDto.fromJson(response.data);
-      return reservation;
+      return;
     }
     throw response;
   }
@@ -81,7 +81,7 @@ class ReservationProvider extends BaseProvider {
     throw response;
   }
 
-  Future<ReservationGetDto> cancel(num reservationId) async {
+  Future cancel(num reservationId) async {
     String endpoint = "reservations/$reservationId/cancel";
     var url = Globals.apiUrl + endpoint;
 
@@ -89,13 +89,12 @@ class ReservationProvider extends BaseProvider {
 
     if (response.statusCode == 200) {
       Globals.notifier.setInfo("Uspješno otkazano!", ToastType.Success);
-      var reservation = ReservationGetDto.fromJson(response.data);
-      return reservation;
+      return;
     }
     throw response;
   }
 
-  Future<ReservationGetDto> confirm(num reservationId) async {
+  Future confirm(num reservationId) async {
     String endpoint = "reservations/$reservationId/confirm";
     var url = Globals.apiUrl + endpoint;
 
@@ -103,8 +102,7 @@ class ReservationProvider extends BaseProvider {
 
     if (response.statusCode == 200) {
       Globals.notifier.setInfo("Uspješno potvrđeno!", ToastType.Success);
-      var reservation = ReservationGetDto.fromJson(response.data);
-      return reservation;
+      return;
     }
     throw response;
   }
@@ -137,6 +135,18 @@ class ReservationProvider extends BaseProvider {
           .toList();
 
       return ReservationByStatusesResponse(reservations: data);
+    }
+    throw response;
+  }
+
+  Future<bool> checkAvailability(num accommodationUnitId, CheckAvailability request) async {
+    String endpoint = "reservations/$accommodationUnitId/check-availability";
+    var url = Globals.apiUrl + endpoint;
+
+    var response = await dio.get(url, data: request.toJson());
+
+    if (response.statusCode == 200) {
+      return response.data;
     }
     throw response;
   }

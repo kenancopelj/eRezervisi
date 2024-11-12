@@ -2,7 +2,6 @@
 using eRezervisi.Infrastructure.Common.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using System;
 using System.Security.Claims;
 
 namespace eRezervisi.Core.Services

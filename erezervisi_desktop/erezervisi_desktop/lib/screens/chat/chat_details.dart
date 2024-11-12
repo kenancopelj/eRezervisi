@@ -35,7 +35,6 @@ class _ChatDetailsState extends State<ChatDetails> {
         .build();
 
     await connection.start();
-    print('SignalR connected');
 
     connection
         .on('${Topics.message}#${Globals.loggedUser!.userId}#${widget.userId}',
@@ -119,7 +118,8 @@ class _ChatDetailsState extends State<ChatDetails> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 50.0, vertical: 15),
                   child: user == null
                       ? const Text('')
                       : Text(

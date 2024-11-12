@@ -1,20 +1,37 @@
+import 'package:erezervisi_desktop/enums/accommodation_unit_status.dart';
 import 'package:erezervisi_desktop/enums/reservation_status.dart';
 import 'package:erezervisi_desktop/helpers/custom_theme.dart';
+import 'package:erezervisi_desktop/models/dropdown_item.dart';
 import 'package:erezervisi_desktop/models/requests/reservation/get_reservations_request.dart';
 import 'package:erezervisi_desktop/models/responses/base/paged_response.dart';
 import 'package:erezervisi_desktop/models/responses/reservation/reservation_get_dto.dart';
 import 'package:erezervisi_desktop/providers/reservation_provider.dart';
+import 'package:erezervisi_desktop/screens/chat/chat_details.dart';
 import 'package:erezervisi_desktop/screens/reservations/reservation_details.dart';
+import 'package:erezervisi_desktop/shared/components/form/dropdown.dart';
+import 'package:erezervisi_desktop/shared/globals.dart';
+import 'package:erezervisi_desktop/shared/navigator/navigate.dart';
+import 'package:erezervisi_desktop/shared/navigator/route_list.dart';
 import 'package:erezervisi_desktop/widgets/action_button.dart';
 import 'package:erezervisi_desktop/widgets/empty.dart';
 import 'package:erezervisi_desktop/widgets/master_widget.dart';
 import 'package:erezervisi_desktop/widgets/pagination.dart';
 import 'package:erezervisi_desktop/screens/reservations/reservation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 enum ReservationsView { Calendar, List }
+
+class ReservationStatusItem {
+  late String label;
+  late ReservationStatus status;
+  late Color color;
+
+  ReservationStatusItem(
+      {required this.label, required this.status, required this.color});
+}
 
 class Reservations extends StatefulWidget {
   const Reservations({super.key});
@@ -25,20 +42,30 @@ class Reservations extends StatefulWidget {
 
 class _ReservationsState extends State<Reservations> {
   var reservations = PagedResponse<ReservationGetDto>.empty();
+  List<ReservationGetDto> calendarReservations = [];
+
+  var fromController = TextEditingController();
+  var toController = TextEditingController();
+
+  DateTime? from;
+  DateTime? to;
+
+  num? status;
+
   var request = GetReservationsRequest.def();
+  var calendarRequest = GetReservationsRequest.def();
 
   late ReservationProvider reservationProvider;
+
+  var initialDateFrom = DateTime(DateTime.now().year, 1, 1);
+  var initialDateTo = DateTime(DateTime.now().year, 12, 31);
 
   int currentPage = 1;
   final int pageSize = 5;
 
   ReservationsView currentView = ReservationsView.Calendar;
 
-  List<String> headers = ['Naziv', 'Cijena'];
-
   List<num> selectedReservations = [];
-
-  bool selectAll = false;
 
   @override
   void initState() {
@@ -47,6 +74,22 @@ class _ReservationsState extends State<Reservations> {
     reservationProvider = context.read<ReservationProvider>();
 
     loadReservations();
+    loadCalendarReservations();
+  }
+
+  Future loadCalendarReservations() async {
+    calendarRequest.from =
+        from?.toIso8601String() ?? initialDateFrom.toIso8601String();
+    calendarRequest.to =
+        to?.toIso8601String() ?? initialDateTo.toIso8601String();
+
+    var response = await reservationProvider.getCalendar(calendarRequest);
+
+    if (mounted) {
+      setState(() {
+        calendarReservations = response.reservations;
+      });
+    }
   }
 
   Future loadReservations() async {
@@ -62,6 +105,12 @@ class _ReservationsState extends State<Reservations> {
     }
   }
 
+  Future declineReservation(num reservationId) async {
+    await reservationProvider.decline(reservationId);
+
+    loadReservations();
+  }
+
   void handleSelectReservation(num reservationId) {
     if (selectedReservations.any((x) => x == reservationId) == false) {
       setState(() {
@@ -72,6 +121,49 @@ class _ReservationsState extends State<Reservations> {
         selectedReservations.remove(reservationId);
       });
     }
+  }
+
+  void handleFilter() {
+    setState(() {
+      request.page = 1;
+      request.from =
+          from?.toIso8601String() ?? initialDateFrom.toIso8601String();
+      request.to = to?.toIso8601String() ?? initialDateTo.toIso8601String();
+      request.status = statuses
+          .where((element) => element.status.index == status)
+          .firstOrNull
+          ?.status
+          .index;
+
+      calendarRequest.from =
+          from?.toIso8601String() ?? initialDateFrom.toIso8601String();
+      calendarRequest.to =
+          to?.toIso8601String() ?? initialDateTo.toIso8601String();
+
+      calendarRequest.status = statuses
+          .where((element) => element.status.index == status)
+          .firstOrNull
+          ?.status
+          .index;
+    });
+
+    loadReservations();
+    loadCalendarReservations();
+  }
+
+  void resetFilters() {
+    setState(() {
+      request.from = initialDateFrom.toIso8601String();
+      request.to = initialDateTo.toIso8601String();
+      request.status = null;
+
+      from = null;
+      to = null;
+      status = null;
+
+      fromController.text = "";
+      toController.text = "";
+    });
   }
 
   @override
@@ -138,9 +230,170 @@ class _ReservationsState extends State<Reservations> {
                           const SizedBox(
                             width: 5,
                           ),
-                          Text(
-                            "Filtriraj",
-                            style: CustomTheme.sortByTextStyle,
+                          TextButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Odustani'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          handleFilter();
+
+                                          Navigator.pop(context);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          elevation: 0,
+                                          backgroundColor:
+                                              CustomTheme.bluePrimaryColor,
+                                        ),
+                                        child: const Text('Primjeni'),
+                                      ),
+                                    ],
+                                    content: SizedBox(
+                                      height: 400,
+                                      width: 300,
+                                      child: Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 35, vertical: 16),
+                                            child: Text(
+                                              "Filteri",
+                                              style:
+                                                  CustomTheme.mediumTextStyle,
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Expanded(
+                                                child: TextField(
+                                                  controller: fromController,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    labelText: "Od:",
+                                                    suffixIcon: Icon(
+                                                        Icons.calendar_today),
+                                                    border:
+                                                        OutlineInputBorder(),
+                                                  ),
+                                                  readOnly: true,
+                                                  onTap: () async {
+                                                    DateTime? pickedDate =
+                                                        await showDatePicker(
+                                                      context: context,
+                                                      initialDate:
+                                                          DateTime.now(),
+                                                      firstDate: DateTime(
+                                                          DateTime.now().year),
+                                                      lastDate: DateTime(
+                                                          DateTime.now().year,
+                                                          12,
+                                                          31),
+                                                    );
+                                                    if (pickedDate != null) {
+                                                      setState(() {
+                                                        from = pickedDate;
+                                                        fromController.text =
+                                                            DateFormat(Globals
+                                                                    .dateFormat)
+                                                                .format(from!);
+                                                      });
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                              const SizedBox(width: 16),
+                                              Expanded(
+                                                child: TextField(
+                                                  controller: toController,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    labelText: "Do:",
+                                                    suffixIcon: Icon(
+                                                        Icons.calendar_today),
+                                                    border:
+                                                        OutlineInputBorder(),
+                                                  ),
+                                                  readOnly: true,
+                                                  onTap: () async {
+                                                    DateTime? pickedDate =
+                                                        await showDatePicker(
+                                                      context: context,
+                                                      initialDate:
+                                                          DateTime.now(),
+                                                      firstDate: DateTime(2000),
+                                                      lastDate: DateTime(2101),
+                                                    );
+                                                    if (pickedDate != null) {
+                                                      setState(() {
+                                                        to = pickedDate;
+
+                                                        toController.text =
+                                                            DateFormat(Globals
+                                                                    .dateFormat)
+                                                                .format(to!);
+                                                      });
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 700,
+                                            child: Dropdown(
+                                                outline: true,
+                                                padding: 10,
+                                                withSearch: false,
+                                                value: status,
+                                                placeholder: 'Status',
+                                                items: statuses
+                                                    .map((item) => DropdownItem(
+                                                        key: item.status.index,
+                                                        value:
+                                                            "${item.label} "))
+                                                    .toList(),
+                                                controller:
+                                                    TextEditingController(),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    status = value != 0
+                                                        ? ReservationStatus
+                                                            .values
+                                                            .where((item) =>
+                                                                item.index ==
+                                                                value)
+                                                            .first
+                                                            .index
+                                                        : null;
+                                                  });
+                                                }),
+                                          ),
+                                          TextButton(
+                                            onPressed: resetFilters,
+                                            child: const Text('Očisti'),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: Text(
+                              "Filtriraj",
+                              style: CustomTheme.sortByTextStyle,
+                            ),
                           ),
                         ],
                       ),
@@ -155,15 +408,27 @@ class _ReservationsState extends State<Reservations> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 20,
-                      child: Checkbox(
-                        value: selectAll,
-                        onChanged: (value) {},
-                      ),
-                    ),
+                    const SizedBox(width: 20),
                     const SizedBox(
                       width: 60,
+                    ),
+                    SizedBox(
+                      width: 120,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.sort,
+                            color: CustomTheme.sortByColor,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Gost",
+                            style: CustomTheme.sortByTextStyle,
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(
                       width: 120,
@@ -195,7 +460,43 @@ class _ReservationsState extends State<Reservations> {
                             width: 5,
                           ),
                           Text(
-                            "Adresa",
+                            "Od",
+                            style: CustomTheme.sortByTextStyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 120,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.sort,
+                            color: CustomTheme.sortByColor,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Do",
+                            style: CustomTheme.sortByTextStyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 120,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.sort,
+                            color: CustomTheme.sortByColor,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Status",
                             style: CustomTheme.sortByTextStyle,
                           ),
                         ],
@@ -264,8 +565,10 @@ class _ReservationsState extends State<Reservations> {
               SizedBox(
                   height: MediaQuery.of(context).size.height - 300,
                   child: SfCalendar(
+                    minDate: initialDateFrom,
+                    maxDate: initialDateTo,
                     view: CalendarView.month,
-                    dataSource: ReservationDataSource(items),
+                    dataSource: ReservationDataSource(calendarReservations),
                     monthViewSettings: const MonthViewSettings(
                         appointmentDisplayMode:
                             MonthAppointmentDisplayMode.appointment),
@@ -279,36 +582,30 @@ class _ReservationsState extends State<Reservations> {
                       }
                     },
                   )),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Row(
-                children: [
-                  Container(
-                    height: 20,
-                    width: 40,
-                    decoration: const BoxDecoration(color: Colors.yellow),
-                  ),
-                  const SizedBox(width: 5),
-                  const Text('U toku'),
-                  _spacer(),
-                  Container(
-                    height: 20,
-                    width: 40,
-                    decoration: const BoxDecoration(color: Colors.green),
-                  ),
-                  const SizedBox(width: 5),
-                  const Text('Potvrđeno'),
-                  _spacer(),
-                  Container(
-                    height: 20,
-                    width: 40,
-                    decoration: const BoxDecoration(color: Colors.blue),
-                  ),
-                  const SizedBox(width: 5),
-                  const Text('Kreirano'),
-                ],
-              ),
-            )
+            if (currentView == ReservationsView.Calendar)
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Row(
+                    children: statuses
+                        .where(
+                            (item) => item.status != ReservationStatus.Unknown)
+                        .map(
+                          (item) => Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 15),
+                            height: 20,
+                            decoration: BoxDecoration(color: item.color),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              child: Text(
+                                item.label,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList()),
+              )
           ],
         ),
       ),
@@ -328,24 +625,52 @@ class _ReservationsState extends State<Reservations> {
       builder: (BuildContext context) {
         return ReservationDetails(
           reservation: reservation,
-          onMessageSend: () => {print('poruka')},
+          onMessageSend: () {
+            Navigate.next(context, AppRoutes.chatDetails.routeName,
+                ChatDetails(userId: reservation.guestId), true);
+          },
+          onDeclined: (value) {
+            declineReservation(value);
+          },
         );
       },
     );
   }
 }
 
+List<ReservationStatusItem> statuses = [
+  ReservationStatusItem(
+      label: "Svi", status: ReservationStatus.Unknown, color: Colors.black),
+  ReservationStatusItem(
+      label: "Kreirano",
+      status: ReservationStatus.Draft,
+      color: CustomTheme.bluePrimaryColor),
+  ReservationStatusItem(
+      label: "Potvrđeno",
+      status: ReservationStatus.Confirmed,
+      color: Colors.green),
+  ReservationStatusItem(
+      label: "U toku",
+      status: ReservationStatus.InProgress,
+      color: Colors.orange),
+  ReservationStatusItem(
+      label: "Odbijeno", status: ReservationStatus.Declined, color: Colors.red),
+  ReservationStatusItem(
+      label: "Otkazano",
+      status: ReservationStatus.Cancelled,
+      color: Colors.brown),
+  ReservationStatusItem(
+      label: "Završeno",
+      status: ReservationStatus.Completed,
+      color: Colors.purple),
+];
+
 Color getReservationColor(ReservationGetDto reservation) {
-  switch (reservation.status) {
-    case ReservationStatus.InProgress:
-      return Colors.yellow;
-    case ReservationStatus.Confirmed:
-      return Colors.green;
-    case ReservationStatus.Draft:
-      return Colors.blue;
-    default:
-      return CustomTheme.bluePrimaryColor;
-  }
+  return statuses
+          .where((item) => item.status == reservation.status)
+          .firstOrNull
+          ?.color ??
+      CustomTheme.bluePrimaryColor;
 }
 
 class ReservationDataSource extends CalendarDataSource {

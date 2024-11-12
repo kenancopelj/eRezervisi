@@ -40,7 +40,11 @@ namespace eRezervisi.Api.Extensions
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
             services.AddScoped<IMaintenaceService, MaintenanceService>();
-            services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<IRecommenderService, RecommenderService>();
+
+            services.AddMemoryCache();
+
+            services.AddScoped<ICacheService, CacheService>();
         }
     }
 }

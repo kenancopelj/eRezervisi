@@ -6,7 +6,6 @@ class NotificationGetDto {
   late num userId;
   late UserGetShortDto user;
   late String title;
-  late String shortTitle;
   String? description;
   late NotificationStatus status;
   late NotificationType type;
@@ -17,7 +16,6 @@ class NotificationGetDto {
     required this.userId,
     required this.user,
     required this.title,
-    required this.shortTitle,
     this.description,
     required this.status,
     required this.type,
@@ -30,7 +28,6 @@ class NotificationGetDto {
       userId: json['userId'] as num,
       user: UserGetShortDto.fromJson(json['user']),
       title: json['title'],
-      shortTitle: json['shortTitle'],
       description: json['description'],
       status: NotificationStatus.values[json['status']],
       type: NotificationType.values[json['type']],

@@ -53,7 +53,15 @@ namespace eRezervisi.Core.Services
                     (request.Priority.HasValue, x => x.Priority == request.Priority!),
                 },
                 GetOrderByExpression(pagingRequest.OrderByColumn),
-                x => _mapper.Map<MaintenanceGetDto>(x)
+                x => new MaintenanceGetDto
+                {
+                    Id = x.Id,
+                    AccommodationUnitId = x.AccommodationUnitId,
+                    AccommodationUnitTitle = x.AccommodationUnit.Title,
+                    Note = x.Note,
+                    Priority = x.Priority,
+                    Status = x.Status
+                }
                 , cancellationToken);
 
             return maintenances;

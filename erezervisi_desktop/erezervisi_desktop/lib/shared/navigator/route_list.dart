@@ -19,7 +19,10 @@ enum AppRoutes {
   search,
   settings,
   statistics,
-  maintenances
+  maintenances,
+  requestCode,
+  checkCode,
+  resetPassword
 }
 
 extension AppRouteExtension on AppRoutes {
@@ -67,6 +70,12 @@ extension AppRouteExtension on AppRoutes {
         return 'statistics';
       case AppRoutes.maintenances:
         return 'maintenances';
+      case AppRoutes.requestCode:
+        return 'request-code';
+      case AppRoutes.checkCode:
+        return 'check-code';
+      case AppRoutes.resetPassword:
+        return 'reset-password';
       default:
         return '/';
     }

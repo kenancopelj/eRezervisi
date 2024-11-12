@@ -35,5 +35,14 @@ namespace eRezervisi.Api.Controllers
 
             return Ok();
         }
+
+        [HttpGet("{accommodationUnit}/allowed-review")]
+        [CustomAuthorize(Roles.MobileUser.Name, Roles.Owner.Name)]
+        public async Task<IActionResult> IsUserAllowedToReviewAsync([FromRoute] long accommodationUnit, CancellationToken cancellationToken)
+        {
+            var result = await _guestService.IsUserAllowedToMakeReviewAsync(accommodationUnit, cancellationToken);
+
+            return Ok(result);
+        }
     }
 }

@@ -74,9 +74,6 @@ namespace eRezervisi.Api.Extensions
 
                 RecurringJob.AddOrUpdate<IJobService>(Jobs.CheckAccommodationUnits, x => x.CheckAccommodationUnitsAsync(CancellationToken.None), configuration.GetValue<string>("CheckAccommodationUnitsJobCron"),
                     jobOptions);
-
-                RecurringJob.AddOrUpdate<IJobService>(Jobs.RemindAboutPasswordChange, x => x.RemindAboutPasswordChange(CancellationToken.None), configuration.GetValue<string>("RemindAboutPasswordJobCron"),
-                    jobOptions);
             }
         }
         #endregion

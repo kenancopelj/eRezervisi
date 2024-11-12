@@ -1,21 +1,31 @@
-import 'package:erezervisi_mobile/enums/accommodation_unit_status.dart';
 import 'package:erezervisi_mobile/enums/scope_type.dart';
 import 'package:erezervisi_mobile/models/requests/base/base_paged_request.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 
 class GetAccommodationUnitsRequest extends BasePagedRequest {
   num scope = ScopeType.Mobile.index;
-  num? ownerId;
   num? categoryId;
   num? status;
+  num? capacity;
+  bool? withPool;
+  bool? birthdayPartiesAllowed;
+  bool? alcoholAllowed;
+  bool? oneNightOnly;
+  num? cantonId;
+  num? townshipId;
 
-  GetAccommodationUnitsRequest({
-    required super.page,
-    required super.pageSize,
-    required super.searchTerm,
-    required super.orderByColumn,
-    required super.orderBy,
-  });
+  GetAccommodationUnitsRequest(
+      {required super.page,
+      required super.pageSize,
+      required super.searchTerm,
+      required super.orderByColumn,
+      required super.orderBy,
+      this.capacity,
+      this.birthdayPartiesAllowed,
+      this.alcoholAllowed,
+      this.oneNightOnly,
+      this.cantonId,
+      this.townshipId});
 
   GetAccommodationUnitsRequest.def()
       : super(
@@ -30,9 +40,14 @@ class GetAccommodationUnitsRequest extends BasePagedRequest {
     final Map<String, dynamic> data = super.toJson();
 
     data['scope'] = scope;
-    data['ownerId'] = ownerId;
     data['categoryId'] = categoryId;
-    data['status'] = AccommodationUnitStatus.Active.index;
+    data['capacity'] = capacity;
+    data['birthdayPartiesAllowed'] = birthdayPartiesAllowed;
+    data['alcoholAllowed'] = alcoholAllowed;
+    data['oneNightOnly'] = oneNightOnly;
+    data['withPool'] = withPool;
+    data['cantonId'] = cantonId;
+    data['townshipId'] = townshipId;
 
     return data;
   }

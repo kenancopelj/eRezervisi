@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:erezervisi_mobile/enums/toast_type.dart';
-import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/models/requests/image/image_create_dto.dart';
 import 'package:erezervisi_mobile/models/requests/user/user_update_dto.dart';
 import 'package:erezervisi_mobile/models/responses/user/user_get_dto.dart';
@@ -13,7 +12,6 @@ import 'package:erezervisi_mobile/shared/components/form/input.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:erezervisi_mobile/shared/style.dart';
 import 'package:erezervisi_mobile/shared/validators/auth/register.dart';
-import 'package:erezervisi_mobile/widgets/image/preview_image.dart';
 import 'package:erezervisi_mobile/widgets/master_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -109,54 +107,72 @@ class _MyProfileState extends State<MyProfile> {
                     child: Stack(
                       children: [
                         InkWell(
-                          onTap: () {
-                            // if (profileImage != null) {
-                            //   showDialog(
-                            //     barrierDismissible: false,
-                            //     context: context,
-                            //     builder: (BuildContext context) {
-                            //       return PreviewImage(
-                            //         image: profileImage!.image!,
-                            //       );
-                            //     },
-                            //   );
-                            // }
-                          },
-                          child: profileImage != null
-                              ? Container(
-                                  alignment: Alignment.center,
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 10),
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    image: DecorationImage(
-                                        image: NetworkImage(
-                                            Globals.imageBasePath +
-                                                user!.image!),
-                                        fit: BoxFit.contain),
-                                  ),
-                                )
-                              : Container(
-                                  alignment: Alignment.center,
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 10),
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                  child: Text(
-                                    Globals.loggedUser!.initials,
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                        ),
+                            onTap: () {
+                              // if (profileImage != null) {
+                              //   showDialog(
+                              //     barrierDismissible: false,
+                              //     context: context,
+                              //     builder: (BuildContext context) {
+                              //       return PreviewImage(
+                              //         image: profileImage!.image!,
+                              //       );
+                              //     },
+                              //   );
+                              // }
+                            },
+                            child: profileImage != null &&
+                                    profileImage!.imageBase64 == null &&
+                                    user!.image != null
+                                ? Container(
+                                    alignment: Alignment.center,
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    width: 100,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                              Globals.imageBasePath +
+                                                  user!.image!),
+                                          fit: BoxFit.contain),
+                                    ),
+                                  )
+                                : profileImage != null
+                                    ? Container(
+                                        alignment: Alignment.center,
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 10),
+                                        width: 100,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          image: DecorationImage(
+                                              image: FileImage(File(
+                                                  profileImage!.image!.path)),
+                                              fit: BoxFit.contain),
+                                        ),
+                                      )
+                                    : Container(
+                                        alignment: Alignment.center,
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 10),
+                                        width: 100,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black,
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                        ),
+                                        child: Text(
+                                          Globals.loggedUser!.initials,
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )),
                         Positioned(
                           right: 15,
                           bottom: 15,
@@ -455,7 +471,7 @@ class _MyProfileState extends State<MyProfile> {
         lastName: lastNameController.text,
         phone: phoneController.text,
         address: addressController.text,
-        email: addressController.text,
+        email: emailController.text,
         username: usernameController.text,
         imageBase64: profileImage?.imageBase64,
         imageFileName: profileImage?.imageFileName,

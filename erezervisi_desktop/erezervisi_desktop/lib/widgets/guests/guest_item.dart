@@ -48,9 +48,9 @@ class _GuestItemState extends State<GuestItem> {
               ),
               SizedBox(width: 120, child: Text(widget.item.fullName)),
               SizedBox(
-                  width: 120, child: Text(widget.item.accommodationUnitTitle!)),
+                  width: 250, child: Text(widget.item.accommodationUnitTitle!)),
               SizedBox(
-                  width: 120,
+                  width: 200,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

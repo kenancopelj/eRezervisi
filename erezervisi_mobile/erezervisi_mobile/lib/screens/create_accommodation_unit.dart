@@ -21,7 +21,6 @@ import 'package:erezervisi_mobile/shared/components/form/input.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:erezervisi_mobile/shared/style.dart';
 import 'package:erezervisi_mobile/shared/validators/accommodation_unit/create.dart';
-import 'package:erezervisi_mobile/widgets/image/preview_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:image_picker/image_picker.dart';
@@ -133,14 +132,14 @@ class _CreateAccommodationUnitScreenState
                   });
                 },
                 child: Padding(
-                    padding: EdgeInsets.only(left: 25.0),
+                    padding: const EdgeInsets.only(left: 25.0),
                     child: Container(
                         height: 40,
                         width: 60,
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8.0)),
-                        child: Center(child: Text("Nazad")))),
+                        child: const Center(child: Text("Nazad")))),
               )
             else
               const SizedBox.shrink(),
@@ -301,10 +300,10 @@ class _CreateAccommodationUnitScreenState
         const SizedBox(
           height: 30,
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
-        Padding(
+        const Padding(
           padding: EdgeInsets.symmetric(horizontal: 45.0),
           child: Column(
             children: [

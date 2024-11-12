@@ -2,7 +2,6 @@
 {
     public interface IJobService
     {
-        Task RemindAboutPasswordChange(CancellationToken cancellationToken);
         Task CheckReservationsAsync(CancellationToken cancellationToken);
         Task CompleteReservationsAsync(CancellationToken cancellationToken);
         Task CheckUsersAsync(CancellationToken cancellationToken);

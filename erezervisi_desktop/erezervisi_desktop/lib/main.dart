@@ -2,8 +2,10 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:erezervisi_desktop/enums/button_type.dart';
 import 'package:erezervisi_desktop/providers/dashboard_provider.dart';
 import 'package:erezervisi_desktop/providers/maintenance_provider.dart';
+import 'package:erezervisi_desktop/screens/forgotten-password/request-code.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:dio/dio.dart';
@@ -320,6 +322,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         label: "PRIJAVI SE",
                         onClick: handleSubmit,
                       ),
+                      Button(
+                        label: "Zaboravljena lozinka?",
+                        type: ButtonType.Link,
+                        onClick: navigateToForgottenPasswordScreen,
+                      ),
                     ],
                   ),
                 )
@@ -329,6 +336,10 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       )),
     );
+  }
+
+  navigateToForgottenPasswordScreen() {
+    Navigate.next(context, AppRoutes.requestCode.routeName, const RequestCodeScreen(), true);
   }
 
   handleRememberMeChange(newValue) {

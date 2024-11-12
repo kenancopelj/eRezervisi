@@ -4,8 +4,6 @@ import 'package:erezervisi_mobile/models/requests/base/base_paged_request.dart';
 import 'package:erezervisi_mobile/models/responses/auth/jwt_token_response.dart';
 import 'package:erezervisi_mobile/models/responses/notification/notifications.dart';
 import 'package:erezervisi_mobile/notifiers/global_notifier.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class Globals {
   Globals._();
@@ -13,10 +11,10 @@ class Globals {
   // static String apiUrl = "http://localhost:5269/";
 
   // Emulator
-  static String apiUrl = 'https://10.0.2.2:7158/';
+  // static String apiUrl = 'https://10.0.2.2:7158/';
 
   // Windows app
-  // static String apiUrl = "https://localhost:7158/";
+  static String apiUrl = "https://localhost:7158/";
 
   static String imageBasePath = "${apiUrl}Uploads/Images/";
 
@@ -39,7 +37,7 @@ class Globals {
   static String erezervisiKeyKeyboardHeight = "erezervisi_keyboard_height";
   static String erezervisiKeyGetNotifications = "erezervisi_get_notifications";
 
-  static int pageSize = 20;
+  static int pageSize = 10;
 
   static double keyboardHeight = 0;
 

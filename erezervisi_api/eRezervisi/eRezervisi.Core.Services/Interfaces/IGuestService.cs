@@ -11,5 +11,6 @@ namespace eRezervisi.Core.Services.Interfaces
         Task<PagedResponse<GuestGetDto>> GetGuestsPagedAsync(GetGuestsRequest request, CancellationToken cancellationToken);
         Task CreateGuestReviewAsync(long guestId, ReviewCreateDto request, CancellationToken cancellationToken);
         Task<GuestReview?> GetReviewByOwnerId(long userId, CancellationToken cancellationToken);
+        Task<bool> IsUserAllowedToMakeReviewAsync(long accommodationUnitId, CancellationToken cancellationToken);
     }
 }

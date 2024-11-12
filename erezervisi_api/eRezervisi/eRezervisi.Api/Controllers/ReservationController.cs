@@ -27,6 +27,15 @@ namespace eRezervisi.Api.Controllers
             return Ok(result);
         }
 
+        [HttpPost("calendar")]
+        [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
+        public async Task<IActionResult> GetCalendarAsync([FromBody] GetReservationsRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _reservationService.GetCalendarReservationsAsync(request, cancellationToken);
+
+            return Ok(result);
+        }
+
         [HttpPost]
         [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
         public async Task<IActionResult> CreateAsync([FromBody] ReservationCreateDto request, CancellationToken cancellationToken)
@@ -63,6 +72,15 @@ namespace eRezervisi.Api.Controllers
             return Ok();
         }
 
+        [HttpPut("{id}/decline")]
+        [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
+        public async Task<IActionResult> DeclineAsync([FromRoute] long id, CancellationToken cancellationToken)
+        {
+            await _reservationService.DeclineReservationAsync(id, cancellationToken);
+
+            return Ok();
+        }
+
         [HttpDelete("{id}")]
         [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
         public async Task<IActionResult> DeleteAsync([FromRoute] long id, CancellationToken cancellationToken)
@@ -77,6 +95,15 @@ namespace eRezervisi.Api.Controllers
         public async Task<IActionResult> GetByStatusAsync([FromBody] GetReservationsByStatusRequest request, CancellationToken cancellationToken)
         {
             var result = await _reservationService.GetUserReservationsAsync(request, cancellationToken);
+
+            return Ok(result);
+        }
+
+        [HttpGet("{accommodationUnitId}/check-availability")]
+        [CustomAuthorize(Roles.MobileUser.Name)]
+        public async Task<IActionResult> CheckAvailabilityAsync([FromRoute] long accommodationUnitId, [FromBody] CheckAvailabilityDto request, CancellationToken cancellationToken)
+        {
+            var result = await _reservationService.CheckAccommodationUnitAvailabilityAsync(accommodationUnitId, request, cancellationToken);
 
             return Ok(result);
         }

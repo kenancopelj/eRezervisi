@@ -1,15 +1,10 @@
-import 'dart:io';
-
 import 'package:erezervisi_mobile/helpers/custom_theme.dart';
-import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/models/responses/accommodation_unit/accommodation_unit_get_dto.dart';
 import 'package:erezervisi_mobile/screens/accommodation_unit_details.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:erezervisi_mobile/shared/navigator/navigate.dart';
 import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class FavoriteCard extends StatefulWidget {
   final AccommodationUnitGetDto accommodationUnit;
@@ -51,15 +46,18 @@ class _FavoriteCardState extends State<FavoriteCard> {
               children: [
                 Row(
                   children: [
-                    Text(
-                      widget.accommodationUnit.title,
-                      style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black),
+                    SizedBox(
+                      width: 150,
+                      child: Text(
+                        widget.accommodationUnit.title,
+                        style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black),
+                      ),
                     ),
                     const SizedBox(
-                      width: 80,
+                      width: 30,
                     ),
                     const Icon(
                       Icons.favorite,

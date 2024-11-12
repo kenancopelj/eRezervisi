@@ -163,4 +163,32 @@ class AccommodationUnitProvider extends BaseProvider {
     }
     throw response;
   }
+
+  Future activate(num accommodationUnitId) async {
+    String endpoint = "accommodation-units/$accommodationUnitId/activate";
+    var url = Globals.apiUrl + endpoint;
+
+    var response = await dio.put(url);
+
+    if (response.statusCode == 200) {
+      Globals.notifier.setInfo("Objekat uspješno aktiviran", ToastType.Success);
+      return;
+    }
+
+    throw response;
+  }
+
+  Future deactivate(num accommodationUnitId) async {
+    String endpoint = "accommodation-units/$accommodationUnitId/deactivate";
+    var url = Globals.apiUrl + endpoint;
+
+    var response = await dio.put(url);
+
+    if (response.statusCode == 200) {
+      Globals.notifier.setInfo("Objekat uspješno deaktiviran", ToastType.Success);
+      return;
+    }
+    
+    throw response;
+  }
 }

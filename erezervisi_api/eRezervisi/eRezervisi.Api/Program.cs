@@ -100,33 +100,24 @@ app.MapHub<NotificationHub>("/notification-hub");
 
 app.MapHub<MessageHub>("/message-hub");
 
-TrainRecommenderModel();
+using (var scope = app.Services.CreateScope())
+{
+    var dataContext = scope.ServiceProvider.GetRequiredService<eRezervisiDbContext>();
+
+    var accommodationUnitService = scope.ServiceProvider.GetRequiredService<IRecommenderService>();
+
+    try
+    {
+        await accommodationUnitService.TrainModelAsync();
+    }
+    catch (Exception)
+    {
+
+    }
+
+}
 
 app.Run();
-
-async void TrainRecommenderModel()
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var dataContext = scope.ServiceProvider.GetRequiredService<eRezervisiDbContext>();
-
-        if (!dataContext.Database.CanConnect())
-        {
-            dataContext.Database.Migrate();
-
-            var accommodationUnitService = scope.ServiceProvider.GetRequiredService<IAccommodationUnitService>();
-
-            try
-            {
-                await accommodationUnitService.TrainModelAsync();
-            }
-            catch (Exception)
-            {
-
-            }
-        }
-    }
-}
 
 void AddJwtBearer()
 {

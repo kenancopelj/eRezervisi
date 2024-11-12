@@ -37,7 +37,7 @@ namespace eRezervisi.Core.Services
         {
             var now = DateTime.Now;
 
-            var reservations = await _dbContext.Reservations.Where(x => x.From >= now && x.Status == ReservationStatus.Confirmed).ToListAsync(cancellationToken);
+            var reservations = await _dbContext.Reservations.Where(x => x.From <= now && x.Status == ReservationStatus.Confirmed).ToListAsync(cancellationToken);
 
             foreach (var item in reservations)
             {
@@ -82,12 +82,14 @@ namespace eRezervisi.Core.Services
                 {
                     await _notifyService.NotifyUserAboutUncleanObject(item.AccommodationUnitId);
 
+                    var priority = GeneratePriorityBasedOnReservationTotalDays(item);
+
                     var maintenace = new Maintenance
                     {
                         Note = $"Prljava soba nakon rezervacije {item.Code}",
                         AccommodationUnitId = item.AccommodationUnitId,
                         Status = MaintenanceStatus.Created,
-                        Priority = MaintenacePriority.Medium
+                        Priority = priority
                     };
 
                     await _dbContext.AddAsync(maintenace, cancellationToken);
@@ -101,20 +103,24 @@ namespace eRezervisi.Core.Services
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task RemindAboutPasswordChange(CancellationToken cancellationToken)
+        private MaintenacePriority GeneratePriorityBasedOnReservationTotalDays(Reservation reservation)
         {
-            var now = DateTime.Now;
+            var totalDays = reservation.TotalDays;
 
-            var users = await _dbContext.Users.Include(x => x.UserCredentials)
-                .Where(x => x.IsActive && !x.UserCredentials!.ReminderSent && x.UserCredentials!.LastPasswordChangeAt.AddDays(30) < now)
-                .ToListAsync(cancellationToken);
-
-            foreach (var user in users)
+            if (totalDays > 1 && totalDays <= 3)
             {
-                user.UserCredentials!.ReminderSent = true;
-
-                await _notifyService.NotifyUserAboutPasswordChange(user.Id);
+                return MaintenacePriority.Low;
             }
+            else if (totalDays > 3 && totalDays <= 7)
+            {
+                return MaintenacePriority.Medium;
+            }
+            else if (totalDays > 7 && totalDays < 14)
+            {
+                return MaintenacePriority.High;
+            }
+
+            return MaintenacePriority.Urgent;
         }
     }
 }

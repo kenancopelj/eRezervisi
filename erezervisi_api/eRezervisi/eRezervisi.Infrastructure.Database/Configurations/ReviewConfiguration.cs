@@ -12,11 +12,9 @@ namespace eRezervisi.Infrastructure.Database.Configurations
 
             builder.ToTable("reviews");
 
-            builder.Property(x => x.Title);
-
             builder.Property(x => x.Rating);
 
-            builder.Property(x => x.Note);
+            builder.Property(x => x.Note).IsRequired(false);
         }
     }
 }

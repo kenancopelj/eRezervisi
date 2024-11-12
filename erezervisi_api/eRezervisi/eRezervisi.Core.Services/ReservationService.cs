@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using eRezervisi.Common.Dtos.AccommodationUnit;
-using eRezervisi.Common.Dtos.AccommodationUnitCategories;
-using eRezervisi.Common.Dtos.Canton;
 using eRezervisi.Common.Dtos.Reservation;
-using eRezervisi.Common.Dtos.Township;
 using eRezervisi.Common.Shared;
 using eRezervisi.Common.Shared.Pagination;
 using eRezervisi.Common.Shared.Requests.Reservation;
@@ -52,8 +49,7 @@ namespace eRezervisi.Core.Services
                 throw new DomainException("AccommodationUnitInactive", "Odabrani objekat trenutno nije dostupan za rezervacije.");
             }
 
-            var alreadyReserved = await _dbContext.Reservations.AnyAsync(x => x.AccommodationUnitId == request.AccommodationUnitId &&
-                                                                              x.From >= request.From && x.To <= request.To);
+            var alreadyReserved = await CheckDatesAsync(request.AccommodationUnitId, request.From, request.To, cancellationToken);
 
             DuplicateException.ThrowIf(alreadyReserved, "Rezervacija za odabrani period već postoji!");
 
@@ -62,6 +58,13 @@ namespace eRezervisi.Core.Services
             if (request.TotalPeople > policy.Capacity)
             {
                 throw new DomainException("MaximumCapacity", "Broj osoba na rezervaciji je veći od kapaciteta objekta");
+            }
+
+            var totalDays = (request.To - request.From).TotalDays + 1;
+
+            if (accommodationUnit.AccommodationUnitPolicy.OneNightOnly && totalDays > 1)
+            {
+                throw new DomainException("OneNightOnly", "Objekat dozvoljava samo jedno noćenje");
             }
 
             var userId = _jwtTokenReader.GetUserIdFromToken();
@@ -78,10 +81,9 @@ namespace eRezervisi.Core.Services
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            if (accommodationUnit.Owner.UserSettings!.ReceiveEmails)
+            if (accommodationUnit.Owner.UserSettings!.ReceiveNotifications)
             {
-                // Notify owner about new reservation via email if enabled in user settings
-                NotifyOwner(reservation.Id);
+                NotifyOwnerAboutNewReservation(reservation.Id);
             }
 
             return _mapper.Map<ReservationGetDto>(reservation);
@@ -102,9 +104,9 @@ namespace eRezervisi.Core.Services
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            if (reservation.AccommodationUnit.Owner.UserSettings!.ReceiveEmails)
+            if (reservation.AccommodationUnit.Owner.UserSettings!.ReceiveNotifications)
             {
-                NotifyOwner(reservation.Id);
+                NotifyOwnerAboutReservationStatus(reservation.Id);
             }
         }
 
@@ -128,9 +130,35 @@ namespace eRezervisi.Core.Services
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            if (reservation.AccommodationUnit.Owner.UserSettings!.ReceiveEmails)
+            if (reservation.AccommodationUnit.Owner.UserSettings!.ReceiveNotifications)
             {
-                NotifyOwner(reservation.Id);
+                NotifyOwnerAboutReservationStatus(reservation.Id);
+            }
+        }
+
+        public async Task DeclineReservationAsync(long id, CancellationToken cancellationToken)
+        {
+            var reservation = await _dbContext.Reservations.Include(x => x.AccommodationUnit).ThenInclude(x => x.Owner).ThenInclude(x => x.UserSettings).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+            NotFoundException.ThrowIfNull(reservation);
+
+            if (reservation.AccommodationUnit.Status != AccommodationUnitStatus.Active)
+            {
+                throw new DomainException("UnitNotActive", "Objekat trenutno nije aktivan");
+            }
+
+            if (reservation.Status != ReservationStatus.Draft)
+            {
+                throw new DomainException("NotAllowed", "Nije moguće odbiti odabranu rezervaciju!");
+            }
+
+            reservation.ChangeStatus(ReservationStatus.Declined);
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            if (reservation.AccommodationUnit.Owner.UserSettings!.ReceiveNotifications)
+            {
+                NotifyGuestAboutDeclinedReservatoin(reservation.Id);
             }
         }
 
@@ -159,7 +187,11 @@ namespace eRezervisi.Core.Services
             var reservations = await queryable.GetPagedAsync(pagingRequest,
                 new List<(bool shouldFilter, Expression<Func<Reservation, bool>> FilterExpression)>()
                 {
-                    (true, x => x.AccommodationUnit.OwnerId == userId)
+                    (true, x => x.AccommodationUnit.OwnerId == userId),
+                    (request.Status.HasValue, x => x.Status == request.Status),
+                    (request.To.HasValue, x => x.From < request.To),
+                    (request.From.HasValue, x => x.To > request.From),
+
                 },
                 GetOrderByExpression(pagingRequest.OrderByColumn),
                 x => new ReservationGetDto
@@ -186,6 +218,42 @@ namespace eRezervisi.Core.Services
             return reservations;
         }
 
+        public async Task<GetReservationsResponse> GetCalendarReservationsAsync(GetReservationsRequest request, CancellationToken cancellationToken)
+        {
+            var userId = _jwtTokenReader.GetUserIdFromToken();
+
+            var reservations = await _dbContext.Reservations
+                .Where(x => x.AccommodationUnit.OwnerId == userId &&
+                            x.From < request.To &&
+                            x.To > request.From &&
+                            (!request.Status.HasValue || x.Status == request.Status))
+                .Select(x => new ReservationGetDto
+                {
+                    Id = x.Id,
+                    Code = x.Code,
+                    GuestId = x.UserId,
+                    Guest = x.User.GetFullName(),
+                    GuestContact = x.User.Phone,
+                    AccommodationUnitId = x.AccommodationUnitId,
+                    AccommodationUnit = _mapper.Map<AccommodationUnitGetDto>(x.AccommodationUnit),
+                    From = x.From,
+                    To = x.To,
+                    PaymentMethod = x.PaymentMethod,
+                    NumberOfAdults = x.NumberOfAdults,
+                    NumberOfChildren = x.NumberOfChildren,
+                    TotalPeople = x.TotalPeople,
+                    TotalDays = x.TotalDays,
+                    CreatedAt = x.CreatedAt,
+                    TotalPrice = x.TotalPrice,
+                    Status = x.Status
+                }).ToListAsync(cancellationToken);
+
+            return new GetReservationsResponse
+            {
+                Reservations = reservations
+            };
+        }
+
         public async Task<ReservationGetDto> UpdateReservationAsync(long id, ReservationUpdateDto request, CancellationToken cancellationToken)
         {
             var reservation = await _dbContext.Reservations.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
@@ -205,7 +273,8 @@ namespace eRezervisi.Core.Services
 
             var reservations = await _dbContext.Reservations
                .AsNoTracking()
-               .Where(x => x.UserId == userId && x.Status == request.Status)
+               .Where(x => x.UserId == userId &&
+                           (!request.Status.HasValue || x.Status == request.Status))
                .Select(x => new ReservationByStatusDto
                {
                    Id = x.Id,
@@ -216,7 +285,8 @@ namespace eRezervisi.Core.Services
                    TotalPeople = x.TotalPeople,
                    TotalDays = x.TotalDays,
                    CreatedAt = x.CreatedAt,
-                   TotalPrice = x.TotalPrice
+                   TotalPrice = x.TotalPrice,
+                   Status = x.Status
                })
                .ToListAsync(cancellationToken);
 
@@ -226,9 +296,36 @@ namespace eRezervisi.Core.Services
             };
         }
 
-        private void NotifyOwner(long reservationId)
+        public async Task<bool> CheckAccommodationUnitAvailabilityAsync(long accommodationUnitId, CheckAvailabilityDto request, CancellationToken cancellationToken)
+        {
+            var alreadyReserved = await CheckDatesAsync(accommodationUnitId, request.From, request.To, cancellationToken);
+
+            return alreadyReserved;
+        }
+
+        private async Task<bool> CheckDatesAsync(long accommodationUnitId, DateTime from, DateTime to, CancellationToken cancellationToken)
+        {
+            var alreadyReserved = await _dbContext.Reservations
+                .AnyAsync(x => (x.Status == ReservationStatus.InProgress || x.Status == ReservationStatus.Draft || x.Status == ReservationStatus.Confirmed) && x.AccommodationUnitId == accommodationUnitId &&
+                        x.From < to &&
+                        x.To > from, cancellationToken);
+
+            return alreadyReserved;
+        }
+
+        private void NotifyOwnerAboutReservationStatus(long reservationId)
         {
             _backgroundJobClient.Enqueue<INotifyService>(x => x.NotifyOwnerAboutReservationStatus(reservationId));
+        }
+
+        private void NotifyOwnerAboutNewReservation(long reservationId)
+        {
+            _backgroundJobClient.Enqueue<INotifyService>(x => x.NotifyOwnerAboutNewReservation(reservationId));
+        }
+
+        private void NotifyGuestAboutDeclinedReservatoin(long reservationId)
+        {
+            _backgroundJobClient.Enqueue<INotifyService>(x => x.NotifyGuestAboutDeclinedReservation(reservationId));
         }
 
         private async Task<string> GenerateCode(AccommodationUnit accommodationUnit, CancellationToken cancellationToken)

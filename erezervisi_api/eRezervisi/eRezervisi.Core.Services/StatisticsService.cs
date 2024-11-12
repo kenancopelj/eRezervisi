@@ -1,6 +1,12 @@
-﻿using eRezervisi.Common.Dtos.Statistics;
+﻿using eRezervisi.Common.Dtos.AccommodationUnit;
+using eRezervisi.Common.Dtos.AccommodationUnitCategories;
+using eRezervisi.Common.Dtos.Canton;
+using eRezervisi.Common.Dtos.Image;
+using eRezervisi.Common.Dtos.Statistics;
+using eRezervisi.Common.Dtos.Township;
 using eRezervisi.Common.Shared.Requests.Reservation;
 using eRezervisi.Common.Shared.Requests.Statistics;
+using eRezervisi.Core.Domain.Entities;
 using eRezervisi.Core.Services.Interfaces;
 using eRezervisi.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
@@ -23,16 +29,7 @@ namespace eRezervisi.Core.Services
         {
             var userId = _jwtTokenReader.GetUserIdFromToken();
 
-            var allMonths = new List<int>();
-
-            if (request.Month.HasValue)
-            {
-                allMonths.Add(request.Month.Value);
-            }
-            else
-            {
-                Enumerable.Range(1, 12).ToList();
-            }
+            var allMonths = Enumerable.Range(1, 12).ToList();
 
             var reservationsByMonth = await _dbContext.Reservations
                 .Where(x => x.AccommodationUnit.OwnerId == userId &&
@@ -61,26 +58,11 @@ namespace eRezervisi.Core.Services
             return result;
         }
 
-
-        public Task<List<GetReservationsByYearDto>> GetReservationByMonthAsync(GetReservationsByYearOrMonthRequest request, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<List<GetGuestsByYearDto>> GetGuestsByYearAsync(GetGuestsByYearOrMonthRequest request, CancellationToken cancellationToken)
         {
             var userId = _jwtTokenReader.GetUserIdFromToken();
 
-            var allMonths = new List<int>();
-
-            if (request.Month.HasValue)
-            {
-                allMonths.Add(request.Month.Value);
-            }
-            else
-            {
-                Enumerable.Range(1, 12).ToList();
-            }
+            var allMonths = Enumerable.Range(1, 12).ToList();
 
             var reservationsByMonth = await _dbContext.Reservations
                 .Where(x => x.AccommodationUnit.OwnerId == userId &&
@@ -109,14 +91,5 @@ namespace eRezervisi.Core.Services
             return result;
         }
 
-        public Task<GetReservationsByYearDto> GetMostPopularAccommodationUnits(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<GetGuestsByYearDto>> GetGuestsByMonthAsync(GetGuestsByYearOrMonthRequest request, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using eRezervisi.Api.Authorization;
-using eRezervisi.Common.Shared.Requests.Dashboard;
 using eRezervisi.Core.Services.Interfaces;
 using eRezervisi.Infrastructure.Common.Constants;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +17,10 @@ namespace eRezervisi.Api.Controllers
             _dashboardService = dashboardService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> GetAsync([FromBody] GetDashboardDataRequest request, CancellationToken cancellationToken)
+        [HttpGet]
+        public async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
         {
-            var result = await _dashboardService.GetDashboardDataAsync(request, cancellationToken);
+            var result = await _dashboardService.GetDashboardDataAsync(cancellationToken);
 
             return Ok(result);
         }
