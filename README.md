@@ -12,7 +12,7 @@
 
 
 ### Instrukcije
-Run the following commands:
+Ukucajte sljedeće komande:
 </br>
 - flutter clean </br>
 - flutter pub get </br>
