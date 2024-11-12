@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PreviewImage extends StatelessWidget {
-  XFile? image;
-  String? imageUrl;
+  final XFile? image;
+  final String? imageUrl;
 
-  PreviewImage({super.key, this.image, this.imageUrl});
+  const PreviewImage({super.key, this.image, this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

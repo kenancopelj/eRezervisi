@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:erezervisi_mobile/enums/toast_type.dart';
 import 'package:erezervisi_mobile/shared/globals.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +29,6 @@ class BaseProvider with ChangeNotifier {
       }
       return handler.next(response);
     }, onError: (DioException e, handler) {
-      print(e.message);
       Globals.notifier.setRequestInactive();
       switch (e.type) {
         case DioExceptionType.connectionTimeout:

@@ -1,17 +1,11 @@
-import 'dart:io';
-
 import 'package:erezervisi_mobile/enums/notification_status.dart';
 import 'package:erezervisi_mobile/enums/notification_type.dart';
-import 'package:erezervisi_mobile/helpers/file_helper.dart';
 import 'package:erezervisi_mobile/models/responses/notification/notification_get_dto.dart';
 import 'package:erezervisi_mobile/screens/accommodation_unit_details.dart';
 import 'package:erezervisi_mobile/screens/chat.dart';
-import 'package:erezervisi_mobile/screens/chat_details.dart';
 import 'package:erezervisi_mobile/shared/navigator/navigate.dart';
 import 'package:erezervisi_mobile/shared/navigator/route_list.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class NewNotification extends StatefulWidget {
   final NotificationGetDto notification;

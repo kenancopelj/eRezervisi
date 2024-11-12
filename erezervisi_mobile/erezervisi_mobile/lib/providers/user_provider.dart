@@ -6,7 +6,6 @@ import 'package:erezervisi_mobile/models/requests/user/update_settings_dto.dart'
 import 'package:erezervisi_mobile/models/requests/user/user_create_dto.dart';
 import 'package:erezervisi_mobile/models/requests/user/user_update_dto.dart';
 import 'package:erezervisi_mobile/models/responses/base/paged_response.dart';
-import 'package:erezervisi_mobile/models/responses/review/get_reviews_response.dart';
 import 'package:erezervisi_mobile/models/responses/review/review_get_dto.dart';
 import 'package:erezervisi_mobile/models/responses/user/check_code_dto.dart';
 import 'package:erezervisi_mobile/models/responses/user/check_email_dto.dart';

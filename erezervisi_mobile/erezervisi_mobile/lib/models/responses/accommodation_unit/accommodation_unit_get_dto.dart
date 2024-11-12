@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:erezervisi_mobile/enums/accommodation_unit_status.dart';
 import 'package:erezervisi_mobile/models/responses/category/category_get_dto.dart';
 import 'package:erezervisi_mobile/models/responses/image/image_get_dto.dart';

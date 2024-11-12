@@ -1,14 +1,12 @@
 import 'package:erezervisi_mobile/helpers/custom_theme.dart';
 import 'package:erezervisi_mobile/models/requests/review/get_users_reviews_request.dart';
 import 'package:erezervisi_mobile/models/responses/base/paged_response.dart';
-import 'package:erezervisi_mobile/models/responses/review/get_reviews_response.dart';
 import 'package:erezervisi_mobile/models/responses/review/review_get_dto.dart';
 import 'package:erezervisi_mobile/providers/user_provider.dart';
 import 'package:erezervisi_mobile/shared/pagination.dart';
 import 'package:erezervisi_mobile/widgets/master_widget.dart';
 import 'package:erezervisi_mobile/widgets/reviews_custom/review_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 class MyReviews extends StatefulWidget {

@@ -11,10 +11,10 @@ class Globals {
   // static String apiUrl = "http://localhost:5269/";
 
   // Emulator
-  // static String apiUrl = 'https://10.0.2.2:7158/';
+  static String apiUrl = 'https://10.0.2.2:5269/';
 
   // Windows app
-  static String apiUrl = "https://localhost:7158/";
+  // static String apiUrl = "https://localhost:7158/";
 
   static String imageBasePath = "${apiUrl}Uploads/Images/";
 

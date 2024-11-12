@@ -5,7 +5,6 @@ import 'package:erezervisi_mobile/models/requests/user/user_create_dto.dart';
 import 'package:erezervisi_mobile/models/responses/user/check_email_dto.dart';
 import 'package:erezervisi_mobile/models/responses/user/check_phone_dto.dart';
 import 'package:erezervisi_mobile/models/responses/user/check_username_dto.dart';
-import 'package:erezervisi_mobile/models/responses/user/user_get_dto.dart';
 import 'package:erezervisi_mobile/providers/user_provider.dart';
 import 'package:erezervisi_mobile/shared/components/form/button.dart';
 import 'package:erezervisi_mobile/shared/components/form/input.dart';
@@ -65,8 +64,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future checkPhoneNumber(phoneNumber) async {
     var response = await userProvider
         .checkPhoneNumber(CheckPhoneDto(phoneNumber: phoneNumber));
-
-    print(response);
 
     setState(() {
       duplicatePhoneNumber = response;
@@ -227,6 +224,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (value != passwordController.text) {
                       return 'Lozinke se ne poklapaju';
                     }
+                    return null;
                   },
                   obscureText: true,
                   label: "Ponovljena lozinka",
