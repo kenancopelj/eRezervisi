@@ -49,6 +49,12 @@ class _ReservationDetailsState extends State<ReservationDetails> {
   int numberOfAdults = 0;
   int basePrice = 0;
 
+  int totalDays = 0;
+  int totalPeople = 0;
+
+  bool objectReserved = false;
+  bool formSubmitted = false;
+
   String rangeText = '';
 
   int _selectedPaymentMethod = PaymentMethods.Card.index;
@@ -56,22 +62,21 @@ class _ReservationDetailsState extends State<ReservationDetails> {
   handleDatesChange(DateRangePickerSelectionChangedArgs args) {
     setState(() {
       if (args.value is PickerDateRange) {
-        var now = DateTime.now();
-        var from = DateTime.tryParse(args.value.startDate.toString());
-        var to = DateTime.tryParse(args.value.endDate.toString()) ?? from;
+        setState(() {
+          dateFrom = DateTime.tryParse(args.value.startDate.toString());
+          dateTo = DateTime.tryParse(args.value.endDate.toString()) ?? dateFrom;
+        });
 
-        var totalDays = to!.difference(from!).inDays;
+        setState(() {
+          totalDays = dateTo!.difference(dateFrom!).inDays;
+        });
 
         if (accommodationUnit!.policy!.oneNightOnly && totalDays > 1) {
-          Globals.notifier
-              .setInfo("Objekat dozvoljava samo jedno noćenje", ToastType.Info);
           return;
         }
 
-        if (from.isBefore(now) || to.isBefore(now)) {
-          Globals.notifier
-              .setInfo("Datum mora biti u budućnosti", ToastType.Info);
-
+        if (dateFrom!.isBefore(DateTime.now()) ||
+            dateTo!.isBefore(DateTime.now())) {
           return;
         }
 
@@ -109,8 +114,9 @@ class _ReservationDetailsState extends State<ReservationDetails> {
     if (isReserved) {
       resetDates();
 
-      Globals.notifier
-          .setInfo("Objekat nije dostupan za odabrani period", ToastType.Error);
+      setState(() {
+        objectReserved = isReserved;
+      });
     }
   }
 
@@ -275,336 +281,406 @@ class _ReservationDetailsState extends State<ReservationDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return showPayementScreen
-        ? paymentScreen()
-        : Scaffold(
-            bottomNavigationBar: BottomNavigationBar(
-              backgroundColor: Colors.white,
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              items: [
-                BottomNavigationBarItem(
-                    icon: Container(
-                      height: 50,
-                      margin: EdgeInsets.only(left: 20),
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Ukupno: ${total}KM",
-                            style: TextStyle(color: Colors.black),
-                          )),
-                    ),
-                    label: ''),
-                BottomNavigationBarItem(
-                    icon: InkWell(
-                      onTap: () {
-                        var capacity = accommodationUnit!.policy!.capacity;
+    return accommodationUnit == null
+        ? SizedBox.shrink()
+        : showPayementScreen
+            ? paymentScreen()
+            : Scaffold(
+                bottomNavigationBar: BottomNavigationBar(
+                  backgroundColor: Colors.white,
+                  showSelectedLabels: false,
+                  showUnselectedLabels: false,
+                  items: [
+                    BottomNavigationBarItem(
+                        icon: Container(
+                          height: 50,
+                          margin: EdgeInsets.only(left: 20),
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Ukupno: ${total}KM",
+                                style: TextStyle(color: Colors.black),
+                              )),
+                        ),
+                        label: ''),
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                          onTap: () {
+                            setState(() {
+                              formSubmitted = true;
+                            });
 
-                        var totalPeople = numberOfAdults + numberOfChildren;
+                            var capacity = accommodationUnit!.policy!.capacity;
 
-                        if (totalPeople == 0) {
-                          Globals.notifier.setInfo(
-                              "Minimalan broj osoba na rezervaciji je 1",
-                              ToastType.Warning);
+                            var totalPeople = numberOfAdults + numberOfChildren;
 
-                          return;
-                        }
+                            if (totalPeople == 0) {
+                              return;
+                            }
 
-                        if (numberOfAdults == 0 && numberOfChildren > 0) {
-                          Globals.notifier.setInfo(
-                              "Na rezervaciji mora biti minimalno jedna odrasla osoba",
-                              ToastType.Warning);
+                            if (numberOfAdults == 0 && numberOfChildren > 0) {
+                              return;
+                            }
 
-                          return;
-                        }
+                            if (totalPeople > capacity) {
+                              return;
+                            }
 
-                        if (totalPeople > capacity) {
-                          Globals.notifier.setInfo(
-                              "Maksimalan kapacitet objekta je $capacity osoba",
-                              ToastType.Warning);
+                            if (dateFrom == null || dateTo == null) {
+                              return;
+                            }
 
-                          return;
-                        }
-
-                        if (dateFrom == null || dateTo == null) {
-                          Globals.notifier.setInfo(
-                              "Odaberite period rezervacije",
-                              ToastType.Warning);
-
-                          return;
-                        }
-
-                        setState(() {
-                          showPayementScreen = true;
-                        });
-                      },
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(10)),
-                        margin: EdgeInsets.only(left: 20, right: 10),
-                        child: Center(
-                            child: Text(
-                          "POTVRDI",
-                          style: TextStyle(color: Colors.white),
-                        )),
-                      ),
-                    ),
-                    label: '')
-              ],
-            ),
-            backgroundColor: Colors.black,
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                            setState(() {
+                              showPayementScreen = true;
+                            });
+                          },
+                          child: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(10)),
+                            margin: EdgeInsets.only(left: 20, right: 10),
+                            child: Center(
+                                child: Text(
+                              "POTVRDI",
+                              style: TextStyle(color: Colors.white),
+                            )),
+                          ),
+                        ),
+                        label: '')
+                  ],
+                ),
+                backgroundColor: Colors.black,
+                body: SingleChildScrollView(
+                  child: Column(
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(top: 20),
+                            height: 50,
+                            child: Text(
+                              accommodationUnit?.title ?? '',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          )
+                        ],
+                      ),
                       Container(
-                        margin: EdgeInsets.only(top: 20),
-                        height: 50,
-                        child: Text(
-                          accommodationUnit?.title ?? '',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        height: MediaQuery.of(context).size.height,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30)),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                    margin: EdgeInsets.only(top: 20, left: 20),
+                                    child: IconButton(
+                                      icon: Icon(Icons.arrow_back_ios_new,
+                                          size: 14),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    )),
+                              ],
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Datum",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  Spacer(),
+                                  TextButton(
+                                    onPressed: resetDates,
+                                    child: Text(
+                                      "Očisti",
+                                      style: TextStyle(
+                                          color: CustomTheme.bluePrimaryColor),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
+                                height: 300,
+                                width: double.maxFinite,
+                                margin: EdgeInsets.all(20),
+                                child: SfDateRangePicker(
+                                  initialSelectedRange:
+                                      PickerDateRange(dateFrom, dateTo),
+                                  rangeSelectionColor: CustomTheme
+                                      .bluePrimaryColor
+                                      .withOpacity(0.5),
+                                  startRangeSelectionColor:
+                                      CustomTheme.bluePrimaryColor,
+                                  onSelectionChanged: handleDatesChange,
+                                  endRangeSelectionColor:
+                                      CustomTheme.bluePrimaryColor,
+                                  selectionMode:
+                                      DateRangePickerSelectionMode.range,
+                                )),
+                            Text(rangeText),
+                            if (accommodationUnit!.policy!.oneNightOnly &&
+                                totalDays > 1)
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Objekat dozvoljava samo jedno noćenje",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            if ((dateFrom != null &&
+                                    dateFrom!.isBefore(DateTime.now())) ||
+                                (dateTo != null &&
+                                    dateTo!.isBefore(DateTime.now())))
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Datum mora biti u budućnosti",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            if (objectReserved)
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Datum mora biti u budućnosti",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            if (formSubmitted &&
+                                (dateFrom == null || dateTo == null))
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Odaberite period rezervacije!",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Gosti",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  Spacer(),
+                                  TextButton(
+                                    onPressed: resetGuests,
+                                    child: Text(
+                                      "Očisti",
+                                      style: TextStyle(
+                                          color: CustomTheme.bluePrimaryColor),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              child: Material(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white,
+                                elevation: 2.0,
+                                child: SizedBox(
+                                  height: 50,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 15,
+                                          ),
+                                          Column(
+                                            children: [
+                                              Text(
+                                                "Odrasli",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              Text(
+                                                "Preko 12 godina",
+                                                style: TextStyle(
+                                                    color: Colors.grey),
+                                              )
+                                            ],
+                                          ),
+                                          Spacer(),
+                                          IconButton(
+                                              onPressed: () {
+                                                if (numberOfAdults - 1 < 0) {
+                                                  setState(() {
+                                                    numberOfAdults = 0;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    numberOfAdults--;
+                                                  });
+                                                }
+
+                                                setState(() {
+                                                  totalPeople = numberOfAdults +
+                                                      numberOfChildren;
+                                                });
+                                              },
+                                              icon: Icon(
+                                                Icons.remove,
+                                                color: Colors.black,
+                                              )),
+                                          Text(
+                                            "$numberOfAdults",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                          IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  numberOfAdults++;
+                                                  totalPeople = numberOfAdults +
+                                                      numberOfChildren;
+                                                });
+                                              },
+                                              icon: Icon(
+                                                Icons.add,
+                                                color: Colors.black,
+                                              )),
+                                          SizedBox(
+                                            width: 15,
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              child: Material(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white,
+                                elevation: 2.0,
+                                child: SizedBox(
+                                  height: 50,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 15,
+                                          ),
+                                          Column(
+                                            children: [
+                                              Text(
+                                                "Djeca",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              Text(
+                                                "Ispod 12 godina",
+                                                style: TextStyle(
+                                                    color: Colors.grey),
+                                              )
+                                            ],
+                                          ),
+                                          Spacer(),
+                                          IconButton(
+                                              onPressed: () {
+                                                if (numberOfChildren - 1 < 0) {
+                                                  setState(() {
+                                                    numberOfChildren = 0;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    numberOfChildren--;
+                                                  });
+                                                }
+                                                setState(() {
+                                                  totalPeople = numberOfAdults +
+                                                      numberOfChildren;
+                                                });
+                                              },
+                                              icon: Icon(
+                                                Icons.remove,
+                                                color: Colors.black,
+                                              )),
+                                          Text(
+                                            "$numberOfChildren",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                          IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  numberOfChildren++;
+                                                  totalPeople = numberOfAdults +
+                                                      numberOfChildren;
+                                                });
+                                              },
+                                              icon: Icon(
+                                                Icons.add,
+                                                color: Colors.black,
+                                              )),
+                                          SizedBox(
+                                            width: 15,
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            if (formSubmitted && totalPeople == 0)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Minimalan broj osoba na rezervaciji je 1!",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            if (numberOfAdults == 0 && numberOfChildren > 0)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Na rezervaciji mora biti barem jedna odrasla osoba!",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            if (totalPeople >
+                                accommodationUnit!.policy!.capacity)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Maksimalan broj osoba je ${accommodationUnit!.policy!.capacity}",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                          ],
                         ),
                       )
                     ],
                   ),
-                  Container(
-                    height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30)),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                                margin: EdgeInsets.only(top: 20, left: 20),
-                                child: IconButton(
-                                  icon:
-                                      Icon(Icons.arrow_back_ios_new, size: 14),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                )),
-                          ],
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 20),
-                          child: Row(
-                            children: [
-                              Text(
-                                "Datum",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              Spacer(),
-                              TextButton(
-                                onPressed: resetDates,
-                                child: Text(
-                                  "Očisti",
-                                  style: TextStyle(
-                                      color: CustomTheme.bluePrimaryColor),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                            height: 300,
-                            width: double.maxFinite,
-                            margin: EdgeInsets.all(20),
-                            child: SfDateRangePicker(
-                              initialSelectedRange:
-                                  PickerDateRange(dateFrom, dateTo),
-                              rangeSelectionColor:
-                                  CustomTheme.bluePrimaryColor.withOpacity(0.5),
-                              startRangeSelectionColor:
-                                  CustomTheme.bluePrimaryColor,
-                              onSelectionChanged: handleDatesChange,
-                              endRangeSelectionColor:
-                                  CustomTheme.bluePrimaryColor,
-                              selectionMode: DateRangePickerSelectionMode.range,
-                            )),
-                        Text(rangeText),
-                        Container(
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 20),
-                          child: Row(
-                            children: [
-                              Text(
-                                "Gosti",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              Spacer(),
-                              TextButton(
-                                onPressed: resetGuests,
-                                child: Text(
-                                  "Očisti",
-                                  style: TextStyle(
-                                      color: CustomTheme.bluePrimaryColor),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          child: Material(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Colors.white,
-                            elevation: 2.0,
-                            child: SizedBox(
-                              height: 50,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            "Odrasli",
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                          Text(
-                                            "Preko 12 godina",
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          )
-                                        ],
-                                      ),
-                                      Spacer(),
-                                      IconButton(
-                                          onPressed: () {
-                                            if (numberOfAdults - 1 < 0) {
-                                              setState(() {
-                                                numberOfAdults = 0;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                numberOfAdults--;
-                                              });
-                                            }
-                                          },
-                                          icon: Icon(
-                                            Icons.remove,
-                                            color: Colors.black,
-                                          )),
-                                      Text(
-                                        "$numberOfAdults",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                      IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              numberOfAdults++;
-                                            });
-                                          },
-                                          icon: Icon(
-                                            Icons.add,
-                                            color: Colors.black,
-                                          )),
-                                      SizedBox(
-                                        width: 15,
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          child: Material(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Colors.white,
-                            elevation: 2.0,
-                            child: SizedBox(
-                              height: 50,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            "Djeca",
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                          Text(
-                                            "Ispod 12 godina",
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          )
-                                        ],
-                                      ),
-                                      Spacer(),
-                                      IconButton(
-                                          onPressed: () {
-                                            if (numberOfChildren - 1 < 0) {
-                                              setState(() {
-                                                numberOfChildren = 0;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                numberOfChildren--;
-                                              });
-                                            }
-                                          },
-                                          icon: Icon(
-                                            Icons.remove,
-                                            color: Colors.black,
-                                          )),
-                                      Text(
-                                        "$numberOfChildren",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                      IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              numberOfChildren++;
-                                            });
-                                          },
-                                          icon: Icon(
-                                            Icons.add,
-                                            color: Colors.black,
-                                          )),
-                                      SizedBox(
-                                        width: 15,
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
+                ),
+              );
   }
 
   Future handleSubmit() async {

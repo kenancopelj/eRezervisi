@@ -241,6 +241,14 @@ class _EditAccommodationUnitState extends State<EditAccommodationUnit> {
                                           ),
                                         ),
                                   const SizedBox(height: 10),
+                                  if (images.isEmpty)
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Slika objekta je obavezna",
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
                                   SizedBox(
                                     height: 120,
                                     child: GridView.builder(
@@ -374,6 +382,14 @@ class _EditAccommodationUnitState extends State<EditAccommodationUnit> {
                                       ],
                                     ),
                                   ),
+                                  if (_tappedPoint == null)
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Lokacija objekta je obavezna",
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    )
                                 ],
                               ),
                             ),
@@ -496,7 +512,7 @@ class _EditAccommodationUnitState extends State<EditAccommodationUnit> {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20,
                                   ),
                                   Row(
@@ -543,7 +559,6 @@ class _EditAccommodationUnitState extends State<EditAccommodationUnit> {
     }
 
     if (images.isEmpty) {
-      Globals.notifier.setInfo("Slika objekta je obavezna!", ToastType.Warning);
       return;
     }
 
@@ -557,8 +572,6 @@ class _EditAccommodationUnitState extends State<EditAccommodationUnit> {
     }
 
     if (latitude == null || longitude == null) {
-      Globals.notifier
-          .setInfo("Lokacija objekta je obavezna!", ToastType.Warning);
       return;
     }
 

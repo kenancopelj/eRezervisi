@@ -61,6 +61,9 @@ Future<void> main() async {
       defaultValue:
           "pk_test_51QBzrSGGfjPDcVYDzcLTlLAj767Aqs2ISFfZ8S6WetGmNfSfA3pIXYNrWPMnjWJpmkAQU71eaGnZjbTk1bR04HeS00UZljPHG0");
 
+  Globals.apiUrl = const String.fromEnvironment('API_URL',
+      defaultValue: 'http://10.0.2.2:5269/');
+
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
 

@@ -4,6 +4,7 @@ import 'package:erezervisi_desktop/models/requests/statistics/get_guests_year_or
 import 'package:erezervisi_desktop/models/requests/statistics/get_reservations_year_or_month_request.dart';
 import 'package:erezervisi_desktop/models/responses/statistics/get_guests_by_year_dto.dart';
 import 'package:erezervisi_desktop/models/responses/statistics/get_reservations_by_year_dto.dart';
+import 'package:erezervisi_desktop/models/responses/statistics/get_revenue_dto.dart';
 import 'package:erezervisi_desktop/providers/base_provider.dart';
 import 'package:erezervisi_desktop/shared/globals.dart';
 
@@ -41,6 +42,19 @@ class StatisticsProvider extends BaseProvider {
           .cast<GetGuestsByYearDto>()
           .toList();
 
+      return data;
+    }
+    throw response;
+  }
+
+  Future<GetRevenueDto> getRevenue() async {
+    String endpoint = "statistics/revenue";
+    var url = Globals.apiUrl + endpoint;
+
+    var response = await dio.get(url);
+
+    if (response.statusCode == 200) {
+      var data = GetRevenueDto.fromJson(response.data);
       return data;
     }
     throw response;

@@ -100,7 +100,7 @@ namespace eRezervisi.Api.Controllers
         }
 
         [HttpGet("{accommodationUnit}/check-availability")]
-        [CustomAuthorize(Roles.MobileUser.Name)]
+        [CustomAuthorize(Roles.MobileUser.Name, Roles.Owner.Name)]
         public async Task<IActionResult> CheckAvailabilityAsync([FromRoute] long accommodationUnit, [FromBody] CheckAvailabilityDto request, CancellationToken cancellationToken)
         {
             var result = await _reservationService.CheckAccommodationUnitAvailabilityAsync(accommodationUnit, request, cancellationToken);

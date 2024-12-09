@@ -149,7 +149,7 @@ class _CreateAccommodationUnitScreenState
                   handleSubmit();
                   return;
                 }
-                if (step == 2) {
+                if (step == 2 && validateLocation()) {
                   setState(() {
                     step = 3;
                     validated = true;
@@ -556,6 +556,20 @@ class _CreateAccommodationUnitScreenState
             ),
           ),
           const SizedBox(height: 20),
+          if (images.isEmpty)
+            const Center(
+              child: Text(
+                "Slika objekta je obavezna",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          if (images.isNotEmpty && !images.any((item) => item.isThumbnail))
+            const Center(
+              child: Text(
+                "Molimo odaberite thumbnail sliku objekta",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -683,6 +697,14 @@ class _CreateAccommodationUnitScreenState
               ],
             ),
           ),
+          if (_tappedPoint == null)
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                "Lokacija objekta je obavezna!",
+                style: TextStyle(color: Colors.red),
+              ),
+            )
         ],
       ),
     );
@@ -736,13 +758,12 @@ class _CreateAccommodationUnitScreenState
     return formKey.currentState!.validate();
   }
 
+  bool validateLocation() {
+    return _tappedPoint != null;
+  }
+
   Future handleSubmit() async {
     if (!validate()) {
-      return;
-    }
-
-    if (images.isEmpty) {
-      Globals.notifier.setInfo("Slika objekta je obavezna!", ToastType.Warning);
       return;
     }
 
@@ -753,12 +774,6 @@ class _CreateAccommodationUnitScreenState
       setState(() {
         images.first.isThumbnail = true;
       });
-    }
-
-    if (images.isNotEmpty && !thumbnailSelected) {
-      Globals.notifier
-          .setInfo("Thubmanil slika objekta je obavezna!", ToastType.Warning);
-      return;
     }
 
     var payload = AccommodationUnitCreateDto(

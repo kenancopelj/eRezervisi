@@ -206,6 +206,14 @@ class _CreateAccommodationUnitState extends State<CreateAccommodationUnit> {
                                     ),
                                   ),
                             const SizedBox(height: 16),
+                            if (images.isEmpty)
+                              const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Slika objekta je obavezna",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
                             SizedBox(
                               height: 120,
                               child: GridView.builder(
@@ -294,7 +302,8 @@ class _CreateAccommodationUnitState extends State<CreateAccommodationUnit> {
                               width: 600,
                               child: FlutterMap(
                                 options: MapOptions(
-                                  initialCenter: _tappedPoint ?? const LatLng(43.3, 17.807),
+                                  initialCenter: _tappedPoint ??
+                                      const LatLng(43.3, 17.807),
                                   initialZoom: 13.0,
                                   onTap: _handleTap,
                                 ),
@@ -321,6 +330,14 @@ class _CreateAccommodationUnitState extends State<CreateAccommodationUnit> {
                                 ],
                               ),
                             ),
+                            if (_tappedPoint == null)
+                              const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Lokacija objekta je obavezna",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              )
                           ],
                         ),
                       ),
@@ -490,7 +507,6 @@ class _CreateAccommodationUnitState extends State<CreateAccommodationUnit> {
     }
 
     if (images.isEmpty) {
-      Globals.notifier.setInfo("Slika objekta je obavezna!", ToastType.Warning);
       return;
     }
 
@@ -504,8 +520,6 @@ class _CreateAccommodationUnitState extends State<CreateAccommodationUnit> {
     }
 
     if (latitude == null || longitude == null) {
-      Globals.notifier
-          .setInfo("Lokacija objekta je obavezna!", ToastType.Warning);
       return;
     }
 

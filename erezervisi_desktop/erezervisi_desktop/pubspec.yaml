@@ -55,6 +55,7 @@ dependencies:
   syncfusion_flutter_charts: ^26.1.40
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
+  pdf: ^3.11.1
   syncfusion_flutter_calendar: ^26.2.12
   flutter_debouncer: ^2.0.0
   flutter_localizations:

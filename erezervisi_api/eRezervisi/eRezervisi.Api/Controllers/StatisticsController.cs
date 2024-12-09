@@ -35,5 +35,14 @@ namespace eRezervisi.Api.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("revenue")]
+        [CustomAuthorize(Roles.Owner.Name, Roles.MobileUser.Name)]
+        public async Task<IActionResult> GetRevenueAsync(CancellationToken cancellationToken)
+        {
+            var result = await _statisticsService.GetRevenueAsync(cancellationToken);
+
+            return Ok(result);
+        }
     }
 }

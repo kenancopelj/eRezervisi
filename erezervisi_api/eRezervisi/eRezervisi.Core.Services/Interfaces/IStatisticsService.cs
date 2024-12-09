@@ -7,5 +7,6 @@ namespace eRezervisi.Core.Services.Interfaces
     {
         Task<List<GetReservationsByYearDto>> GetReservationByYearAsync(GetReservationsByYearOrMonthRequest request, CancellationToken cancellationToken);
         Task<List<GetGuestsByYearDto>> GetGuestsByYearAsync(GetGuestsByYearOrMonthRequest request, CancellationToken cancellationToken);
+        Task<GetRevenuesDto> GetRevenueAsync(CancellationToken cancellationToken);
     }
 }

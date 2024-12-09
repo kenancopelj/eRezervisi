@@ -91,5 +91,51 @@ namespace eRezervisi.Core.Services
             return result;
         }
 
+        public async Task<GetRevenuesDto> GetRevenueAsync(CancellationToken cancellationToken)
+        {
+            var userId = _jwtTokenReader.GetUserIdFromToken();
+
+            var reservations = await _dbContext.Reservations
+                .Include(x => x.AccommodationUnit)
+                .Where(x => x.AccommodationUnit.OwnerId == userId &&
+                       x.Status == Domain.Enums.ReservationStatus.Completed)
+                .ToListAsync(cancellationToken);
+
+            var totalReservations = reservations.Count;
+
+            var averagePrice = reservations.Average(x => x.TotalPrice);
+
+            var now = DateTime.Now;
+
+            var revenueThisMonth = await _dbContext.Reservations
+                .Include(x => x.AccommodationUnit)
+                .Where(x => x.AccommodationUnit.OwnerId == userId &&
+                        x.To.Month == now.Month &&
+                        x.Status == Domain.Enums.ReservationStatus.Completed)
+                .SumAsync(x => x.TotalPrice, cancellationToken);
+
+            var lastMonth = now.AddMonths(-1);
+
+            var revenueLastMonth = await _dbContext.Reservations
+                .Include(x => x.AccommodationUnit)
+                .Where(x => x.AccommodationUnit.OwnerId == userId &&
+                        x.To.Month == lastMonth.Month &&
+                        x.Status == Domain.Enums.ReservationStatus.Completed)
+                .SumAsync(x => x.TotalPrice, cancellationToken);
+
+            var totalRevenue = await _dbContext.Reservations
+                .Include(x => x.AccommodationUnit)
+                .Where(x => x.AccommodationUnit.OwnerId == userId && x.Status == Domain.Enums.ReservationStatus.Completed)
+                .SumAsync(x => x.TotalPrice, cancellationToken);
+
+            return new GetRevenuesDto
+            {
+                TotalNumberOfReservations = totalReservations,
+                AverageReservationPrice = (decimal)averagePrice,
+                RevenueLastMonth = (decimal)revenueLastMonth,
+                RevenueThisMonth = (decimal)revenueThisMonth,
+                TotalRevenue = (decimal)totalRevenue
+            };
+        }
     }
 }

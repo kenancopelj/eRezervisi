@@ -52,6 +52,9 @@ Future<void> main() async {
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
+  Globals.apiUrl = const String.fromEnvironment('API_URL',
+      defaultValue: 'http://localhost:5269/');
+
   final prefs = await SharedPreferences.getInstance();
 
   try {
@@ -339,7 +342,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   navigateToForgottenPasswordScreen() {
-    Navigate.next(context, AppRoutes.requestCode.routeName, const RequestCodeScreen(), true);
+    Navigate.next(context, AppRoutes.requestCode.routeName,
+        const RequestCodeScreen(), true);
   }
 
   handleRememberMeChange(newValue) {
